@@ -1,0 +1,37 @@
+/* This CSS for widgets of RegisterUserExist.js */
+.container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 50%;
+}
+
+.paper {
+    height: auto;
+    padding: 10px;
+    display: flex;
+}
+
+.cicleProfile img{
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+}
+
+.profileDetails {
+    line-height: 1px;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.profileDetails p{
+    color: gray;
+}
+
+.profileDetails h6{
+    background-color: rgb(173, 170, 170);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
