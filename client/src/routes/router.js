@@ -5,9 +5,8 @@ import PrivateRoute from './PrivateRouter';
 
 import Home from '../components/Home';
 import Profile from '../components/Profile';
-import Login from '../components/Admin/login';
-import Register from '../components/Admin/register';
-import Temporary from '../components/widgets/ProfileUploadRegister';
+import Login from '../components/Auth/login';
+import Register from '../components/Auth/register';
 
 const Router = () => {
     return (
@@ -34,7 +33,7 @@ const Router = () => {
                 </Route>
 
                 {/* Temporary Route here */}
-                <Route path={'/temporary'} exact element={<Temporary />} />
+                {/* <Route path={'/temporary'} exact element={<Temporary />} /> */}
             </Routes>
         </Layout>
     );

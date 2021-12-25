@@ -3,6 +3,8 @@ import { Grid, Button } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import CheckIcon from '@mui/icons-material/Check';
 import "../../css/profileUploadRegister.css";
+import { connect } from 'react-redux';
+import { profileUpload } from '../../redux/actions/UserActions';
 
 // Image Uploader..
 const ImgUpload = ({ onChange, src }) => (
@@ -18,6 +20,7 @@ const ImgUpload = ({ onChange, src }) => (
 const Edit = ({ onSubmit, children }) => (
     <div className="card">
         <form onSubmit={onSubmit} className="form-file-upload">
+            <h1>Select Profile</h1>
             {children}
 
             {/* Get into the next point */}
@@ -58,7 +61,7 @@ class UploadProfile extends React.Component {
         super(props);
 
         this.state = {
-            file: '',
+            file: 'avatar',
             imagePreviewUrl: 'https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true',
             active: 'edit'
         };
@@ -85,12 +88,23 @@ class UploadProfile extends React.Component {
         this.setState({
             active: activeP,
         })
-        console.log(this.state);
+
+        // creating object for image file store..
+        let formData = new FormData();
+        formData.append('file', this.state.file);
+
+        // dispatching data to redux store..
+        this.props.dispatch(profileUpload({
+            id: this.props.User.register.user._id,
+            formData
+        }));
     }
 
     // rendering method..
     render() {
         const { imagePreviewUrl, active } = this.state;
+
+        console.log('Rendered Props', this.props);
 
         // Returninig statement..
         return (
@@ -118,4 +132,11 @@ class UploadProfile extends React.Component {
     }
 }
 
-export default UploadProfile;
+// move redux store to props..
+const mapStateToProps = (state) => {
+    return {
+        User: state.User
+    };
+};
+
+export default connect(mapStateToProps)(UploadProfile);

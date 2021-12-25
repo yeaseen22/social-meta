@@ -21,4 +21,15 @@ export function register(data){
         type: "USER_REGISTER",
         payload: request
     };
-}
+};
+
+// profile pictures upload..
+export function profileUpload(data){
+    const request = axios.post('/api/profile_upload', data)
+        .then(response => response.data);
+
+    return {
+        type: "PROFILE_UPLOAD",
+        payload: request
+    };
+};

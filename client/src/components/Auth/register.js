@@ -19,7 +19,7 @@ import { MobileDatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { LockOutlined as LockOutlinedIcon, Visibility, VisibilityOff } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import StylesModule from '../../css/loginRegister.module.css';
 import { connect } from 'react-redux';
 import { register } from '../../redux/actions/UserActions';
@@ -27,7 +27,8 @@ import SimpleReactValidator from 'simple-react-validator';
 import AlertNotify from '../widgets/AlertNotify';
 import BackdropLoading from '../widgets/BackdropLoading';
 import Copyright from '../widgets/Copyright';
-import RegisterUserExist from '../widgets/RegisterUserExist';
+import RegisterUserExist from './RegisterUserExist';
+import ProfileUploadRegister from './ProfileUploadRegister';
 
 // Using React Validator..
 const validator = new SimpleReactValidator({ messagesShown: false });
@@ -50,10 +51,9 @@ const Register = (props) => {
         showPassword: false,
         validForm: null,
         formMessage: 'keep filling the form',
-        backdropLoading: false
+        backdropLoading: false,
+        moveNext: false
     });
-
-    const navigate = useNavigate();
 
     // click eye to show pass..
     const handleClickShowPassword = () => {
@@ -123,15 +123,19 @@ const Register = (props) => {
 
     // if the user created successfully then redirect to login..
     // otherwise it will redirect to error page.. 
-    if (props.User.register){
-        if (!props.User.register.success){
+    if (props.User.register) {
+        if (!props.User.register.success) {
             return <RegisterUserExist {...props} />;
         }
 
-        if (props.User.register.success){
+        if (props.User.register.success) {
             setTimeout(() => {
-                navigate('/login');
+                setFormData({ ...formData, moveNext: true });
             }, 4000);
+
+            if (formData.moveNext) {
+                return <ProfileUploadRegister />;
+            }
         }
     }
 
