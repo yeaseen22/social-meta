@@ -8,48 +8,18 @@ const SALT_I = 10;
 
 // user Schema..
 const userSchema = mongoose.Schema({
-    firstname: {
-        type: String,
-        required: false,
-        maxLength: 100
-    },
-    lastname: {
-        type: String,
-        required: false,
-        maxLength: 100
-    },
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-        minLength: 7
-    },
-    bio: {
-        type: String,
-        required: false,
-    },
-    profilePhoto: {
-        type: String,
-        default: "avatar"
-    },
-    coverPhoto: {
-        type: String
-    },
-    birthdate: {
-        type: String,
-    },
-    title: {
-        type: String
-    },
-
-    token: {
-        type: String
-    }
+    firstname: { type: String, required: false, maxLength: 100 },
+    lastname: { type: String, required: false, maxLength: 100 },
+    email: { type: String, required: true, trim: true, unique: true },
+    password: { type: String, required: true, minLength: 7 },
+    bio: { type: String, required: false },
+    profilePhoto: { type: String, default: "avatar" },
+    coverPhoto: { type: String },
+    birthdate: { type: String },
+    title: { type: String },
+    token: { type: String },
+}, {
+    timestamps: true
 });
 
 // Schema Middleware to hashing password..

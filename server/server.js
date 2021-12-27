@@ -9,6 +9,7 @@ const User = require('./models/user');
 const Post = require('./models/post');
 const auth = require('./middleware/auth');
 const emailChecker = require('./middleware/emailCheck');
+const profileUpload = require('./middleware/profileUpload');
 
 const app = express();
 const HOST = process.env.HOST || 'localhost';
@@ -31,19 +32,6 @@ mongoose.connect(config.DATABASE, mongoOptions, function (error) {
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images/');
-    },
-    filename: function (req, file, cb) {
-        console.log('looking file -->> ', file.originalname);
-        cb(null, file.originalname);
-    }
-});
-
-// var upload = multer({ storage: storage }).single('file');
-var upload = multer({ storage: storage });
 
 // GET..
 // Profile (Auth)..
@@ -91,36 +79,21 @@ app.get('/api/logout', auth, (req, res) => {
 
 // POST..
 // Uploading profile pic and update mongo users data..
-app.post('/api/profile_upload', upload.single('file'), (req, res) => {
-    // const userId = req.body.id;
-    // const profile = req.body.filename;
-
-    console.log(req.body.formData);
-
-    // upload(req, res, function(err){
-    //     if (err instanceof multer.MulterError) {
-    //         return res.status(500).json({err, message: 'Multer Error from instanceof!'});
-
-    //     } else if (err) {
-    //         return res.status(500).json({err, message: 'Multer error!'});
-    //     }
-
-    //     return res.status(200).send(req.file);
-    // });
-
-    res.end();
+app.post('/api/profile_upload', profileUpload.single("file"), (req, res) => {
+    const userId = req.body.id;
+    const fileName = req.file.originalname;
 
     // findByIdAndUpdate with database..
-    // User.findByIdAndUpdate({_id: userId}, {profilePhoto: profile}, (error, user) => {
-    //     if (error) return res.json({isUpdate: false, error});
-    //     if (!user) return res.json({isUpdate: false, message: 'User not found!'});
+    User.findByIdAndUpdate({_id: userId}, {profilePhoto: fileName}, (error, user) => {
+        if (error) return res.json({isUpdate: false, error});
+        if (!user) return res.json({isUpdate: false, message: 'User not found!'});
 
-    //     res.status(200).json({
-    //         isUpdate: true,
-    //         message: 'User updated and added profile.',
-    //         user
-    //     });
-    // });
+        res.status(200).json({
+            isUpdate: true,
+            message: 'User updated and added profile.',
+            user
+        });
+    });
 });
 
 // Login User..

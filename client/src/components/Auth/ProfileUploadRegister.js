@@ -12,14 +12,14 @@ const ImgUpload = ({ onChange, src }) => (
         <div className="img-wrap img-upload" >
             <img className="file-upload-img" for="photo-upload" src={src} />
         </div>
-        <input id="photo-upload" type="file" onChange={onChange} />
+        <input id="photo-upload" type="file" name="file" onChange={onChange} />
     </label>
 );
 
 // Edit Pic..
 const Edit = ({ onSubmit, children }) => (
     <div className="card">
-        <form onSubmit={onSubmit} className="form-file-upload">
+        <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
             <h1>Select Profile</h1>
             {children}
 
@@ -37,7 +37,7 @@ const Edit = ({ onSubmit, children }) => (
 // When uploaded then show Pic..
 const Profile = ({ onSubmit, src }) => (
     <div className="card">
-        <form onSubmit={onSubmit} className="form-file-upload">
+        <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
             <h1>Your Profile</h1>
             <label className="custom-file-upload fas">
                 <div className="img-wrap" >
@@ -63,7 +63,7 @@ class UploadProfile extends React.Component {
         this.state = {
             file: 'avatar',
             imagePreviewUrl: 'https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true',
-            active: 'edit'
+            active: 'edit',
         };
     }
 
@@ -71,11 +71,12 @@ class UploadProfile extends React.Component {
     photoUpload = e => {
         e.preventDefault();
         const reader = new FileReader();
+
         const file = e.target.files[0];
         reader.onloadend = () => {
             this.setState({
                 file: file,
-                imagePreviewUrl: reader.result
+                imagePreviewUrl: reader.result,
             });
         }
         reader.readAsDataURL(file);
@@ -90,21 +91,20 @@ class UploadProfile extends React.Component {
         })
 
         // creating object for image file store..
-        let formData = new FormData();
+        const formData = new FormData();
+        formData.append('id', this.props.User.register.user._id);
         formData.append('file', this.state.file);
 
         // dispatching data to redux store..
-        this.props.dispatch(profileUpload({
-            id: this.props.User.register.user._id,
-            formData
-        }));
+        this.props.dispatch(profileUpload(formData));
     }
 
     // rendering method..
     render() {
         const { imagePreviewUrl, active } = this.state;
 
-        console.log('Rendered Props', this.props);
+        // console.log('Rendered Props', this.props);
+        // console.log('Progress -->> ', this.state);
 
         // Returninig statement..
         return (
