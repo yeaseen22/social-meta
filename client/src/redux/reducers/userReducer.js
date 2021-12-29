@@ -4,6 +4,9 @@ export function UserReducer(state = {}, action) {
         case "USER_AUTH":
             return { ...state, login: action.payload };
 
+        case "USER_LOGIN":
+            return { ...state, login: action.payload };
+
         case "USER_REGISTER":
             return { ...state, register: action.payload };
 

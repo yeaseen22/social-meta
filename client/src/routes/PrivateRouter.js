@@ -32,6 +32,8 @@ class PrivateRoute extends React.Component {
                 return <Outlet />;
             }
         }
+        
+        return <Outlet />;
     }
 }
 

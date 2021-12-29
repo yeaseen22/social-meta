@@ -12,6 +12,17 @@ export function auth() {
     };
 };
 
+// Login user..
+export function login(data){
+    const request = axios.post('/api/login', data)
+        .then(response => response.data);
+
+    return {
+        type: "USER_LOGIN",
+        payload: request
+    };
+}
+
 // Sign Up User..
 export function register(data){
     const request = axios.post('/api/register', data)

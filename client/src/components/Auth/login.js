@@ -19,30 +19,43 @@ import {
 } from '@mui/material';
 import { LockOutlined as LockOutlinedIcon, Visibility, VisibilityOff } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import StylesModule from '../../css/loginRegister.module.css';
 import Copyright from '../widgets/Copyright';
+import SimpleReactValidator from 'simple-react-validator';
+import AlertNotify from '../widgets/AlertNotify';
+import { connect } from 'react-redux';
+import { login } from '../../redux/actions/UserActions';
+import BackdropLoading from '../widgets/BackdropLoading';
 
+// react validator..
+const validator = new SimpleReactValidator({ messagesShown: false });
 const theme = createTheme();
-
 
 // Login component..
 const Login = (props) => {
     // hook..
-    const [passProps, setPassProps] = React.useState({
+    const [formData, setFormData] = React.useState({
+        email: '',
         password: '',
         showPassword: false,
+        validForm: null,
+        formMessage: 'keep filling the form!',
+        backdropLoading: false
     });
 
-    // to hangleChanges like Password..
-    const handleChange = (prop) => (event) => {
-        setPassProps({ ...passProps, [prop]: event.target.value });
+    // react router dom's navigation..
+    const navigate = useNavigate();
+
+    // onChange handler..
+    const handleChange = (event) => {
+        setFormData({ ...formData, [event.target.id]: event.target.value });
     };
 
     const handleClickShowPassword = () => {
-        setPassProps({
-            ...passProps,
-            showPassword: !passProps.showPassword,
+        setFormData({
+            ...formData,
+            showPassword: !formData.showPassword,
         });
     };
 
@@ -50,23 +63,75 @@ const Login = (props) => {
         event.preventDefault();
     };
 
+    // show Result Notify..
+    const showResultsAlertNofity = (validForm, formMessage) => {
+        if (validForm === null) {
+            return <AlertNotify type="INFO" message={formMessage} />;
+        }
+        if (!validForm) {
+            return <AlertNotify type="ERROR" message={formMessage} />;
+        }
+        if (validForm) {
+            return <AlertNotify type="SUCCESS" message={formMessage} />;
+        }
+    };
+
     // submit form..
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
 
-        console.log('Props - ', props);
+        if (validator.allValid()) {
+            setFormData({ ...formData, validForm: true, formMessage: 'You are logged in successfully.' });
+
+            // dispatching action method of redux..
+            props.dispatch(login({
+                email: data.get('email'),
+                password: data.get('password')
+            }));
+
+            // showing the Backdrop Loading after register user..
+            setTimeout(() => {
+                setFormData({ ...formData, backdropLoading: true });
+                // console.log('loading');
+            }, 2000);
+
+        } else {
+            validator.showMessages();
+            setFormData({ ...formData, validForm: false, formMessage: 'Your form is not valid please try again' });
+
+            // Again make normal the Alert Notify..
+            setTimeout(() => {
+                setFormData({ ...formData, validForm: null, formMessage: 'Keep filling' });
+            }, 2000);
+        }
+
+        if (props.User.login){
+            if (!props.User.login.isAuth && props.User.login.error) {
+                console.log('Not Loggedin -->> ', props.User.login);
+            }
+        }
+
     };
+
+    // If user is logged in successfully so redirect to profile..
+    // otherwise show the error component..
+    if (props.User.login) {
+        if (props.User.login.isAuth) {
+            console.log('Loggedin -->> ', props.User.login);
+            setTimeout(() => {
+                navigate(`/profile/${props.User.login.id}`);
+            }, 3000);
+        }
+    }
 
     // Returining statement..
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
+                {/*------- Backdrop Loading ------*/}
+                {formData.backdropLoading && <BackdropLoading />}
+
                 <CssBaseline />
                 <Grid
                     item
@@ -102,15 +167,20 @@ const Login = (props) => {
 
                             {/*-------- Email --------*/}
                             <TextField
-                                margin="normal"
+                                error={validator.visibleFields.length && !validator.fieldValid('email') ? true : false}
                                 required
                                 fullWidth
+                                margin="normal"
                                 id="email"
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
                                 autoFocus
+                                value={formData.email}
+                                onChange={(e) => handleChange(e)}
+                                onBlur={() => validator.showMessageFor('email')}
                             />
+                            {validator.message('email', formData.email, 'required|email', { className: StylesModule.error })}
 
                             {/*-------- Password ---------*/}
                             <FormControl
@@ -121,12 +191,14 @@ const Login = (props) => {
                             >
                                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                                 <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={passProps.showPassword ? 'text' : 'password'}
-                                    value={passProps.password}
+                                    error={validator.visibleFields.length && !validator.fieldValid('password') ? true : false}
+                                    id="password"
+                                    type={formData.showPassword ? 'text' : 'password'}
+                                    value={formData.password}
                                     name="password"
                                     autoComplete="current-password"
-                                    onChange={handleChange('password')}
+                                    onChange={(e) => handleChange(e)}
+                                    onBlur={() => validator.showMessageFor('password')}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
@@ -135,19 +207,19 @@ const Login = (props) => {
                                                 onMouseDown={handleMouseDownPassword}
                                                 edge="end"
                                             >
-                                                {passProps.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                {formData.showPassword ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>
                                         </InputAdornment>
                                     }
                                     label="Password"
                                 />
                             </FormControl>
+                            {validator.message('password', formData.password, 'required|min:7', { className: StylesModule.error })}
 
-                            {/*-------- Remember Me Checkbox --------*/}
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
+                            {/*--------- Checking Form's Result ----------*/}
+                            <Grid style={{ marginTop: '10px' }}>
+                                {showResultsAlertNofity(formData.validForm, formData.formMessage)}
+                            </Grid>
 
                             {/*-------- Sign In --------*/}
                             <Button
@@ -183,4 +255,11 @@ const Login = (props) => {
     );
 }
 
-export default Login;
+// mapStateToProps function..
+const mapStateToProps = (state) => {
+    return {
+        User: state.User
+    };
+};
+
+export default connect(mapStateToProps)(Login);

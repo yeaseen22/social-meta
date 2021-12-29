@@ -121,7 +121,7 @@ const Register = (props) => {
         }
     };
 
-    // if the user created successfully then redirect to login..
+    // if the user created successfully then redirect to profileUpload..
     // otherwise it will redirect to error page.. 
     if (props.User.register) {
         if (!props.User.register.success) {
@@ -298,7 +298,6 @@ const Register = (props) => {
                         {/*--------- Checking Form's Result ----------*/}
                         <Grid style={{ marginTop: '10px' }}>
                             {showResultsAlertNofity(formData.validForm, formData.formMessage)}
-                            {/* {checkAndRedirect()} */}
                         </Grid>
 
                         {/*------- Sign Up --------*/}
