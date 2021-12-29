@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const multer = require('multer');
 const config = require('./config/config').get(process.env.NODE_ENV);
 const User = require('./models/user');
 const Post = require('./models/post');

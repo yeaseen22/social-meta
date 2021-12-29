@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import "../../css/profileUploadRegister.css";
 import { connect } from 'react-redux';
 import { profileUpload } from '../../redux/actions/UserActions';
+import { useNavigate } from 'react-router-dom';
 
 // Image Uploader..
 const ImgUpload = ({ onChange, src }) => (
@@ -35,25 +36,30 @@ const Edit = ({ onSubmit, children }) => (
 
 
 // When uploaded then show Pic..
-const Profile = ({ onSubmit, src }) => (
-    <div className="card">
-        <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
-            <h1>Your Profile</h1>
-            <label className="custom-file-upload fas">
-                <div className="img-wrap" >
-                    <img className="file-upload-img" for="photo-upload" src={src} />
-                </div>
-            </label>
+const Profile = ({ onSubmit, src }) => {
+    // useNavigate react-router-dom hook to redirect..
+    const navigate = useNavigate();
 
-            {/* when completes the profile set */}
-            <button type="submit" className="next">
-                <Button endIcon={<CheckIcon style={{ color: 'white' }} />}>
-                    <span style={{ color: 'white' }}>Complete</span>
-                </Button>
-            </button>
-        </form>
-    </div>
-);
+    return (
+        <div className="card">
+            <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
+                <h1>Your Profile</h1>
+                <label className="custom-file-upload fas">
+                    <div className="img-wrap" >
+                        <img className="file-upload-img" for="photo-upload" src={src} />
+                    </div>
+                </label>
+    
+                {/* when completes the profile set */}
+                <button type="submit" className="next" onClick={() => navigate('/login') }>
+                    <Button endIcon={<CheckIcon style={{ color: 'white' }} />}>
+                        <span style={{ color: 'white' }}>Complete</span>
+                    </Button>
+                </button>
+            </form>
+        </div>
+    );
+}
 
 // Main Component..
 class UploadProfile extends React.Component {
