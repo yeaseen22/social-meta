@@ -70,6 +70,7 @@ app.get('/api/logout', auth, (req, res) => {
     req.user.deleteToken(function (err) {
         if (err) return res.status(400).send(err);
         res.status(200).json({
+            isAuth: false,
             msg: 'Logged-Out, session deleted!'
         });
     });
@@ -101,8 +102,8 @@ app.post('/api/login', (req, res) => {
     const loginPassword = req.body.password;
 
     User.findOne({ email: loginEmail }, function (err, user) {
-        if (!user) return res.json({ isAuth: false, message: 'User not found!' });
         if (err) return res.json({ isAuth: false, message: 'Auth failed! wrong email!' });
+        if (!user) return res.json({ isAuth: false, message: 'User not found!' });
 
         // compare password with registered user..
         user.comparePassword(loginPassword, function (err, isMatch) {

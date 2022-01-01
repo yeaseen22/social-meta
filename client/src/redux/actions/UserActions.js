@@ -12,10 +12,23 @@ export function auth() {
     };
 };
 
-// Login user..
-export function login(data){
+// Logout User..
+export function logout(){
+    const request = axios.get('/api/logout')
+        .then(response => response.data)
+        .catch(err => err.message);
+
+    return {
+        type: "USER_LOGOUT",
+        payload: request
+    };
+}
+
+// Login User..
+export function loginUser(data){
     const request = axios.post('/api/login', data)
-        .then(response => response.data);
+        .then(response => response.data)
+        .catch(err => err.message);
 
     return {
         type: "USER_LOGIN",

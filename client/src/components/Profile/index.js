@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Grid, Paper, Container } from '@mui/material';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -7,12 +8,20 @@ class Profile extends React.Component {
     }
 
     // rendering method..
-    render(){
+    render() {
 
         console.log(this.props);
 
         return (
-            <h1>Welcome to Profile here!</h1>
+            <Container>
+                <Grid container spacing={2}>
+                    <Grid item xs={8} md={12}>
+                        <Paper>
+                            <h3>Profile</h3>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Container>
         );
     }
 }

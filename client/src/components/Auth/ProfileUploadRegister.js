@@ -6,6 +6,7 @@ import "../../css/profileUploadRegister.css";
 import { connect } from 'react-redux';
 import { profileUpload } from '../../redux/actions/UserActions';
 import { useNavigate } from 'react-router-dom';
+import BackdropLoading from '../widgets/BackdropLoading';
 
 // Image Uploader..
 const ImgUpload = ({ onChange, src }) => (
@@ -39,26 +40,41 @@ const Edit = ({ onSubmit, children }) => (
 const Profile = ({ onSubmit, src }) => {
     // useNavigate react-router-dom hook to redirect..
     const navigate = useNavigate();
+    const [isLoading, setLoading] = React.useState(false);
 
-    return (
-        <div className="card">
-            <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
-                <h1>Your Profile</h1>
-                <label className="custom-file-upload fas">
-                    <div className="img-wrap" >
-                        <img className="file-upload-img" for="photo-upload" src={src} />
-                    </div>
-                </label>
+    const submitRedirect = () => {
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/login');
+            window.location.reload();
+        }, 2000);
+    };
+
+    if (!isLoading){
+        return (
+            <div className="card">
+                <form onSubmit={onSubmit} className="form-file-upload" encType="multipart/form-data">
+                    <h1>Your Profile</h1>
+                    <label className="custom-file-upload fas">
+                        <div className="img-wrap" >
+                            <img className="file-upload-img" for="photo-upload" src={src} />
+                        </div>
+                    </label>
     
-                {/* when completes the profile set */}
-                <button type="submit" className="next" onClick={() => navigate('/login') }>
-                    <Button endIcon={<CheckIcon style={{ color: 'white' }} />}>
-                        <span style={{ color: 'white' }}>Complete</span>
-                    </Button>
-                </button>
-            </form>
-        </div>
-    );
+                    {/* when completes the profile set */}
+                    <button type="submit" className="next" onClick={submitRedirect}>
+                        <Button endIcon={<CheckIcon style={{ color: 'white' }} />}>
+                            <span style={{ color: 'white' }}>Complete</span>
+                        </Button>
+                    </button>
+                </form>
+            </div>
+        );
+    }else{
+        return <BackdropLoading />
+    }
+
+   
 }
 
 // Main Component..

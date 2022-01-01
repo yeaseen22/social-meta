@@ -4,8 +4,6 @@ import {
     Button,
     CssBaseline,
     TextField,
-    FormControlLabel,
-    Checkbox,
     Link,
     Paper,
     Box,
@@ -25,7 +23,7 @@ import Copyright from '../widgets/Copyright';
 import SimpleReactValidator from 'simple-react-validator';
 import AlertNotify from '../widgets/AlertNotify';
 import { connect } from 'react-redux';
-import { login } from '../../redux/actions/UserActions';
+import { loginUser } from '../../redux/actions/UserActions';
 import BackdropLoading from '../widgets/BackdropLoading';
 
 // react validator..
@@ -46,6 +44,24 @@ const Login = (props) => {
 
     // react router dom's navigation..
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (props.User.login) {
+            if (props.User.login.isAuth) {
+                // console.log('Loggedin -->> ', props.User.login);
+                setFormData({ ...formData, backdropLoading: true });
+
+                return setTimeout(() => {
+                    navigate(`/profile/${props.User.login.id}`);
+                    // window.location.reload();
+                }, 3000);
+            }
+
+            if (!props.User.login.isAuth) {
+                return null;
+            }
+        }
+    }, []);
 
     // onChange handler..
     const handleChange = (event) => {
@@ -85,16 +101,14 @@ const Login = (props) => {
             setFormData({ ...formData, validForm: true, formMessage: 'You are logged in successfully.' });
 
             // dispatching action method of redux..
-            props.dispatch(login({
+            props.dispatch(loginUser({
                 email: data.get('email'),
                 password: data.get('password')
             }));
 
             // showing the Backdrop Loading after register user..
-            setTimeout(() => {
-                setFormData({ ...formData, backdropLoading: true });
-                // console.log('loading');
-            }, 2000);
+            // setFormData({ ...formData, backdropLoading: true });
+            // console.log('loading');
 
         } else {
             validator.showMessages();
@@ -105,154 +119,153 @@ const Login = (props) => {
                 setFormData({ ...formData, validForm: null, formMessage: 'Keep filling' });
             }, 2000);
         }
-
-        if (props.User.login){
-            if (!props.User.login.isAuth && props.User.login.error) {
-                console.log('Not Loggedin -->> ', props.User.login);
-            }
-        }
-
     };
 
-    // If user is logged in successfully so redirect to profile..
-    // otherwise show the error component..
-    if (props.User.login) {
-        if (props.User.login.isAuth) {
-            console.log('Loggedin -->> ', props.User.login);
-            setTimeout(() => {
-                navigate(`/profile/${props.User.login.id}`);
-            }, 3000);
-        }
+    // Destructuring for props data..
+    const { login } = props.User;
+
+    // Backdrop Loading..
+    // When the laoding..
+    if (!formData.backdropLoading) {
+        return (
+            <ThemeProvider theme={theme}>
+                <Grid container component="main" sx={{ height: '100vh' }}>
+                    {/*------- Backdrop Loading ------*/}
+                    {formData.backdropLoading && <BackdropLoading />}
+
+                    <CssBaseline />
+                    <Grid
+                        item
+                        xs={false}
+                        sm={4}
+                        md={7}
+                        sx={{
+                            backgroundImage: 'url(https://source.unsplash.com/random)',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundColor: (t) =>
+                                t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                        }}
+                    />
+                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                        <Box
+                            sx={{
+                                my: 8,
+                                mx: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Typography component="h1" variant="h5">
+                                Sign in
+                            </Typography>
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+
+                                {/*-------- Email --------*/}
+                                <TextField
+                                    error={validator.visibleFields.length && !validator.fieldValid('email') ? true : false}
+                                    required
+                                    fullWidth
+                                    margin="normal"
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                    value={formData.email}
+                                    onChange={(e) => handleChange(e)}
+                                    onBlur={() => validator.showMessageFor('email')}
+                                />
+                                {validator.message('email', formData.email, 'required|email', { className: StylesModule.error })}
+
+                                {/*-------- Password ---------*/}
+                                <FormControl
+                                    fullWidth
+                                    required
+                                    variant="outlined"
+                                    margin="normal"
+                                >
+                                    <InputLabel htmlFor="password">Password</InputLabel>
+                                    <OutlinedInput
+                                        error={validator.visibleFields.length && !validator.fieldValid('password') ? true : false}
+                                        id="password"
+                                        type={formData.showPassword ? 'text' : 'password'}
+                                        value={formData.password}
+                                        name="password"
+                                        autoComplete="current-password"
+                                        onChange={(e) => handleChange(e)}
+                                        onBlur={() => validator.showMessageFor('password')}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {formData.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                    />
+                                </FormControl>
+                                {validator.message('password', formData.password, 'required|min:7', { className: StylesModule.error })}
+
+                                {/*--------- Checking Form's Result ----------*/}
+                                <Grid style={{ marginTop: '10px' }}>
+                                    {/* { console.log('FormData Error -->> inner from return --', props) } */}
+                                    { 
+                                        login && !login.isAuth && login.message ? 
+                                            showResultsAlertNofity(false, login.message)
+                                        : 
+                                            login ? login.isAuth && showResultsAlertNofity(true, "Successfully Logged-in.")
+                                            :
+                                            null
+                                    }
+                                </Grid>
+
+                                {/*-------- Sign In --------*/}
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Sign In
+                                </Button>
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link href="#" variant="body2">
+                                            Forgot password?
+                                        </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        {/* <Link href="/register" variant="body2">
+                                            {"Don't have an account? Sign Up"}
+                                        </Link> */}
+
+                                        <RouterLink to="/register" className={StylesModule.link}>
+                                            {"Don't have an account? Sign Up"}
+                                        </RouterLink>
+                                    </Grid>
+                                </Grid>
+                                <Copyright sx={{ mt: 5 }} />
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </ThemeProvider>
+        );
     }
 
     // Returining statement..
-    return (
-        <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
-                {/*------- Backdrop Loading ------*/}
-                {formData.backdropLoading && <BackdropLoading />}
-
-                <CssBaseline />
-                <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                    <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign in
-                        </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-
-                            {/*-------- Email --------*/}
-                            <TextField
-                                error={validator.visibleFields.length && !validator.fieldValid('email') ? true : false}
-                                required
-                                fullWidth
-                                margin="normal"
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                                value={formData.email}
-                                onChange={(e) => handleChange(e)}
-                                onBlur={() => validator.showMessageFor('email')}
-                            />
-                            {validator.message('email', formData.email, 'required|email', { className: StylesModule.error })}
-
-                            {/*-------- Password ---------*/}
-                            <FormControl
-                                fullWidth
-                                required
-                                variant="outlined"
-                                margin="normal"
-                            >
-                                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                <OutlinedInput
-                                    error={validator.visibleFields.length && !validator.fieldValid('password') ? true : false}
-                                    id="password"
-                                    type={formData.showPassword ? 'text' : 'password'}
-                                    value={formData.password}
-                                    name="password"
-                                    autoComplete="current-password"
-                                    onChange={(e) => handleChange(e)}
-                                    onBlur={() => validator.showMessageFor('password')}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {formData.showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                />
-                            </FormControl>
-                            {validator.message('password', formData.password, 'required|min:7', { className: StylesModule.error })}
-
-                            {/*--------- Checking Form's Result ----------*/}
-                            <Grid style={{ marginTop: '10px' }}>
-                                {showResultsAlertNofity(formData.validForm, formData.formMessage)}
-                            </Grid>
-
-                            {/*-------- Sign In --------*/}
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2">
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    {/* <Link href="/register" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link> */}
-
-                                    <RouterLink to="/register" className={StylesModule.link}>
-                                        {"Don't have an account? Sign Up"}
-                                    </RouterLink>
-                                </Grid>
-                            </Grid>
-                            <Copyright sx={{ mt: 5 }} />
-                        </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </ThemeProvider>
-    );
+    return <BackdropLoading />;
 }
 
 // mapStateToProps function..

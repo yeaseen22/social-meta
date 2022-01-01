@@ -19,7 +19,7 @@ class PrivateRoute extends React.Component {
 
         // when restricted loading is false..
         if (!this.props.restrictionLoading) {
-            return <Outlet />;
+            return <Outlet {...this.props} />;
         }
 
         // when restricted loading is true..
@@ -29,11 +29,11 @@ class PrivateRoute extends React.Component {
                     return <Navigate to={'/login'} />;
                 }
             } else {
-                return <Outlet />;
+                return <Outlet {...this.props} />;
             }
         }
         
-        return <Outlet />;
+        return <Outlet {...this.props} />;
     }
 }
 

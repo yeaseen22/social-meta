@@ -105,10 +105,8 @@ const Register = (props) => {
             }));
 
             // showing the Backdrop Loading after register user..
-            setTimeout(() => {
-                setFormData({ ...formData, backdropLoading: true });
-                // console.log('loading');
-            }, 2000);
+            setFormData({ ...formData, backdropLoading: true });
+            // console.log('loading');
 
         } else {
             validator.showMessages();
