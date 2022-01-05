@@ -33,6 +33,27 @@ app.use(cookieParser());
 app.use(cors());
 
 // GET..
+// Profile data info..
+app.get('/api/profile', auth, (req, res) => {
+    res.status(200).json({
+        isAuth: true,
+        id: req.user._id,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        title: req.user.title,
+        email: req.user.email,
+        bio: req.user.bio,
+        profilePhoto: req.user.profilePhoto,
+        coverPhoto: req.user.coverPhoto,
+        birthdate: req.user.birthdate,
+        createdAt: req.user.createdAt,
+        updatedAt: req.user.updatedAt
+    });
+
+    console.log(req);
+    res.end();
+});
+
 // Profile (Auth)..
 app.get('/api/auth', auth, (req, res) => {
     res.status(200).json({

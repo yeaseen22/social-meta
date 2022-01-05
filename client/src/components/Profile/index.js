@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid, Paper, Container } from '@mui/material';
+import { Grid, Container, Paper } from '@mui/material';
+import ProfileHead from './profileHead';
+import PostHead from './postHead';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -16,8 +18,28 @@ class Profile extends React.Component {
             <Container>
                 <Grid container spacing={2}>
                     <Grid item xs={8} md={12}>
+                        <ProfileHead />
+                    </Grid>
+
+                    <Grid item xs={6} md={8}>
+                        <PostHead />
+                    </Grid>
+
+                    <Grid item xs={6} md={4}>
                         <Paper>
-                            <h3>Profile</h3>
+                            <h3>suggested connections</h3>
+                        </Paper>
+                    </Grid>
+
+                    <Grid item xs={6} md={8}>
+                        <Paper>
+                            <h3>Post</h3>
+                        </Paper>
+                    </Grid>
+
+                    <Grid item xs={6} md={8}>
+                        <Paper>
+                            <h3>Post</h3>
                         </Paper>
                     </Grid>
                 </Grid>

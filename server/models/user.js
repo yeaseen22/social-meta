@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true, minLength: 7 },
     bio: { type: String, required: false },
     profilePhoto: { type: String, default: "avatar" },
-    coverPhoto: { type: String },
+    coverPhoto: { type: String, default: "cover" },
     birthdate: { type: String },
     title: { type: String },
     token: { type: String },
