@@ -23,7 +23,6 @@ import {
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/UserActions';
-import BackdropLoading from '../widgets/BackdropLoading';
 
 
 const Search = styled('div')(({ theme }) => ({

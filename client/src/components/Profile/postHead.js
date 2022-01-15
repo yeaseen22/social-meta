@@ -5,8 +5,16 @@ import StylesModule from '../../css/postHead.module.css';
 const PostHead = () => {
     const profilePath = "/profileUpload";
 
+    const paperStyle = {
+        padding: '10px',
+        backgroundColor: 'rgb(25 118 209)'
+    };
+
     return (
-        <Paper>
+        <Paper 
+            elevation={2}
+            style={paperStyle}
+        >
             <Grid container>
                 <Grid item xs={1}>
                     <img 

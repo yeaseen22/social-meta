@@ -5,9 +5,6 @@ import ProfileHead from './profileHead';
 import PostHead from './postHead';
 
 class Profile extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     // rendering method..
     render() {

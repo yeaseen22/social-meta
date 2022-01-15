@@ -1,11 +1,24 @@
+//This file holds any configuration variables we may need
+//'config.js' is usually ignored by git to protect sensitive information, such as your database's username and password
+
+// module.exports = {
+// 	db: {
+// 		uri: 'mongodb://localhost:27017/socialMeta',
+// 	}
+// };
+
 const config = {
     production: {
         SECRET: process.env.SECRET,
         DATABASE: process.env.DATABASE,
+        HOST: process.env.HOST,
+        PORT: process.env.PORT
     },
     default: {
         SECRET: 'SUPERSECRET',
         DATABASE: 'mongodb://localhost:27017/socialMeta',
+        HOST: 'localhost',
+        PORT: 8080
     }
 };
 

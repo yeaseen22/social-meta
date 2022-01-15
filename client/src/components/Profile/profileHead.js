@@ -16,6 +16,7 @@ const ProfileHead = () => {
                     alt=""
                     className={StylesModule.coverPic}
                 />
+                
             </div>
             <div className={StylesModule.profile}>
                 <img

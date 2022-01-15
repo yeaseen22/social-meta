@@ -36,6 +36,9 @@ const AlertNotify = ({ type, message }) => {
                         This is an info notify — <strong>{msg}!</strong>
                     </Alert>
                 );
+
+            default:
+                return null;
         }
     };
 
