@@ -12,7 +12,7 @@ import BackdropLoading from '../widgets/BackdropLoading';
 const ImgUpload = ({ onChange, src }) => (
     <label className="custom-file-upload fas">
         <div className="img-wrap img-upload" >
-            <img className="file-upload-img" for="photo-upload" src={src} />
+            <img className="file-upload-img" for="photo-upload" src={src} alt="no anything" />
         </div>
         <input id="photo-upload" type="file" name="file" onChange={onChange} />
     </label>
@@ -57,7 +57,7 @@ const Profile = ({ onSubmit, src }) => {
                     <h1>Your Profile</h1>
                     <label className="custom-file-upload fas">
                         <div className="img-wrap" >
-                            <img className="file-upload-img" for="photo-upload" src={src} />
+                            <img className="file-upload-img" for="photo-upload" src={src} alt="No Avatar" />
                         </div>
                     </label>
     

@@ -3,10 +3,8 @@ import { Button, Paper, Grid } from '@mui/material';
 import StylesModule from '../../css/RegisterUserExist.module.css';
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 import ArrowBackIosSharpIcon from '@mui/icons-material/ArrowBackIosSharp';
-import { useNavigate } from 'react-router-dom';
 
 const RegisterUserExist = (props) => {
-    const navigate = useNavigate();
 
     if (props.User.register) {
         const { success, message, user } = props.User.register;
@@ -17,7 +15,7 @@ const RegisterUserExist = (props) => {
                 return <AccountCircleSharpIcon fontSize={'large'} />;
             }else{
                 return (
-                    <img src="" alt="no-image" />
+                    <img src={`profileUpload/${profilePhoto}`} alt="no-avatar else" />
                 );
             }
         };
