@@ -7,7 +7,8 @@ const PostHead = () => {
 
     const paperStyle = {
         padding: '10px',
-        backgroundColor: 'rgb(25 118 209)'
+        backgroundColor: 'rgb(25 118 209)',
+        marginTop: '1rem'
     };
 
     return (

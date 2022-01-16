@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, Paper, Container } from '@mui/material';
+import PostHead from '../widgets/postHead';
 
 const Home = () => {
     return (
@@ -8,7 +9,7 @@ const Home = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={6} md={8}>
                         <Paper>
-                            <h3>Create Post</h3>
+                            <PostHead />
                         </Paper>
                     </Grid>
 

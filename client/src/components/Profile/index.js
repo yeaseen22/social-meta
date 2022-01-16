@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container, Paper } from '@mui/material';
 import ProfileHead from './profileHead';
-import PostHead from './postHead';
+import PostHead from '../widgets/postHead';
 
 class Profile extends React.Component {
 
