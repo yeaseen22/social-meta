@@ -2,13 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container, Paper } from '@mui/material';
 import ProfileHead from './profileHead';
-import PostHead from '../widgets/postHead';
+import PostHead from '../commons/postHead';
+import PostCard from '../commons/PostCard';
+import SuggestedConnection from "../commons/SuggestedConnection";
 
 class Profile extends React.Component {
 
     // rendering method..
     render() {
-
         console.log(this.props);
 
         return (
@@ -23,21 +24,15 @@ class Profile extends React.Component {
                     </Grid>
 
                     <Grid item xs={6} md={4}>
-                        <Paper>
-                            <h3>suggested connections</h3>
-                        </Paper>
+                       <SuggestedConnection />
                     </Grid>
 
                     <Grid item xs={6} md={8}>
-                        <Paper>
-                            <h3>Post</h3>
-                        </Paper>
+                       <PostCard />
                     </Grid>
 
                     <Grid item xs={6} md={8}>
-                        <Paper>
-                            <h3>Post</h3>
-                        </Paper>
+                       <PostCard />
                     </Grid>
                 </Grid>
             </Container>

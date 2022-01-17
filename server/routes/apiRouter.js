@@ -7,6 +7,10 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload');
 
 
+// Forgot Password..
+router.get('/forgot_password', userController.forgotPassword);
+
+// User Profile..
 router.get('/profile', auth, userController.profile);
 
 // Profile (Auth)..

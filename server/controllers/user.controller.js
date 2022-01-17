@@ -1,5 +1,12 @@
 const User = require('../models/user');
 
+// forgot password..
+exports.forgotPassword = function(req, res){
+    res.send('this is forgot password here !');
+    res.end();
+};
+
+// user profile..
 exports.profile = function(req, res){
     res.status(200).json({
         isAuth: true,

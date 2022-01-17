@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid, Paper, Container } from '@mui/material';
-import PostHead from '../widgets/postHead';
+import PostHead from '../commons/postHead';
+import PostCard from '../commons/PostCard';
+import SuggestedConnection from "../commons/SuggestedConnection";
 
 const Home = () => {
     return (
@@ -14,25 +16,17 @@ const Home = () => {
                     </Grid>
 
                     <Grid item xs={6} md={4}>
-                        <Paper>
-                            <h3>Suggested connections</h3>
-                        </Paper>
+                        <SuggestedConnection />
                     </Grid>
 
                     <Grid item xs={6} md={8}>
-                        <Paper>
-                            <h3>Post</h3>
-                        </Paper>
+                        <PostCard />
                     </Grid>
                     <Grid item xs={6} md={8}>
-                        <Paper>
-                            <h3>Post</h3>
-                        </Paper>
+                        <PostCard />
                     </Grid>
                     <Grid item xs={6} md={8}>
-                        <Paper>
-                            <h3>Post</h3>
-                        </Paper>
+                        <PostCard />
                     </Grid>
                 </Grid>
             </Container>

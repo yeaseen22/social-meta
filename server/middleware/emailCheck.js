@@ -21,7 +21,7 @@ const emailChecker = function(req, res, next){
                 }
 
                 if (user[0].email !== email){
-                    return next();
+                   return next();
                 }
             }
 
