@@ -4,7 +4,7 @@ import { Grid, Container, Paper } from '@mui/material';
 import ProfileHead from './profileHead';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';
-import SuggestedConnection from "../commons/SuggestedConnection";
+import SuggestedFollows from "../commons/SuggestedFollows";
 
 class Profile extends React.Component {
 
@@ -24,7 +24,7 @@ class Profile extends React.Component {
                     </Grid>
 
                     <Grid item xs={6} md={4}>
-                       <SuggestedConnection />
+                       <SuggestedFollows />
                     </Grid>
 
                     <Grid item xs={6} md={8}>

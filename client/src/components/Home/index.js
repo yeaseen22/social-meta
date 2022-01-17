@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper, Container } from '@mui/material';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';
-import SuggestedConnection from "../commons/SuggestedConnection";
+import SuggestedFollows from "../commons/SuggestedFollows";
 
 const Home = () => {
     return (
@@ -16,7 +16,7 @@ const Home = () => {
                     </Grid>
 
                     <Grid item xs={6} md={4}>
-                        <SuggestedConnection />
+                        <SuggestedFollows />
                     </Grid>
 
                     <Grid item xs={6} md={8}>
