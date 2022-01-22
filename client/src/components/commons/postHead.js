@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import StylesModule from '../../css/postHead.module.css';
 import {red} from "@mui/material/colors";
+import TextEditor from '../widgets/TextEditor';
+
 
 // Global style for Modal..
 const style = {
@@ -46,18 +48,20 @@ const PostModal = ({ postModal, setPostModal }) => {
                         title="Asad Anik"
                         subheader="September 14, 2016"
                     />
-                    <CardMedia
-                        component="img"
-                        height="500"
-                        image={`${initialPostImgPath}/demoPostImg.jpg`}
-                        alt="Paella dish"
-                    />
                     <CardContent>
-                        <Typography variant="body2" color="text.secondary">
-                            This impressive paella is a perfect party dish and a fun meal to cook
-                            together with your guests. Add 1 cup of frozen peas along with the mussels,
-                            if you like.
-                        </Typography>
+                        <TextEditor
+                            setValue={null}
+                            editorPlaceholder="Write your post here..."
+                            type="postBody"
+                            value={""}
+                        />
+                        <CardMedia
+                            mx={3}
+                            component="img"
+                            height="300"
+                            image={`${initialPostImgPath}/demoPostImg.jpg`}
+                            alt="Paella dish"
+                        />
                     </CardContent>
                 </Card>
         </Modal>

@@ -89,6 +89,7 @@ const PostCard = () => {
                     <ExpandMoreIcon />
                 </ExpandMore>
             </CardActions>
+
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>

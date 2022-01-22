@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from 'draft-js-export-html';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 // Stylesheet..
 const styles = makeStyles(() => ({
@@ -20,7 +20,7 @@ const styles = makeStyles(() => ({
 }));
 
 // Component..
-const TextEditor = () =>{
+const TextEditor = ({ setValue, editorPlaceholder, type, value }) => {
     const [editorState, setEditorState] = React.useState({ editorState: EditorState.createEmpty() });
     const classes = styles();
 
@@ -70,3 +70,6 @@ const TextEditor = () =>{
         />
     )
 };
+
+
+export default TextEditor;
