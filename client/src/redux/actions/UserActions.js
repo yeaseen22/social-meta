@@ -10,7 +10,7 @@ export function auth() {
         type: "USER_AUTH",
         payload: request
     };
-};
+}
 
 // Logout User..
 export function logout(){
@@ -45,7 +45,7 @@ export function register(data){
         type: "USER_REGISTER",
         payload: request
     };
-};
+}
 
 // profile pictures upload..
 export function profileUpload(data){
@@ -56,4 +56,4 @@ export function profileUpload(data){
         type: "PROFILE_UPLOAD",
         payload: request
     };
-};
+}

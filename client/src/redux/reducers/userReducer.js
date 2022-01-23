@@ -22,4 +22,4 @@ export function UserReducer(state = {}, action) {
         default:
             return state;
     }
-};
+}

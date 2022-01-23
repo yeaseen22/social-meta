@@ -4,7 +4,8 @@ const express = require('express'),
     postController = require('../controllers/post.controller'),
     auth = require('../middleware/auth'),
     emailChecker = require('../middleware/emailCheck'),
-    profileUpload = require('../middleware/profileUpload');
+    profileUpload = require('../middleware/profileUpload'),
+    postUpload = require('../middleware/postUpload');
 
 
 // Forgot Password..
@@ -37,7 +38,7 @@ router.post('/login', userController.login);
 router.post('/register', emailChecker, userController.register);
 
 // Create new Post..
-router.post('/post', auth, postController.createPost);
+router.post('/post_create', auth, postUpload.single("file"), postController.createPost);
 
 // Update Post..
 router.post('/post_update', postController.updatePost);

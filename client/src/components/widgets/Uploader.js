@@ -1,32 +1,30 @@
-import React, {useState} from 'react';
+import React from 'react';
+import { CardMedia } from '@mui/material';
 
-const Uploader = ({ customStyle }) => {
-    // Recoil's Hook..
-    const [postItems, setPostItems] = useState({postBody: ''});
-    const [imageURL, setImageURL] = useState(null);
-
-
+const Uploader = ({ customStyle, postData, setPostData }) => {
     // show image when picked..
     const showImage = (image) => (
         image &&
-        <img
-            src={imageURL}
-            style={{
-                height: '300px',
-                width: '100%',
-                marginTop: '0.5rem',
-                border: '2px solid lightgray',
-                borderRadius: '5px'
-            }}
-            alt="Not Founded Cover Post!"
+        <CardMedia
+            mx={3}
+            component="img"
+            height="300"
+            image={postData.imagePreview}
+            alt="Paella dish"
         />
     );
 
     // when changing the files read image..
     const readImages = async(e) => {
         const file = e.target.files[0];
-        const filename = file.name;
-        console.log('Reading image -->> ', filename);
+        const reader = new FileReader();
+
+        // console.log('Reading image -->> ', file);
+
+        reader.onloadend = () => {
+            setPostData({...postData, imageFile: file, imagePreview: reader.result});
+        };
+        reader.readAsDataURL(file);
     }
 
     // console.log('Image URL here :- ', imageURL);
@@ -42,7 +40,7 @@ const Uploader = ({ customStyle }) => {
             />
 
             {/*------ Image showing after uploading this ------*/}
-            {/*{ showImage(imageURL) }*/}
+            { showImage(postData.imagePreview) }
         </>
     )
 }

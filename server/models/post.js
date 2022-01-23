@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 
 // posts Schema..
 const postSchema = mongoose.Schema({
-    title: { type: String, required: true, maxLength: 200 },
-    image: { type: String, required: true },
-    body: { type: String, required: false, maxLength: 500, minLength: 100 },
+    image: { type: String, required: false },
+    body: { type: String, required: false, maxLength: 1000, },
     ownerId: { type: String, required: false }
 }, {
     timestamps: true

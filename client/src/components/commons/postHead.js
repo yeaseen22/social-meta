@@ -5,7 +5,6 @@ import {
     Modal,
     CardHeader,
     Avatar,
-    CardMedia,
     CardContent,
     Card,
     Button,
@@ -16,6 +15,8 @@ import StylesModule from '../../css/postHead.module.css';
 import {red} from "@mui/material/colors";
 import TextEditor from '../widgets/TextEditor';
 import Uploader from '../widgets/Uploader';
+import { connect } from 'react-redux';
+import { postCreate } from '../../redux/actions/PostActions';
 
 
 // Global style for Modal..
@@ -29,23 +30,18 @@ const style = {
     boxShadow: 24,
 };
 
-// const initialPostImgPath = "/postUpload";
-
 // Modal Component..
-const PostModal = ({ postModal, setPostModal }) => {
-    const [postData, setPostData] = React.useState({ postBody: ''});
+const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
+    const [postData, setPostData] = React.useState({ postBody: '', imageFile: '', imagePreview: ''});
     const [loading, setLoading] = useState(false);
 
     const uploaderStyle = {
         width: '100%',
         marginTop: '0.5rem',
-        marginBottom: '0.5rem'
-    };
-
-    // Submit Post..
-    const clickToSubmit = () => {
-        alert('Clicked for submit me! check console into browser');
-        console.log(postData);
+        marginBottom: '0.5rem',
+        border: '1px solid lightgray',
+        borderRadius: '5px',
+        cursor: 'pointer'
     };
 
     // Post Submit Button Or Loading after submit..
@@ -56,7 +52,7 @@ const PostModal = ({ postModal, setPostModal }) => {
                 fullWidth={true}
                 color="secondary"
                 endIcon={<SendIcon />}
-                onClick={clickToSubmit}
+                onClick={(event) => clickToSubmit(event, postData)}
             >
                 post
             </Button>
@@ -93,19 +89,16 @@ const PostModal = ({ postModal, setPostModal }) => {
                     />
                     <CardContent>
                         <TextEditor
-                            setValue={setPostData}
+                            postData={postData}
+                            setPostData={setPostData}
                             editorPlaceholder="Write your post here..."
                             type="postBody"
-                            value={postData.postBody}
                         />
-                        <Uploader customStyle={uploaderStyle} />
-                        {/*<CardMedia*/}
-                        {/*    mx={3}*/}
-                        {/*    component="img"*/}
-                        {/*    height="300"*/}
-                        {/*    image={`${initialPostImgPath}/demoPostImg.jpg`}*/}
-                        {/*    alt="Paella dish"*/}
-                        {/*/>*/}
+                        <Uploader
+                            customStyle={uploaderStyle}
+                            postData={postData}
+                            setPostData={setPostData}
+                        />
 
                         {/*---- Post-Submit button or loading ----*/}
                         <div style={{marginTop: '0.5rem'}}>
@@ -118,7 +111,7 @@ const PostModal = ({ postModal, setPostModal }) => {
 };
 
 // Post Head Component..
-const PostHead = () => {
+const PostHead = (props) => {
     const profilePath = "/profileUpload";
     const [postModal, setPostModal] = useState(false);
 
@@ -127,6 +120,20 @@ const PostHead = () => {
         backgroundColor: 'rgb(25 118 209)',
         marginTop: '1rem'
     };
+
+    // Submit Post..
+    const clickToSubmit = (event, postData) => {
+        event.preventDefault();
+        const formData = new FormData();
+
+        formData.append('body', postData.postBody);
+        formData.append('file', postData.imageFile);
+
+        // dispatching data to redux store for backend req.
+        props.dispatch(postCreate(formData));
+    };
+
+    console.log('Connnected with redux store and showing props -->> ', props);
 
     // Returning statement..
     return (
@@ -156,6 +163,7 @@ const PostHead = () => {
                     <PostModal
                         postModal={postModal}
                         setPostModal={setPostModal}
+                        clickToSubmit={clickToSubmit}
                     />
                 </Grid>
             </Grid>
@@ -163,4 +171,11 @@ const PostHead = () => {
     );
 };
 
-export default PostHead;
+// mapStateToProps function..
+const mapStateToProps = (state) => {
+    return {
+        Post: state.Post
+    };
+};
+
+export default connect(mapStateToProps)(PostHead);

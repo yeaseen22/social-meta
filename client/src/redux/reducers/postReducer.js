@@ -1,4 +1,10 @@
 // Posts Reducer..
 export function PostReducer(state={}, action){
-    return state;
-};
+    switch (action.type){
+        case "POST_CREATE":
+            return { ...state, createdPost: action.payload};
+
+        default:
+            return state;
+    }
+}

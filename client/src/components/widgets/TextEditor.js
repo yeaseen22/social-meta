@@ -7,9 +7,6 @@ import { makeStyles } from '@mui/styles';
 
 // Stylesheet..
 const styles = makeStyles(() => ({
-    wrapperClass: {
-        border: '1px solid gray'
-    },
     editorClass: {
         fontSize: '18px',
         padding: '10px',
@@ -20,7 +17,7 @@ const styles = makeStyles(() => ({
 }));
 
 // Component..
-const TextEditor = ({ setValue, editorPlaceholder, type, value }) => {
+const TextEditor = ({ postData, setPostData, editorPlaceholder, type }) => {
     const [editorState, setEditorState] = React.useState({ editorState: EditorState.createEmpty() });
     const classes = styles();
 
@@ -52,9 +49,9 @@ const TextEditor = ({ setValue, editorPlaceholder, type, value }) => {
         setEditorState({ ...editorState, editorState, });
 
         if(type === "postBody"){
-            setValue({...value, postBody: html});
+            setPostData({...postData, postBody: html});
         }else{
-            setValue(html);
+            setPostData(html);
         }
     };
 
@@ -63,7 +60,6 @@ const TextEditor = ({ setValue, editorPlaceholder, type, value }) => {
         <Editor
             editorState={editorState.editorState}
             toolbarClassName="toolbarClassName"
-            wrapperClassName={classes.wrapperClas}
             editorClassName={classes.editorClass}
             onEditorStateChange={onEditorStateChange}
             placeholder={editorPlaceholder}

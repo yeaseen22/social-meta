@@ -27,6 +27,7 @@ exports.createPost = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
     // post.set('ownerId', currentLoggedInUserId);
     post.ownerId = currentLoggedInUserId;
+    post.image = req.file.originalname;
 
     post.save(function (error, docs) {
         if (error) return res.json({ success: false, error });
