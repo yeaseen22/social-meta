@@ -3,16 +3,19 @@ import {
     Grid,
     Paper,
     Modal,
-    Typography,
     CardHeader,
     Avatar,
     CardMedia,
     CardContent,
-    Card
+    Card,
+    Button,
 } from '@mui/material';
+import { Send as SendIcon } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import StylesModule from '../../css/postHead.module.css';
 import {red} from "@mui/material/colors";
 import TextEditor from '../widgets/TextEditor';
+import Uploader from '../widgets/Uploader';
 
 
 // Global style for Modal..
@@ -26,10 +29,50 @@ const style = {
     boxShadow: 24,
 };
 
-const initialPostImgPath = "/postUpload";
+// const initialPostImgPath = "/postUpload";
 
 // Modal Component..
 const PostModal = ({ postModal, setPostModal }) => {
+    const [postData, setPostData] = React.useState({ postBody: ''});
+    const [loading, setLoading] = useState(false);
+
+    const uploaderStyle = {
+        width: '100%',
+        marginTop: '0.5rem',
+        marginBottom: '0.5rem'
+    };
+
+    // Submit Post..
+    const clickToSubmit = () => {
+        alert('Clicked for submit me! check console into browser');
+        console.log(postData);
+    };
+
+    // Post Submit Button Or Loading after submit..
+    const postSubmitButton = (isLoading) => (
+        !isLoading ?
+            <Button
+                variant="contained"
+                fullWidth={true}
+                color="secondary"
+                endIcon={<SendIcon />}
+                onClick={clickToSubmit}
+            >
+                post
+            </Button>
+            :
+            <LoadingButton
+                loading
+                loadingPosition="start"
+                variant="contained"
+                fullWidth={true}
+                startIcon={<SendIcon/>}
+            >
+                post
+            </LoadingButton>
+    )
+
+
     // Returning statement..
     return (
         <Modal
@@ -50,18 +93,24 @@ const PostModal = ({ postModal, setPostModal }) => {
                     />
                     <CardContent>
                         <TextEditor
-                            setValue={null}
+                            setValue={setPostData}
                             editorPlaceholder="Write your post here..."
                             type="postBody"
-                            value={""}
+                            value={postData.postBody}
                         />
-                        <CardMedia
-                            mx={3}
-                            component="img"
-                            height="300"
-                            image={`${initialPostImgPath}/demoPostImg.jpg`}
-                            alt="Paella dish"
-                        />
+                        <Uploader customStyle={uploaderStyle} />
+                        {/*<CardMedia*/}
+                        {/*    mx={3}*/}
+                        {/*    component="img"*/}
+                        {/*    height="300"*/}
+                        {/*    image={`${initialPostImgPath}/demoPostImg.jpg`}*/}
+                        {/*    alt="Paella dish"*/}
+                        {/*/>*/}
+
+                        {/*---- Post-Submit button or loading ----*/}
+                        <div style={{marginTop: '0.5rem'}}>
+                            {postSubmitButton(loading)}
+                        </div>
                     </CardContent>
                 </Card>
         </Modal>
@@ -104,7 +153,10 @@ const PostHead = () => {
                         />
                     </div>
 
-                    <PostModal postModal={postModal} setPostModal={setPostModal} />
+                    <PostModal
+                        postModal={postModal}
+                        setPostModal={setPostModal}
+                    />
                 </Grid>
             </Grid>
         </Paper>
