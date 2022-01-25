@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 import {
     Card,
     CardHeader,
@@ -18,6 +17,12 @@ import {
     ExpandMore as ExpandMoreIcon,
     MoreVert as MoreVertIcon
 } from '@mui/icons-material';
+import { connect } from 'react-redux';
+import { findUserByOwnerId } from '../../redux/actions/UserActions';
+
+// path for initialPath for image as post image..
+const initialPostImgPath = "/postUpload";
+const initialProfileImgPath = "/profileUpload";
 
 // Styled..
 const ExpandMore = styled((props) => {
@@ -31,46 +36,54 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-
 // Main PostCard's Component..
-const PostCard = () => {
+const PostCard = (props) => {
+    const { ownerId, postBody, postImage, createdAt, updateAt } = props;
     const [expanded, setExpanded] = React.useState(false);
 
-    // path for initialPath for image as post image..
-    const initialPostImgPath = "/postUpload";
+    useEffect(() => {
+        // dispatched for userByOwnerId..
+        props.dispatch(findUserByOwnerId(ownerId));
+    }, ['']);
 
+    // console.log('PostCard redux store == ',props);
+
+    // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    // Owner's Firstname & Lastname here..
+    const ownerFirstAndLastName = props.User && `${props.User.foundUser.firstname} ${props.User.foundUser.lastname}`;
+    const ownerProfilePhoto = props.User && `${props.User.foundUser.profilePhoto}`;
 
     // Returning statement..
     return (
         <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
-                    </Avatar>
+                    <Avatar
+                        alt={ownerFirstAndLastName}
+                        src={`${initialProfileImgPath}/${ownerProfilePhoto}`}
+                    />
                 }
                 action={
                     <IconButton aria-label="settings">
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="Shrimp and Chorizo Paella"
-                subheader="September 14, 2016"
+                title={ownerFirstAndLastName}
+                subheader={createdAt}
             />
             <CardMedia
                 component="img"
                 height="500"
-                image={`${initialPostImgPath}/demoPostImg.jpg`}
+                image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
             <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                    This impressive paella is a perfect party dish and a fun meal to cook
-                    together with your guests. Add 1 cup of frozen peas along with the mussels,
-                    if you like.
+                    {postBody}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
@@ -90,6 +103,7 @@ const PostCard = () => {
                 </ExpandMore>
             </CardActions>
 
+            {/*---- Collapse Area Section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>
@@ -123,4 +137,9 @@ const PostCard = () => {
     );
 };
 
-export default PostCard;
+// mapStateToProps..
+const mapStateToProps = (state) => {
+    return { ...state.User };
+};
+
+export default connect(mapStateToProps)(PostCard);

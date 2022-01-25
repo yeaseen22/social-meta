@@ -1,10 +1,18 @@
 const Post = require('../models/post');
 
+// Read all posts..
+exports.readAllPosts = function (req, res) {
+    Post.find().sort([['createdAt', -1]]).exec((err, post) => {
+        if (err) return res.send(err);
+        res.status(200).send(post);
+    });
+};
+
 // Current User Posts..
 exports.currentUserPosts = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
 
-    Post.find({ ownerId: currentLoggedInUserId }).exec((err, docs) => {
+    Post.find({ ownerId: currentLoggedInUserId }).sort([['createdAt', -1]]).exec((err, docs) => {
         if (err) return res.status(400).send(err);
         res.status(200).send(docs);
     });

@@ -7,6 +7,11 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+// Get all Posts..
+router.get('/read_all_posts', auth, postController.readAllPosts);
+
+// Get User by OwnerId..
+router.get('/find_user', auth, userController.postOwner);
 
 // Forgot Password..
 router.get('/forgot_password', userController.forgotPassword);

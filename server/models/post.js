@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 // posts Schema..
 const postSchema = mongoose.Schema({
     image: { type: String, required: false },
-    body: { type: String, required: false, maxLength: 1000, },
+    body: { type: String, required: false, maxLength: 1000 },
     ownerId: { type: String, required: false }
 }, {
     timestamps: true

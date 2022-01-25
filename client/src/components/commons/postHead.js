@@ -17,6 +17,7 @@ import TextEditor from '../widgets/TextEditor';
 import Uploader from '../widgets/Uploader';
 import { connect } from 'react-redux';
 import { postCreate } from '../../redux/actions/PostActions';
+import AlertNotify from "../widgets/AlertNotify";
 
 
 // Global style for Modal..
@@ -32,8 +33,12 @@ const style = {
 
 // Modal Component..
 const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
-    const [postData, setPostData] = React.useState({ postBody: '', imageFile: '', imagePreview: ''});
-    const [loading, setLoading] = useState(false);
+    const [postData, setPostData] = React.useState({
+        postBody: '',
+        imageFile: '',
+        imagePreview: '',
+        loading: false
+    });
 
     const uploaderStyle = {
         width: '100%',
@@ -52,7 +57,7 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
                 fullWidth={true}
                 color="secondary"
                 endIcon={<SendIcon />}
-                onClick={(event) => clickToSubmit(event, postData)}
+                onClick={(event) => clickToSubmit(event, postData, setPostData)}
             >
                 post
             </Button>
@@ -102,7 +107,7 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
 
                         {/*---- Post-Submit button or loading ----*/}
                         <div style={{marginTop: '0.5rem'}}>
-                            {postSubmitButton(loading)}
+                            {postSubmitButton(postData.loading)}
                         </div>
                     </CardContent>
                 </Card>
@@ -122,18 +127,38 @@ const PostHead = (props) => {
     };
 
     // Submit Post..
-    const clickToSubmit = (event, postData) => {
+    const clickToSubmit = (event, postData, setPostData) => {
         event.preventDefault();
-        const formData = new FormData();
 
+        setPostData({...postData, loading: true});
+
+        const formData = new FormData();
         formData.append('body', postData.postBody);
         formData.append('file', postData.imageFile);
 
         // dispatching data to redux store for backend req.
         props.dispatch(postCreate(formData));
+
+        setTimeout(() => {
+            setPostData({...postData, loading: false});
+            setPostModal(false);
+        }, 2000);
     };
 
-    console.log('Connnected with redux store and showing props -->> ', props);
+    // console.log('Connnected with redux store and showing props -->> ', props);
+
+    if (props.Post){
+        if (props.Post.createdPost){
+            const { success } = props.Post.createdPost;
+            if (!success) {
+                return (
+                    <div style={{marginTop: '1rem'}}>
+                        <AlertNotify type="ERROR" message="Server ERROR! reload app & try again." />
+                    </div>
+                );
+            }
+        }
+    }
 
     // Returning statement..
     return (
