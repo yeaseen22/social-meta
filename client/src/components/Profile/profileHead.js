@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper } from '@mui/material';
 import StylesModule from '../../css/profileHead.module.css';
 
-// profile head compoennts here..
+// profile head component here..
 const ProfileHead = () => {
     const profilePath = "/profileUpload";
     const coverPath = "/coverUpload";
@@ -16,7 +16,7 @@ const ProfileHead = () => {
                     alt=""
                     className={StylesModule.coverPic}
                 />
-                
+
             </div>
             <div className={StylesModule.profile}>
                 <img

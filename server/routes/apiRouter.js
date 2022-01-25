@@ -4,9 +4,19 @@ const express = require('express'),
     postController = require('../controllers/post.controller'),
     auth = require('../middleware/auth'),
     emailChecker = require('../middleware/emailCheck'),
-    profileUpload = require('../middleware/profileUpload');
+    profileUpload = require('../middleware/profileUpload'),
+    postUpload = require('../middleware/postUpload');
 
+// Get all Posts..
+router.get('/read_all_posts', auth, postController.readAllPosts);
 
+// Get User by OwnerId..
+router.get('/find_user', auth, userController.postOwner);
+
+// Forgot Password..
+router.get('/forgot_password', userController.forgotPassword);
+
+// User Profile..
 router.get('/profile', auth, userController.profile);
 
 // Profile (Auth)..
@@ -33,7 +43,7 @@ router.post('/login', userController.login);
 router.post('/register', emailChecker, userController.register);
 
 // Create new Post..
-router.post('/post', auth, postController.createPost);
+router.post('/post_create', auth, postUpload.single("file"), postController.createPost);
 
 // Update Post..
 router.post('/post_update', postController.updatePost);

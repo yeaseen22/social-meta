@@ -1,5 +1,31 @@
 const User = require('../models/user');
 
+// post Owner..
+exports.postOwner = function(req, res){
+    const ownerId = req.query.ownerId;
+
+    User.findById({_id: ownerId}, (error, user) => {
+        if (error) return res.send(error);
+        if (!user) return res.json({isUserFound: false, message: "User not found!"});
+
+        res.status(200).json({
+            isUserFound: true,
+            foundUser: {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                profilePhoto: user.profilePhoto
+            }
+        });
+    });
+};
+
+// forgot password..
+exports.forgotPassword = function(req, res){
+    res.send('this is forgot password here !');
+    res.end();
+};
+
+// user profile..
 exports.profile = function(req, res){
     res.status(200).json({
         isAuth: true,
