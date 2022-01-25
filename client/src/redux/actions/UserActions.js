@@ -1,17 +1,5 @@
 import axios from 'axios';
 
-// Find User by ownerId of any post..
-export function findUserByOwnerId(ownerId){
-    const request = axios.get(`/api/find_user?ownerId=${ownerId}`)
-        .then(resonse => resonse.data);
-
-    return {
-        type: "USER_BY_OWNER_ID",
-        payload: request
-    };
-}
-
-
 // Auth of User..
 export function auth() {
     const request = axios.get('/api/auth')

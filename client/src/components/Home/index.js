@@ -26,25 +26,26 @@ class Home extends React.Component{
         if (Posts.length < 1){
             return (
                 <Grid item xs={6} md={8}>
-                    <h1>Posts Not Found!</h1>
+                    <h1>Loading...</h1>
                 </Grid>
             );
         }
 
         return Posts.length && Posts.map((post) => (
-            <Grid item xs={6} md={8}>
+            <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
                     ownerId={post.ownerId}
                     postBody={post.body}
                     postImage={post.image}
                     createdAt={post.createdAt}
-                    updateAt={post.updatedAt}
                 />
             </Grid>
         ));
     }
 
     render() {
+        // console.log(this.props.Posts);
+
         return (
             <>
                 <Container>
@@ -60,7 +61,7 @@ class Home extends React.Component{
                         </Grid>
 
                         {/*----- Showing all posts ----*/}
-                        {this.showAllPosts(this.props.Posts ? this.props.Posts : null)}
+                        {this.showAllPosts(this.props.allPosts ? this.props.allPosts : null)}
                     </Grid>
                 </Container>
             </>

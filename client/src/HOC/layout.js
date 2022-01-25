@@ -4,8 +4,7 @@ import Appbar from '../components/Navigation/Appbar';
 import { Container } from '@mui/material';
 
 const Layout = (props) => {
-
-    console.log('this is from layout', props);
+    // console.log('this is from layout', props);
 
     if (props.User.login) {
         if (!props.User.login.isAuth) {

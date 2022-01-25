@@ -34,13 +34,12 @@ class Profile extends React.Component {
         }
 
         return Posts.length && Posts.map((post) => (
-            <Grid item xs={6} md={8}>
+            <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
                     ownerId={post.ownerId}
                     postBody={post.body}
                     postImage={post.image}
                     createdAt={post.createdAt}
-                    updateAt={post.updatedAt}
                 />
             </Grid>
         ));
@@ -48,7 +47,7 @@ class Profile extends React.Component {
 
     // rendering method..
     render() {
-        console.log('profile indexed outputted here -->> ', this.props);
+        // console.log('profile indexed outputted here -->> ', this.props);
 
         return (
             <Container>
@@ -69,7 +68,7 @@ class Profile extends React.Component {
                     </Grid>
 
                     {/*----- Showing current user posts ----*/}
-                    {this.showCurrentUserPosts(this.props.Posts ? this.props.Posts : null)}
+                    {this.showCurrentUserPosts(this.props.currentUserPosts ? this.props.currentUserPosts : null)}
                 </Grid>
             </Container>
         );

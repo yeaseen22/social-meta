@@ -17,8 +17,7 @@ import {
     ExpandMore as ExpandMoreIcon,
     MoreVert as MoreVertIcon
 } from '@mui/icons-material';
-import { connect } from 'react-redux';
-import { findUserByOwnerId } from '../../redux/actions/UserActions';
+import axios from 'axios';
 
 // path for initialPath for image as post image..
 const initialPostImgPath = "/postUpload";
@@ -38,24 +37,43 @@ const ExpandMore = styled((props) => {
 
 // Main PostCard's Component..
 const PostCard = (props) => {
-    const { ownerId, postBody, postImage, createdAt, updateAt } = props;
+    const { ownerId, postBody, postImage, createdAt } = props;
     const [expanded, setExpanded] = React.useState(false);
+    const [userByOwner, setUserByOwner] = React.useState(null);
 
+    // useEffect hook..
     useEffect(() => {
-        // dispatched for userByOwnerId..
-        props.dispatch(findUserByOwnerId(ownerId));
-    }, ['']);
-
-    // console.log('PostCard redux store == ',props);
+        axios.get(`/api/find_user?ownerId=${ownerId}`)
+            .then(response => {
+                setUserByOwner(response.data);
+            })
+            .catch(err => console.log(`ERR! from when tried to get req. findUserByOwnerId ${err}`));
+    }, [ownerId]);
 
     // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
-    // Owner's Firstname & Lastname here..
-    const ownerFirstAndLastName = props.User && `${props.User.foundUser.firstname} ${props.User.foundUser.lastname}`;
-    const ownerProfilePhoto = props.User && `${props.User.foundUser.profilePhoto}`;
+    // showing profile firstname lastname or profile photo of userByOwnerId..
+    const showNameOrProfile = (type) => {
+        switch (type){
+            case "NAME":
+                if (userByOwner === null){
+                    return "Loading...";
+                }
+                return `${userByOwner.foundUser.firstname} ${userByOwner.foundUser.lastname}`;
+
+            case "PROFILE":
+                if (userByOwner === null){
+                    return "Loading...";
+                }
+                return `${userByOwner.foundUser.profilePhoto}`;
+
+            default:
+                return "Not Found!";
+        }
+    };
 
     // Returning statement..
     return (
@@ -63,8 +81,8 @@ const PostCard = (props) => {
             <CardHeader
                 avatar={
                     <Avatar
-                        alt={ownerFirstAndLastName}
-                        src={`${initialProfileImgPath}/${ownerProfilePhoto}`}
+                        alt={'No User'}
+                        src={`${initialProfileImgPath}/${showNameOrProfile("PROFILE")}`}
                     />
                 }
                 action={
@@ -72,7 +90,7 @@ const PostCard = (props) => {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={ownerFirstAndLastName}
+                title={showNameOrProfile('NAME')}
                 subheader={createdAt}
             />
             <CardMedia
@@ -104,6 +122,7 @@ const PostCard = (props) => {
             </CardActions>
 
             {/*---- Collapse Area Section ----*/}
+            {/*---- It will be the future Comments section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>
@@ -137,9 +156,4 @@ const PostCard = (props) => {
     );
 };
 
-// mapStateToProps..
-const mapStateToProps = (state) => {
-    return { ...state.User };
-};
-
-export default connect(mapStateToProps)(PostCard);
+export default PostCard;
