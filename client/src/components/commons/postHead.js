@@ -18,6 +18,7 @@ import Uploader from '../widgets/Uploader';
 import { connect } from 'react-redux';
 import { postCreate } from '../../redux/actions/PostActions';
 import AlertNotify from "../widgets/AlertNotify";
+import { useNavigate } from 'react-router-dom';
 
 
 // Global style for Modal..
@@ -120,6 +121,9 @@ const PostHead = (props) => {
     const profilePath = "/profileUpload";
     const [postModal, setPostModal] = useState(false);
 
+    // React-Router-Dom Navigate..
+    const navigate = useNavigate();
+
     const paperStyle = {
         padding: '10px',
         backgroundColor: 'rgb(25 118 209)',
@@ -150,12 +154,21 @@ const PostHead = (props) => {
     if (props.Post){
         if (props.Post.createdPost){
             const { success } = props.Post.createdPost;
+
             if (!success) {
                 return (
                     <div style={{marginTop: '1rem'}}>
                         <AlertNotify type="ERROR" message="Server ERROR! reload app & try again." />
                     </div>
                 );
+            }
+
+            if (success) {
+                // Redirect Home after make Post..
+                setTimeout(() => {
+                    // redirecting for home route..
+                    navigate('/');
+                }, 3000);
             }
         }
     }

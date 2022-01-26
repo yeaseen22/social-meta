@@ -9,15 +9,21 @@ import {
     Collapse,
     Avatar,
     IconButton,
-    Typography
+    Typography,
+    Menu,
+    MenuItem,
+    ListItemIcon
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
     Share as ShareIcon,
     ExpandMore as ExpandMoreIcon,
-    MoreVert as MoreVertIcon
+    MoreVert as MoreVertIcon,
+    Edit as EditIcon,
+    Delete as DeleteIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+
 
 // path for initialPath for image as post image..
 const initialPostImgPath = "/postUpload";
@@ -41,6 +47,9 @@ const PostCard = (props) => {
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
 
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const optionOpen = Boolean(anchorEl);
+
     // useEffect hook..
     useEffect(() => {
         axios.get(`/api/find_user?ownerId=${ownerId}`)
@@ -53,6 +62,13 @@ const PostCard = (props) => {
     // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
+    };
+
+    const handleOptionOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleOptionClose = () => {
+        setAnchorEl(null);
     };
 
     // showing profile firstname lastname or profile photo of userByOwnerId..
@@ -86,9 +102,34 @@ const PostCard = (props) => {
                     />
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                    </IconButton>
+                    <>
+                        <IconButton aria-label="settings" onClick={handleOptionOpen}>
+                            <MoreVertIcon />
+                        </IconButton>
+
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={optionOpen}
+                            onClose={handleOptionClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={handleOptionClose}>
+                                <ListItemIcon>
+                                    <EditIcon />
+                                </ListItemIcon>
+                                Edit
+                            </MenuItem>
+                            <MenuItem onClick={handleOptionClose}>
+                                <ListItemIcon>
+                                    <DeleteIcon />
+                                </ListItemIcon>
+                                Delete
+                            </MenuItem>
+                        </Menu>
+                    </>
                 }
                 title={showNameOrProfile('NAME')}
                 subheader={createdAt}

@@ -5,6 +5,9 @@ import PostCard from '../commons/PostCard';
 import SuggestedFollows from "../commons/SuggestedFollows";
 import { connect } from 'react-redux';
 import { readAllPosts } from '../../redux/actions/PostActions';
+import NotFound from "../widgets/NotFound";
+
+const notFoundColor = 'gray';
 
 class Home extends React.Component{
     constructor(props) {
@@ -18,7 +21,11 @@ class Home extends React.Component{
         if (Posts === null){
             return (
                 <Grid item xs={6} md={8}>
-                    <h1>Posts Not Found!</h1>
+                    <NotFound
+                        msg={"Post Not Found!"}
+                        color={notFoundColor}
+                        size={100}
+                    />
                 </Grid>
             );
         }
@@ -26,7 +33,11 @@ class Home extends React.Component{
         if (Posts.length < 1){
             return (
                 <Grid item xs={6} md={8}>
-                    <h1>Loading...</h1>
+                    <NotFound
+                        msg={"Post Not Found!"}
+                        color={notFoundColor}
+                        size={100}
+                    />
                 </Grid>
             );
         }
