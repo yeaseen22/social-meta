@@ -62,6 +62,12 @@ const Login = (props) => {
                 return null;
             }
         }
+
+        // useEffect cleanup function here..
+        return () => {
+            setFormData({ ...formData, backdropLoading: false });
+        };
+
     }, []);
 
     // onChange handler..
@@ -221,10 +227,10 @@ const Login = (props) => {
                                 {/*--------- Checking Form's Result ----------*/}
                                 <Grid style={{ marginTop: '10px' }}>
                                     {/* { console.log('FormData Error -->> inner from return --', props) } */}
-                                    { 
-                                        login && !login.isAuth && login.message ? 
+                                    {
+                                        login && !login.isAuth && login.message ?
                                             showResultsAlertNofity(false, login.message)
-                                        : 
+                                        :
                                             login ? login.isAuth && showResultsAlertNofity(true, "Successfully Logged-in.")
                                             :
                                             null

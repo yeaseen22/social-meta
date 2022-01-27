@@ -50,13 +50,22 @@ const PostCard = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
 
-    // useEffect hook..
-    useEffect(() => {
-        axios.get(`/api/find_user?ownerId=${ownerId}`)
+    const fetchUserByOwnerId = async(id) => {
+            await axios.get(`/api/find_user?ownerId=${id}`)
             .then(response => {
                 setUserByOwner(response.data);
             })
             .catch(err => console.log(`ERR! from when tried to get req. findUserByOwnerId ${err}`));
+    };
+
+    // useEffect hook..
+    useEffect( () => {
+        fetchUserByOwnerId(ownerId);
+
+        // useEffect's cleanup function..
+        return () => {
+            setUserByOwner(null);
+        };
     }, [ownerId]);
 
     // expandClick handle function..

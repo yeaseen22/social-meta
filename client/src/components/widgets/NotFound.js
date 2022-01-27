@@ -5,9 +5,15 @@ const NotFound = ({ msg, color, size }) => {
     const [isLoading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
+        // to make loading for 2min.. then it makes false..
         setTimeout(() => {
             setLoading(false);
         }, 2000);
+
+        // cleanup function here..
+        return () => {
+            setLoading(null);
+        };
     }, ['']);
 
 
