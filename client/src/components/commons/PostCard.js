@@ -81,7 +81,7 @@ const PostCard = (props) => {
     };
 
     // showing profile firstname lastname or profile photo of userByOwnerId..
-    const showNameOrProfile = (type) => {
+    const showNameOrProfileOrTitle = (type) => {
         switch (type){
             case "NAME":
                 if (userByOwner === null){
@@ -95,6 +95,12 @@ const PostCard = (props) => {
                 }
                 return `${userByOwner.foundUser.profilePhoto}`;
 
+            case "TITLE":
+                if (userByOwner === null){
+                    return "Loading...";
+                }
+                return `${userByOwner.foundUser.title}`;
+
             default:
                 return "Not Found!";
         }
@@ -107,7 +113,7 @@ const PostCard = (props) => {
                 avatar={
                     <Avatar
                         alt={'No User'}
-                        src={`${initialProfileImgPath}/${showNameOrProfile("PROFILE")}`}
+                        src={`${initialProfileImgPath}/${showNameOrProfileOrTitle("PROFILE")}`}
                     />
                 }
                 action={
@@ -140,19 +146,20 @@ const PostCard = (props) => {
                         </Menu>
                     </>
                 }
-                title={showNameOrProfile('NAME')}
-                subheader={createdAt}
+                title={showNameOrProfileOrTitle('NAME')}
+                subheader={showNameOrProfileOrTitle('TITLE')}
             />
 
             {/*---- Post Body here ----*/}
             <CardContent>
-                <Typography
-                    variant="body2"
-                    color="text.secondary"
+                <Typography variant="body1" color="text.primary"
                     dangerouslySetInnerHTML={{
                         __html: postBody
                     }}
                 />
+                <Typography variant="body2" color="text.secondary">
+                    Created at: {createdAt}
+                </Typography>
             </CardContent>
 
             {/*---- Post Image here -----*/}
@@ -162,6 +169,8 @@ const PostCard = (props) => {
                 image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
+
+            {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
                     <FavoriteIcon />

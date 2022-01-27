@@ -13,7 +13,8 @@ exports.postOwner = function(req, res){
             foundUser: {
                 firstname: user.firstname,
                 lastname: user.lastname,
-                profilePhoto: user.profilePhoto
+                profilePhoto: user.profilePhoto,
+                title: user.title
             }
         });
     });
