@@ -150,18 +150,6 @@ const PostCard = (props) => {
                 subheader={showNameOrProfileOrTitle('TITLE')}
             />
 
-            {/*---- Post Body here ----*/}
-            <CardContent>
-                <Typography variant="body1" color="text.primary"
-                    dangerouslySetInnerHTML={{
-                        __html: postBody
-                    }}
-                />
-                <Typography variant="body2" color="text.secondary">
-                    Created at: {createdAt}
-                </Typography>
-            </CardContent>
-
             {/*---- Post Image here -----*/}
             <CardMedia
                 component="img"
@@ -169,6 +157,18 @@ const PostCard = (props) => {
                 image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
+
+            {/*---- Post Body here ----*/}
+            <CardContent>
+                <Typography variant="body2" color="text.primary"
+                            dangerouslySetInnerHTML={{
+                                __html: postBody
+                            }}
+                />
+                <Typography variant="body2" color="text.secondary">
+                    Created at: {createdAt}
+                </Typography>
+            </CardContent>
 
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
