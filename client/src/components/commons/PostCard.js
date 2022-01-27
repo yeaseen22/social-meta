@@ -143,17 +143,25 @@ const PostCard = (props) => {
                 title={showNameOrProfile('NAME')}
                 subheader={createdAt}
             />
+
+            {/*---- Post Body here ----*/}
+            <CardContent>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    dangerouslySetInnerHTML={{
+                        __html: postBody
+                    }}
+                />
+            </CardContent>
+
+            {/*---- Post Image here -----*/}
             <CardMedia
                 component="img"
                 height="500"
                 image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                    {postBody}
-                </Typography>
-            </CardContent>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
                     <FavoriteIcon />
