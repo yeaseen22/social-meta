@@ -14,7 +14,7 @@ const NotFound = ({ msg, color, size }) => {
         return () => {
             setLoading(null);
         };
-    }, ['']);
+    }, [setLoading]);
 
 
     if (isLoading){

@@ -22,7 +22,7 @@ import {
     Home as HomeIcon,
     Logout as LogoutIcon,
     AccountCircle as AccountCircleIcon,
-    Settings as SettingsIcon, Settings
+    Settings as SettingsIcon
 } from '@mui/icons-material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -82,7 +82,7 @@ const Appbar = (props) => {
                 navigate('/login');
             }
         }
-    }, []);
+    }, [props, navigate]);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);

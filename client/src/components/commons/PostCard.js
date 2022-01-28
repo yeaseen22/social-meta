@@ -163,7 +163,7 @@ const PostCard = (props) => {
                 <Typography variant="body2" color="text.primary"
                             dangerouslySetInnerHTML={{
                                 __html: postBody
-                            }}
+                            } }
                 />
                 <Typography variant="body2" color="text.secondary">
                     Created at: {createdAt}

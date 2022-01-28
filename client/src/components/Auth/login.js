@@ -47,19 +47,21 @@ const Login = (props) => {
 
     // useEffect React Hook..
     React.useEffect(() => {
-        if (props.User.login) {
-            if (props.User.login.isAuth) {
-                // console.log('Loggedin -->> ', props.User.login);
-                setFormData({ ...formData, backdropLoading: true });
+        if (props.User){
+            if (props.User.login) {
+                if (props.User.login.isAuth) {
+                    // console.log('Loggedin -->> ', props.User.login);
+                    setFormData({ ...formData, backdropLoading: true });
 
-                return setTimeout(() => {
-                    navigate(`/profile/${props.User.login.id}`);
-                    // window.location.reload();
-                }, 3000);
-            }
+                    return setTimeout(() => {
+                        navigate(`/profile/${props.User.login.id}`);
+                        // window.location.reload();
+                    }, 3000);
+                }
 
-            if (!props.User.login.isAuth) {
-                return null;
+                if (!props.User.login.isAuth) {
+                    return null;
+                }
             }
         }
 
@@ -68,7 +70,7 @@ const Login = (props) => {
             setFormData({ ...formData, backdropLoading: false });
         };
 
-    }, []);
+    }, [setFormData]);
 
     // onChange handler..
     const handleChange = (event) => {
