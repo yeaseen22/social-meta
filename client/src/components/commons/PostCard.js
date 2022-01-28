@@ -20,7 +20,9 @@ import {
     ExpandMore as ExpandMoreIcon,
     MoreVert as MoreVertIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon
+    Delete as DeleteIcon,
+    Person as PersonIcon,
+    Report as ReportIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -80,6 +82,52 @@ const PostCard = (props) => {
         setAnchorEl(null);
     };
 
+    // To rendering Post Menu as Profile Or Home View..
+    const showHomeOrProfileMenuOptions = (type) => {
+        switch (type){
+            case "HOME":
+                return (
+                    <>
+                        <MenuItem onClick={handleOptionClose}>
+                            <ListItemIcon>
+                                <PersonIcon />
+                            </ListItemIcon>
+                            View Profile
+                        </MenuItem>
+
+                        <MenuItem>
+                            <ListItemIcon>
+                                <ReportIcon />
+                            </ListItemIcon>
+                            Make Report
+                        </MenuItem>
+                    </>
+                );
+
+            case "PROFILE":
+                return (
+                    <>
+                        <MenuItem onClick={handleOptionClose}>
+                            <ListItemIcon>
+                                <EditIcon />
+                            </ListItemIcon>
+                            Edit
+                        </MenuItem>
+
+                        <MenuItem onClick={handleOptionClose}>
+                            <ListItemIcon>
+                                <DeleteIcon />
+                            </ListItemIcon>
+                            Delete
+                        </MenuItem>
+                    </>
+                );
+
+            default:
+                return null;
+        }
+    };
+
     // showing profile firstname lastname or profile photo of userByOwnerId..
     const showNameOrProfileOrTitle = (type) => {
         switch (type){
@@ -131,18 +179,7 @@ const PostCard = (props) => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={handleOptionClose}>
-                                <ListItemIcon>
-                                    <EditIcon />
-                                </ListItemIcon>
-                                Edit
-                            </MenuItem>
-                            <MenuItem onClick={handleOptionClose}>
-                                <ListItemIcon>
-                                    <DeleteIcon />
-                                </ListItemIcon>
-                                Delete
-                            </MenuItem>
+                            {showHomeOrProfileMenuOptions(props.postType)}
                         </Menu>
                     </>
                 }

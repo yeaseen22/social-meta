@@ -55,6 +55,8 @@ exports.profileAuth = function(req, res){
         email: req.user.email,
         firstname: req.user.firstname,
         lastname: req.user.lastname,
+        title: req.user.title,
+        profilePhoto: req.user.profilePhoto
         // token: req.user.token
     });
 };
