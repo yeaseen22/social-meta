@@ -26,6 +26,8 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { deletePost } from '../../redux/actions/PostActions';
+import { connect } from 'react-redux';
 
 
 // path for initialPath for image as post image..
@@ -86,6 +88,17 @@ const PostCard = (props) => {
         setAnchorEl(null);
     };
 
+    // to Delete Post..
+    const clickToDeletePost = (event, postId) => {
+        event.preventDefault();
+
+        if (window.confirm("Are you sure want to delete?")){
+            // make delete req. to server..
+            props.dispatch(deletePost(postId));
+            window.location.reload();
+        }
+    };
+
     // To rendering Post Menu as Profile Or Home View..
     const renderMenuBaseOnComponentType = (type) => {
         switch (type){
@@ -134,7 +147,7 @@ const PostCard = (props) => {
                             <Link to={`/profile/editPost/${props.postId}`}>Edit</Link>
                         </MenuItem>
 
-                        <MenuItem onClick={handleOptionClose}>
+                        <MenuItem onClick={(e) => {handleOptionClose(e); clickToDeletePost(e, props.postId)}}>
                             <ListItemIcon>
                                 <DeleteIcon />
                             </ListItemIcon>
@@ -270,4 +283,9 @@ const PostCard = (props) => {
     );
 };
 
-export default PostCard;
+// mapStateToProps..
+const mapStateToProps = (state) => {
+    return {...state.Post};
+};
+
+export default connect(mapStateToProps)(PostCard);

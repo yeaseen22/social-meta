@@ -85,7 +85,9 @@ exports.deletePost = function (req, res) {
     const id = req.query.id;
 
     Post.findByIdAndDelete(id, (err) => {
-        if (err) return res.status(400).send(err);
-        res.status(200).json(true);
+        if (err) return res.status(400).json({deleted: false, err});
+        res.status(200).json({
+            deleted: true
+        });
     });
 };

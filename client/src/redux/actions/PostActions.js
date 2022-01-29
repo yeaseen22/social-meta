@@ -1,5 +1,16 @@
 import axios from 'axios';
 
+// Delete Post..
+export function deletePost(postId){
+    const request = axios.delete(`/api/post_delete?id=${postId}`)
+        .then(response => response.data);
+
+    return {
+        type: "POST_DELETE",
+        payload: request
+    };
+}
+
 // Read Post..
 export function readPost(postId){
     const request = axios.get(`/api/post_read?postId=${postId}`)
