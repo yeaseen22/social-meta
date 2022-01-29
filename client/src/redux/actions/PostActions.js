@@ -1,5 +1,27 @@
 import axios from 'axios';
 
+// Read Post..
+export function readPost(postId){
+    const request = axios.get(`/api/post_read?postId=${postId}`)
+        .then(response => response.data);
+
+    return {
+        type: "POST_READ",
+        payload: request
+    };
+}
+
+// Update Post..
+export function updatePost(data){
+    const request = axios.post('/api/post_update', data)
+        .then(response => response.data);
+
+    return {
+        type: "POST_UPDATE",
+        payload: request
+    };
+}
+
 // Showing All Posts (ReadAllPosts)..
 export function readAllPosts(){
     const request = axios.get('/api/read_all_posts')

@@ -1,5 +1,21 @@
 const Post = require('../models/post');
 
+// Read Post..
+exports.readPost = function(req, res) {
+    const postId = req.query.postId;
+
+    // find Post by PostId..
+    Post.find({_id: postId}, (err, post) => {
+        if (err) return res.json({success: false, err});
+        if (!post) return res.json({success: false, message: 'Post not found!'});
+
+        res.status(200).json({
+            success: true,
+            post
+        });
+    });
+};
+
 // Read all posts..
 exports.readAllPosts = function (req, res) {
     Post.find().sort([['createdAt', -1]]).exec((err, post) => {
@@ -57,7 +73,10 @@ exports.updatePost = function (req, res) {
             docs
         });
     }).catch(err => {
-        res.status(400).send(err);
+        res.status(400).json({
+            success: false,
+            err
+        });
     });
 };
 

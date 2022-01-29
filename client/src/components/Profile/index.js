@@ -47,6 +47,7 @@ class Profile extends React.Component {
             <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
                     postType="PROFILE"
+                    postId={post._id}
                     ownerId={post.ownerId}
                     postBody={post.body}
                     postImage={post.image}

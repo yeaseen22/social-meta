@@ -7,6 +7,7 @@ import Home from '../components/Home';
 import Profile from '../components/Profile';
 import Login from '../components/Auth/login';
 import Register from '../components/Auth/register';
+import PostEdit from '../components/Profile/postEdit';
 
 const Router = () => {
     return (
@@ -34,6 +35,11 @@ const Router = () => {
 
                 {/* Temporary Route here */}
                 {/* <Route path={'/temporary'} exact element={<Temporary />} /> */}
+
+                {/* Edit Post.. */}
+                <Route path={'/profile/editPost/:postId'} exact element={ <PrivateRoute restrictionLoading={true} /> }>
+                    <Route path={'/profile/editPost/:postId'} exact element={ <PostEdit /> } />
+                </Route>
             </Routes>
         </Layout>
     );

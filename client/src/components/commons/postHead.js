@@ -35,15 +35,7 @@ const style = {
 };
 
 // Modal Component..
-const PostModal = ({
-                       postModal,
-                       setPostModal,
-                       clickToSubmit,
-                       userFirstname,
-                       userLastname,
-                       userProfilePhoto,
-                       userTitle
-}) => {
+const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, userLastname, userProfilePhoto, userTitle }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',

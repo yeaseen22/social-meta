@@ -25,6 +25,7 @@ import {
     Report as ReportIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 // path for initialPath for image as post image..
@@ -51,6 +52,9 @@ const PostCard = (props) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
+
+    // React Router navigation..
+    const navigate = useNavigate();
 
     const fetchUserByOwnerId = async(id) => {
             await axios.get(`/api/find_user?ownerId=${id}`)
@@ -83,11 +87,19 @@ const PostCard = (props) => {
     };
 
     // To rendering Post Menu as Profile Or Home View..
-    const showHomeOrProfileMenuOptions = (type) => {
+    const renderMenuBaseOnComponentType = (type) => {
         switch (type){
             case "HOME":
                 return (
-                    <>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={optionOpen}
+                        onClose={handleOptionClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
                         <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
                                 <PersonIcon />
@@ -95,23 +107,31 @@ const PostCard = (props) => {
                             View Profile
                         </MenuItem>
 
-                        <MenuItem>
+                        <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
                                 <ReportIcon />
                             </ListItemIcon>
-                            Make Report
+                            Report this post
                         </MenuItem>
-                    </>
+                    </Menu>
                 );
 
             case "PROFILE":
                 return (
-                    <>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={optionOpen}
+                        onClose={handleOptionClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
                         <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
                                 <EditIcon />
                             </ListItemIcon>
-                            Edit
+                            <Link to={`/profile/editPost/${props.postId}`}>Edit</Link>
                         </MenuItem>
 
                         <MenuItem onClick={handleOptionClose}>
@@ -120,7 +140,7 @@ const PostCard = (props) => {
                             </ListItemIcon>
                             Delete
                         </MenuItem>
-                    </>
+                    </Menu>
                 );
 
             default:
@@ -170,17 +190,7 @@ const PostCard = (props) => {
                             <MoreVertIcon />
                         </IconButton>
 
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={optionOpen}
-                            onClose={handleOptionClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-                            {showHomeOrProfileMenuOptions(props.postType)}
-                        </Menu>
+                        {renderMenuBaseOnComponentType(props.postType)}
                     </>
                 }
                 title={showNameOrProfileOrTitle('NAME')}

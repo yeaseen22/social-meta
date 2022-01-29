@@ -46,6 +46,7 @@ class Home extends React.Component{
             <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
                     postType="HOME"
+                    postId={post._id}
                     ownerId={post.ownerId}
                     postBody={post.body}
                     postImage={post.image}
