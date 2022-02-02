@@ -12,7 +12,8 @@ import {
     Typography,
     Menu,
     MenuItem,
-    ListItemIcon
+    ListItemIcon,
+    Modal, Button
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
@@ -22,12 +23,16 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon,
     Person as PersonIcon,
-    Report as ReportIcon
+    Report as ReportIcon,
+    Send as SendIcon,
+    Cancel as CancelIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { deletePost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
+import {LoadingButton} from "@mui/lab";
+import Uploader from "../widgets/Uploader";
 
 
 // path for initialPath for image as post image..
@@ -46,11 +51,156 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
+// Global style for Modal..
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'auto',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+};
+
+
+// Modal of Edit Post..
+const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo }) => {
+    const [postData, setPostData] = React.useState({
+        postBody: '',
+        imageFile: '',
+        imagePreview: '',
+        loading: false
+    });
+
+    // useEffect Hook..
+    React.useEffect(() => {
+        setPostData({
+            ...postData,
+            postBody: selectedPostInfo.postBody,
+            imageFile: selectedPostInfo.postImage,
+            imagePreview: `${initialPostImgPath}/${selectedPostInfo.postImage}`
+        });
+
+        // clean-up function..
+        return () => {
+            setPostData({
+                postBody: '',
+                imageFile: '',
+                imagePreview: '',
+                loading: false
+            });
+        }
+    }, []);
+
+    // Stylesheet for uploader component..
+    const uploaderStyle = {
+        width: '100%',
+        marginTop: '0.5rem',
+        marginBottom: '0.5rem',
+        border: '1px solid lightgray',
+        borderRadius: '5px',
+        cursor: 'pointer'
+    };
+
+    const postBodyInputStyle = {
+        width: '100%',
+        minHeight: '50px',
+        marginTop: '0.5rem',
+        marginBottom: '0.5rem',
+        border: '1px solid lightgray',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '18px'
+    };
+
+    // Post Submit Button Or Loading after submit..
+    const postSubmitButton = (isLoading) => (
+        !isLoading ?
+            <Button
+                variant="contained"
+                fullWidth={true}
+                color="secondary"
+                endIcon={<SendIcon />}
+            >
+                Update
+            </Button>
+            :
+            <LoadingButton
+                loading
+                loadingPosition="start"
+                variant="contained"
+                fullWidth={true}
+                startIcon={<SendIcon/>}
+            >
+                Update
+            </LoadingButton>
+    )
+
+
+    // Returning statement..
+    return (
+        <Modal
+            open={editModal}
+            onClose={() => setEditModal(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Card sx={style}>
+                <CardHeader
+                    avatar={
+                        <Avatar
+                            alt={'No User'}
+                            src={`${initialProfileImgPath}/${currentUserInfo.userProfilePhoto}`}
+                        />
+                    }
+                    title={`${currentUserInfo.userFirstname} ${currentUserInfo.userLastname}`}
+                    subheader={currentUserInfo.userTitle}
+                />
+                <CardContent>
+                    <textarea
+                        value={postData.postBody}
+                        placeholder="Make Update from previous post.."
+                        style={postBodyInputStyle}
+                        onChange={(e) => {
+                            setPostData({...postData, postBody: e.target.value})
+                        }}
+                    />
+                    <Uploader
+                        customStyle={uploaderStyle}
+                        postData={postData}
+                        setPostData={setPostData}
+                    />
+
+                    {/*---- Post-Submit button or loading ----*/}
+                    <div style={{marginTop: '0.5rem'}}>
+                        {postSubmitButton(postData.loading)}
+                    </div>
+
+                    <div style={{marginTop: '0.5rem'}}>
+                        <Button
+                            variant="contained"
+                            fullWidth={true}
+                            color="error"
+                            endIcon={<CancelIcon/>}
+                            onClick={() => setEditModal(false)}
+                        >
+                            cancel
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+        </Modal>
+    );
+};
+
+
+
 // Main PostCard's Component..
 const PostCard = (props) => {
     const { ownerId, postBody, postImage, createdAt } = props;
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
+    const [editModal, setEditModal] = React.useState(false);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
@@ -76,11 +226,28 @@ const PostCard = (props) => {
         };
     }, [ownerId]);
 
+    // current loggedIn user's information..
+    const currentUserInfo = {
+        userFirstname: props && props.login ? props.login.firstname : "Loading...",
+        userLastname: props && props.login ? props.login.lastname : "Loading..",
+        userTitle: props && props.login ? props.login.title : "Loading..",
+        userProfilePhoto: props && props.login ? props.login.profilePhoto : "Loading.."
+    };
+
+    // current post information..
+    const currentSelectedPostInfo = {
+        ownerId,
+        postBody,
+        postImage,
+        postCreatedAt: createdAt
+    };
+
     // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
+    // Handler functions for main modal open & close
     const handleOptionOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -92,6 +259,7 @@ const PostCard = (props) => {
     const clickToDeletePost = (event, postId) => {
         event.preventDefault();
 
+        // Confirmation to delete or not..
         if (window.confirm("Are you sure want to delete?")){
             // make delete req. to server..
             props.dispatch(deletePost(postId));
@@ -140,12 +308,20 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={handleOptionClose}>
+                        <MenuItem onClick={(e) => setEditModal(true)}>
                             <ListItemIcon>
                                 <EditIcon />
                             </ListItemIcon>
-                            <Link to={`/profile/editPost/${props.postId}`}>Edit</Link>
+                            Edit
                         </MenuItem>
+
+                        {/*---- EditModal here ----*/}
+                        <EditModal
+                            editModal={editModal}
+                            setEditModal={setEditModal}
+                            currentUserInfo={currentUserInfo}
+                            selectedPostInfo={currentSelectedPostInfo}
+                        />
 
                         <MenuItem onClick={(e) => {handleOptionClose(e); clickToDeletePost(e, props.postId)}}>
                             <ListItemIcon>
@@ -285,7 +461,7 @@ const PostCard = (props) => {
 
 // mapStateToProps..
 const mapStateToProps = (state) => {
-    return {...state.Post};
+    return {...state.Post, ...state.User};
 };
 
 export default connect(mapStateToProps)(PostCard);

@@ -9,10 +9,9 @@ import {
     Card,
     Button,
 } from '@mui/material';
-import { Send as SendIcon } from '@mui/icons-material';
+import {Cancel as CancelIcon, Send as SendIcon} from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import StylesModule from '../../css/postHead.module.css';
-import { red } from "@mui/material/colors";
 import TextEditor from '../widgets/TextEditor';
 import Uploader from '../widgets/Uploader';
 import { connect } from 'react-redux';
@@ -112,6 +111,18 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, user
                         {/*---- Post-Submit button or loading ----*/}
                         <div style={{marginTop: '0.5rem'}}>
                             {postSubmitButton(postData.loading)}
+                        </div>
+
+                        <div style={{marginTop: '0.5rem'}}>
+                            <Button
+                                variant="contained"
+                                fullWidth={true}
+                                color="error"
+                                endIcon={<CancelIcon/>}
+                                onClick={() => setPostModal(false)}
+                            >
+                                cancel
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>

@@ -60,7 +60,7 @@ const SuggestedFollows = () => {
                            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
                        </ListItemAvatar>
                        <ListItemText
-                           primary="Alpi Akhi"
+                           primary="Unknown User"
                            secondary={
                                <React.Fragment>
                                    {!followToggle ? "Not followed yet - " : "You are following - "}
