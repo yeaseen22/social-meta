@@ -1,7 +1,19 @@
 import axios from 'axios';
 
-// User By Id..
-export function userById(id) {
+// Own Profile..
+export function ownProfileInfo(){
+    const request = axios.get('/api/profile')
+        .then(response => response.data)
+        .catch(err => console.log('ERR! when try to get own profile info -> ', err.message));
+
+    return {
+        type: "OWN_PROFILE_INFO",
+        payload: request
+    };
+}
+
+// Others Profile User By Id..
+export function userInfoById(id) {
     const request = axios.get(`/api/profile_by_id?userId=${id}`)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to get profileById -> ', err.message));

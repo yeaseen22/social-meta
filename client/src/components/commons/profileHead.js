@@ -3,7 +3,7 @@ import { Grid, Paper } from '@mui/material';
 import StylesModule from '../../css/profileHead.module.css';
 
 // profile head component here..
-const ProfileHead = () => {
+const ProfileHead = (props) => {
     const profilePath = "/profileUpload";
     const coverPath = "/coverUpload";
 
@@ -20,7 +20,7 @@ const ProfileHead = () => {
             </div>
             <div className={StylesModule.profile}>
                 <img
-                    src={`${profilePath}/182301113_1188357921597376_6734590995638215452_n.jpg`}
+                    src={`${profilePath}/${props.profilePhoto}`}
                     alt="profilePhoto"
                     className={StylesModule.profilePic}
                 />
@@ -28,15 +28,15 @@ const ProfileHead = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={8} className={StylesModule.profileInfoText1}>
                         <h1>
-                            <span>Asad Anik</span>
-                            <span>(Software Engineer)</span>
+                            <span>{props.firstname} {props.lastname}</span>
+                            <span>({props.title})</span>
                         </h1>
-                        <p>I am professional boy and i love to coding.</p>
+                        <p>{props.bio}</p>
                     </Grid>
 
                     <Grid item xs={4} className={StylesModule.profileInfoText2}>
                         <p>
-                            <span>s.engineer63@gmail.com</span>
+                            <span>{props.email}</span>
                         </p>
                         <p className={StylesModule.followText}>
                             <span>11,37,899 followers</span>

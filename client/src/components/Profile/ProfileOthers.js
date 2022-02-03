@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container } from '@mui/material';
 import ProfileHead from '../commons/profileHead';
+import { userInfoById } from '../../redux/actions/UserActions';
 import { postsByUserId } from '../../redux/actions/PostActions';
 import { useParams } from 'react-router-dom';
 import NotFound from "../widgets/NotFound";
@@ -13,9 +14,21 @@ const ProfileOthers = (props) => {
     const { userId } = useParams();
 
     useEffect(() => {
-        // dispatch for Posts by UserId..
+        // dispatching for User info by userId and for Posts of userId..
+        props.dispatch(userInfoById(userId));
         props.dispatch(postsByUserId(userId));
     }, []);
+
+    // user info there..
+    const userInfo = {
+        firstname: props.userInfoById ? props.userInfoById.userById.firstname : "Loading...",
+        lastname: props.userInfoById ? props.userInfoById.userById.lastname : "Loading...",
+        title: props.userInfoById ? props.userInfoById.userById.title : "Loading...",
+        bio: props.userInfoById ? props.userInfoById.userById.bio : "Loading...",
+        email: props.userInfoById ? props.userInfoById.userById.email : "Loading...",
+        profilePhoto: props.userInfoById ? props.userInfoById.userById.profilePhoto : "Loading...",
+        coverPhoto: props.userInfoById ? props.userInfoById.userById.coverPhoto : "Loading..."
+    };
 
     // show current User Posts
     const showPostsByUserId = (Posts) => {
@@ -62,7 +75,7 @@ const ProfileOthers = (props) => {
             <Grid container spacing={2}>
                 {/*---- Profile Head showing here ----*/}
                 <Grid item xs={8} md={12}>
-                    <ProfileHead />
+                    <ProfileHead {...userInfo} />
                 </Grid>
 
                 {/*----- Showing current user posts ----*/}
@@ -81,7 +94,7 @@ const ProfileOthers = (props) => {
 
 // mapStateToProps Function..
 const mapStateToProps = (state) => {
-    return {...state.Post};
+    return { ...state.User, ...state.Post };
 };
 
 export default connect(mapStateToProps)(ProfileOthers);

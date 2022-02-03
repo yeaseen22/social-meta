@@ -138,7 +138,7 @@ const Appbar = (props) => {
                     <AccountCircleIcon fontSize="small" />
                 </ListItemIcon>
                 <NavLink
-                    to={`/profile/${props.User.login.id}`}
+                    to={`/profile`}
                     style={isActive => ({
                         color: isActive ? "green" : "blue"
                     })}>
