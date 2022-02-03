@@ -306,12 +306,14 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={handleOptionClose}>
-                            <ListItemIcon>
-                                <PersonIcon />
-                            </ListItemIcon>
-                            View Profile
-                        </MenuItem>
+                        <Link to={`/profile-others/${ownerId}`}>
+                            <MenuItem onClick={handleOptionClose}>
+                                <ListItemIcon>
+                                    <PersonIcon />
+                                </ListItemIcon>
+                                View Profile
+                            </MenuItem>
+                        </Link>
 
                         <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
@@ -354,6 +356,26 @@ const PostCard = (props) => {
                                 <DeleteIcon />
                             </ListItemIcon>
                             Delete
+                        </MenuItem>
+                    </Menu>
+                );
+
+            case "PROFILE_OTHERS":
+                return (
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={optionOpen}
+                        onClose={handleOptionClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={handleOptionClose}>
+                            <ListItemIcon>
+                                <ReportIcon />
+                            </ListItemIcon>
+                            Report this post
                         </MenuItem>
                     </Menu>
                 );

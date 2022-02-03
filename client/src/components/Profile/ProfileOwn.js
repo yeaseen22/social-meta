@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container } from '@mui/material';
-import ProfileHead from './profileHead';
+import ProfileHead from '../commons/profileHead';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';
 import SuggestedFollows from "../commons/SuggestedFollows";

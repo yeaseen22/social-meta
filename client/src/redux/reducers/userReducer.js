@@ -1,6 +1,9 @@
 // Users Reducer..
 export function UserReducer(state = {}, action) {
     switch (action.type) {
+        case "USER_BY_ID":
+            return { ...state, userById: action.payload };
+
         case "USER_AUTH":
             return { ...state, login: action.payload };
 

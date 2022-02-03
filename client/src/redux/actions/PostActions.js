@@ -1,5 +1,17 @@
 import axios from 'axios';
 
+// User Posts for ProfileOthers..
+export function postsByUserId(userId){
+    const request = axios.get(`/api/user_posts?userId=${userId}`)
+        .then(response => response.data)
+        .catch(error => console.log('ERR! when try to make get posts by userId', error.message));
+
+    return {
+        type: "POSTS_BY_USER_ID",
+        payload: request
+    };
+}
+
 // Delete Post..
 export function deletePost(postId){
     const request = axios.delete(`/api/post_delete?id=${postId}`)

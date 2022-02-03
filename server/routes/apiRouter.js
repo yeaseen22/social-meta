@@ -7,6 +7,9 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+// User Profile by id..
+router.get('/profile_by_id', userController.profileById);
+
 // Read Post..
 router.get('/post_read', auth, postController.readPost);
 

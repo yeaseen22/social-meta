@@ -1,6 +1,9 @@
 // Posts Reducer..
 export function PostReducer(state={}, action){
     switch (action.type){
+        case "POSTS_BY_USER_ID":
+            return { ...state, postsByUserId: action.payload };
+
         case "POST_DELETE":
             return { ...state, deletedPost: action.payload };
 
