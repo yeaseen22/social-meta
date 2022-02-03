@@ -49,7 +49,7 @@ router.post('/register', emailChecker, userController.register);
 router.post('/post_create', auth, postUpload.single("file"), postController.createPost);
 
 // Update Post..
-router.post('/post_update', postController.updatePost);
+router.post('/post_update', postUpload.single("file"), postController.updatePost);
 
 // Delete Post..
 router.delete('/post_delete', postController.deletePost);

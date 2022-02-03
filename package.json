@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.3.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "yarn": "^1.22.17"
   }
 }

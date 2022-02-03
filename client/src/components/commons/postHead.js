@@ -113,6 +113,7 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, user
                             {postSubmitButton(postData.loading)}
                         </div>
 
+                        {/*---- Post submit Cancel button ----*/}
                         <div style={{marginTop: '0.5rem'}}>
                             <Button
                                 variant="contained"

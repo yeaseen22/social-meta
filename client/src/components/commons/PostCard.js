@@ -29,7 +29,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { deletePost } from '../../redux/actions/PostActions';
+import { deletePost, updatePost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
 import {LoadingButton} from "@mui/lab";
 import Uploader from "../widgets/Uploader";
@@ -64,7 +64,7 @@ const style = {
 
 
 // Modal of Edit Post..
-const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo }) => {
+const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo, handleUpdate }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',
@@ -76,6 +76,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo 
     React.useEffect(() => {
         setPostData({
             ...postData,
+            postId: selectedPostInfo.postId,
             postBody: selectedPostInfo.postBody,
             imageFile: selectedPostInfo.postImage,
             imagePreview: `${initialPostImgPath}/${selectedPostInfo.postImage}`
@@ -102,6 +103,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo 
         cursor: 'pointer'
     };
 
+    // To PostBody Input..
     const postBodyInputStyle = {
         width: '100%',
         minHeight: '50px',
@@ -121,6 +123,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo 
                 fullWidth={true}
                 color="secondary"
                 endIcon={<SendIcon />}
+                onClick={(e) => handleUpdate(e, postData, setPostData)}
             >
                 Update
             </Button>
@@ -197,7 +200,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo 
 
 // Main PostCard's Component..
 const PostCard = (props) => {
-    const { ownerId, postBody, postImage, createdAt } = props;
+    const { ownerId, postId, postBody, postImage, createdAt } = props;
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
@@ -236,6 +239,7 @@ const PostCard = (props) => {
 
     // current post information..
     const currentSelectedPostInfo = {
+        postId,
         ownerId,
         postBody,
         postImage,
@@ -266,6 +270,27 @@ const PostCard = (props) => {
             window.location.reload();
         }
     };
+
+    // to Update Post..
+    const handleUpdate = (event, postData, setPostData) => {
+        event.preventDefault();
+        setPostData({...postData, loading: true});
+
+        // FormData Class to Object..
+        const formData = new FormData();
+        formData.append('_id', postData.postId);
+        formData.append('body', postData.postBody);
+        formData.append('file', postData.imageFile);
+
+        // make dispatch to update post..
+        props.dispatch(updatePost(formData));
+
+        setTimeout(() => {
+            setPostData({...postData, loading: false});
+            // redirect to home..
+            navigate('/');
+        }, 2000);
+    }
 
     // To rendering Post Menu as Profile Or Home View..
     const renderMenuBaseOnComponentType = (type) => {
@@ -321,6 +346,7 @@ const PostCard = (props) => {
                             setEditModal={setEditModal}
                             currentUserInfo={currentUserInfo}
                             selectedPostInfo={currentSelectedPostInfo}
+                            handleUpdate={handleUpdate}
                         />
 
                         <MenuItem onClick={(e) => {handleOptionClose(e); clickToDeletePost(e, props.postId)}}>

@@ -65,9 +65,15 @@ exports.createPost = function (req, res) {
 // Update Post..
 exports.updatePost = function (req, res) {
     const id = req.body._id;
-    const postBody = req.body;
+    const post = new Post(req.body);
 
-    Post.findByIdAndUpdate({ _id: id }, postBody, { new: true }).then(docs => {
+    // if there is new post image update file to make it up..
+    // and if no new update image file so don't need update extra..
+    if (req.file !== undefined){
+        post.image = req.file.originalname;
+    }
+
+    Post.findByIdAndUpdate({ _id: id }, post, { new: true }).then(docs => {
         res.status(200).json({
             success: true,
             docs
