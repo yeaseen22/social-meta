@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container } from '@mui/material';
-import ProfileHead from './profileHead';
+import ProfileHead from '../commons/profileHead';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';
 import SuggestedFollows from "../commons/SuggestedFollows";
 import { currentUserPosts } from '../../redux/actions/PostActions';
+import NotFound from "../widgets/NotFound";
 
+const notFoundColor = 'gray';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -20,7 +22,11 @@ class Profile extends React.Component {
         if (Posts === null){
             return (
                 <Grid item xs={6} md={8}>
-                    <h1>Posts Not Found!</h1>
+                    <NotFound
+                        msg={"No Post!"}
+                        color={notFoundColor}
+                        size={100}
+                    />
                 </Grid>
             );
         }
@@ -28,7 +34,11 @@ class Profile extends React.Component {
         if (Posts.length < 1){
             return (
                 <Grid item xs={6} md={8}>
-                    <h1>Posts Not Found!</h1>
+                    <NotFound
+                        msg={"No Post!"}
+                        color={notFoundColor}
+                        size={100}
+                    />
                 </Grid>
             );
         }
@@ -36,6 +46,8 @@ class Profile extends React.Component {
         return Posts.length && Posts.map((post) => (
             <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
+                    postType="PROFILE"
+                    postId={post._id}
                     ownerId={post.ownerId}
                     postBody={post.body}
                     postImage={post.image}

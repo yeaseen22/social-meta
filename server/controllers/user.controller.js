@@ -1,5 +1,30 @@
 const User = require('../models/user');
 
+// Profile By Id..
+exports.profileById = function(req, res){
+  const userId = req.query.userId;
+
+  User.findById({_id: userId}, (err, user) => {
+      if (err) return res.json({isUserFound: false, err});
+      if (!user) return res.json({isUserFound: false, message: "User not found!"});
+
+      res.status(200).json({
+          isUserFound: true,
+          userById: {
+              userId: user._id,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              title: user.title,
+              profilePhoto: user.profilePhoto,
+              coverPhoto: user.coverPhoto,
+              email: user.email,
+              bio: user.bio,
+              birthdate: user.birthdate
+          }
+      });
+  });
+};
+
 // post Owner..
 exports.postOwner = function(req, res){
     const ownerId = req.query.ownerId;
@@ -13,7 +38,8 @@ exports.postOwner = function(req, res){
             foundUser: {
                 firstname: user.firstname,
                 lastname: user.lastname,
-                profilePhoto: user.profilePhoto
+                profilePhoto: user.profilePhoto,
+                title: user.title
             }
         });
     });
@@ -54,6 +80,8 @@ exports.profileAuth = function(req, res){
         email: req.user.email,
         firstname: req.user.firstname,
         lastname: req.user.lastname,
+        title: req.user.title,
+        profilePhoto: req.user.profilePhoto
         // token: req.user.token
     });
 };

@@ -47,22 +47,30 @@ const Login = (props) => {
 
     // useEffect React Hook..
     React.useEffect(() => {
-        if (props.User.login) {
-            if (props.User.login.isAuth) {
-                // console.log('Loggedin -->> ', props.User.login);
-                setFormData({ ...formData, backdropLoading: true });
+        if (props.User){
+            if (props.User.login) {
+                if (props.User.login.isAuth) {
+                    // console.log('Loggedin -->> ', props.User.login);
+                    setFormData({ ...formData, backdropLoading: true });
 
-                return setTimeout(() => {
-                    navigate(`/profile/${props.User.login.id}`);
-                    // window.location.reload();
-                }, 3000);
-            }
+                    return setTimeout(() => {
+                        navigate(`/profile/${props.User.login.id}`);
+                        // window.location.reload();
+                    }, 3000);
+                }
 
-            if (!props.User.login.isAuth) {
-                return null;
+                if (!props.User.login.isAuth) {
+                    return null;
+                }
             }
         }
-    }, []);
+
+        // useEffect cleanup function here..
+        return () => {
+            setFormData({ ...formData, backdropLoading: false });
+        };
+
+    }, [setFormData]);
 
     // onChange handler..
     const handleChange = (event) => {
@@ -221,10 +229,10 @@ const Login = (props) => {
                                 {/*--------- Checking Form's Result ----------*/}
                                 <Grid style={{ marginTop: '10px' }}>
                                     {/* { console.log('FormData Error -->> inner from return --', props) } */}
-                                    { 
-                                        login && !login.isAuth && login.message ? 
+                                    {
+                                        login && !login.isAuth && login.message ?
                                             showResultsAlertNofity(false, login.message)
-                                        : 
+                                        :
                                             login ? login.isAuth && showResultsAlertNofity(true, "Successfully Logged-in.")
                                             :
                                             null

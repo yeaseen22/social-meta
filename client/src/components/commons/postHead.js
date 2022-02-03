@@ -9,16 +9,18 @@ import {
     Card,
     Button,
 } from '@mui/material';
-import { Send as SendIcon } from '@mui/icons-material';
+import {Cancel as CancelIcon, Send as SendIcon} from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import StylesModule from '../../css/postHead.module.css';
-import {red} from "@mui/material/colors";
 import TextEditor from '../widgets/TextEditor';
 import Uploader from '../widgets/Uploader';
 import { connect } from 'react-redux';
 import { postCreate } from '../../redux/actions/PostActions';
 import AlertNotify from "../widgets/AlertNotify";
+import { useNavigate } from 'react-router-dom';
 
+// Global initial profilePhoto path for Modal..
+const initialProfileImgPath = "/profileUpload";
 
 // Global style for Modal..
 const style = {
@@ -32,7 +34,7 @@ const style = {
 };
 
 // Modal Component..
-const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
+const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, userLastname, userProfilePhoto, userTitle }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',
@@ -85,12 +87,13 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
                 <Card sx={style}>
                     <CardHeader
                         avatar={
-                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                R
-                            </Avatar>
+                            <Avatar
+                                alt={'No User'}
+                                src={`${initialProfileImgPath}/${userProfilePhoto}`}
+                            />
                         }
-                        title="Asad Anik"
-                        subheader="September 14, 2016"
+                        title={`${userFirstname} ${userLastname}`}
+                        subheader={userTitle}
                     />
                     <CardContent>
                         <TextEditor
@@ -109,16 +112,33 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit }) => {
                         <div style={{marginTop: '0.5rem'}}>
                             {postSubmitButton(postData.loading)}
                         </div>
+
+                        {/*---- Post submit Cancel button ----*/}
+                        <div style={{marginTop: '0.5rem'}}>
+                            <Button
+                                variant="contained"
+                                fullWidth={true}
+                                color="error"
+                                endIcon={<CancelIcon/>}
+                                onClick={() => setPostModal(false)}
+                            >
+                                cancel
+                            </Button>
+                        </div>
                     </CardContent>
                 </Card>
         </Modal>
     );
 };
 
+
 // Post Head Component..
 const PostHead = (props) => {
     const profilePath = "/profileUpload";
     const [postModal, setPostModal] = useState(false);
+
+    // React-Router-Dom Navigate..
+    const navigate = useNavigate();
 
     const paperStyle = {
         padding: '10px',
@@ -145,11 +165,10 @@ const PostHead = (props) => {
         }, 2000);
     };
 
-    // console.log('Connnected with redux store and showing props -->> ', props);
-
     if (props.Post){
         if (props.Post.createdPost){
             const { success } = props.Post.createdPost;
+
             if (!success) {
                 return (
                     <div style={{marginTop: '1rem'}}>
@@ -157,8 +176,24 @@ const PostHead = (props) => {
                     </div>
                 );
             }
+
+            if (success) {
+                // Redirect Home after make Post..
+                setTimeout(() => {
+                    // redirecting for home route..
+                    navigate('/');
+                }, 3000);
+            }
         }
     }
+
+    // current loggedIn user's information..
+    const currentUserInfo = {
+        userFirstname: props.User && props.User.login ? props.User.login.firstname : "Loading...",
+        userLastname: props.User && props.User.login ? props.User.login.lastname : "Loading..",
+        userTitle: props.User && props.User.login ? props.User.login.title : "Loading..",
+        userProfilePhoto: props.User && props.User.login ? props.User.login.profilePhoto : "Loading.."
+    };
 
     // Returning statement..
     return (
@@ -170,7 +205,7 @@ const PostHead = (props) => {
                 <Grid item xs={1}>
                     <img
                         className={StylesModule.postProfilePic}
-                        src={`${profilePath}/182301113_1188357921597376_6734590995638215452_n.jpg`}
+                        src={`${profilePath}/${currentUserInfo.userProfilePhoto}`}
                         alt="profile-pic"
                     />
                 </Grid>
@@ -189,6 +224,10 @@ const PostHead = (props) => {
                         postModal={postModal}
                         setPostModal={setPostModal}
                         clickToSubmit={clickToSubmit}
+                        userFirstname={currentUserInfo.userFirstname}
+                        userLastname={currentUserInfo.userLastname}
+                        userTitle={currentUserInfo.userTitle}
+                        userProfilePhoto={currentUserInfo.userProfilePhoto}
                     />
                 </Grid>
             </Grid>
@@ -199,7 +238,8 @@ const PostHead = (props) => {
 // mapStateToProps function..
 const mapStateToProps = (state) => {
     return {
-        Post: state.Post
+        Post: state.Post,
+        User: state.User
     };
 };
 

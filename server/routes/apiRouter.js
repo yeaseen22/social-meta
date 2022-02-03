@@ -7,6 +7,12 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+// User Profile by id..
+router.get('/profile_by_id', userController.profileById);
+
+// Read Post..
+router.get('/post_read', auth, postController.readPost);
+
 // Get all Posts..
 router.get('/read_all_posts', auth, postController.readAllPosts);
 
@@ -46,7 +52,7 @@ router.post('/register', emailChecker, userController.register);
 router.post('/post_create', auth, postUpload.single("file"), postController.createPost);
 
 // Update Post..
-router.post('/post_update', postController.updatePost);
+router.post('/post_update', postUpload.single("file"), postController.updatePost);
 
 // Delete Post..
 router.delete('/post_delete', postController.deletePost);

@@ -1,5 +1,21 @@
 const Post = require('../models/post');
 
+// Read Post..
+exports.readPost = function(req, res) {
+    const postId = req.query.postId;
+
+    // find Post by PostId..
+    Post.find({_id: postId}, (err, post) => {
+        if (err) return res.json({success: false, err});
+        if (!post) return res.json({success: false, message: 'Post not found!'});
+
+        res.status(200).json({
+            success: true,
+            post
+        });
+    });
+};
+
 // Read all posts..
 exports.readAllPosts = function (req, res) {
     Post.find().sort([['createdAt', -1]]).exec((err, post) => {
@@ -49,15 +65,24 @@ exports.createPost = function (req, res) {
 // Update Post..
 exports.updatePost = function (req, res) {
     const id = req.body._id;
-    const postBody = req.body;
+    const post = new Post(req.body);
 
-    Post.findByIdAndUpdate({ _id: id }, postBody, { new: true }).then(docs => {
+    // if there is new post image update file to make it up..
+    // and if no new update image file so don't need update extra..
+    if (req.file !== undefined){
+        post.image = req.file.originalname;
+    }
+
+    Post.findByIdAndUpdate({ _id: id }, post, { new: true }).then(docs => {
         res.status(200).json({
             success: true,
             docs
         });
     }).catch(err => {
-        res.status(400).send(err);
+        res.status(400).json({
+            success: false,
+            err
+        });
     });
 };
 
@@ -66,7 +91,9 @@ exports.deletePost = function (req, res) {
     const id = req.query.id;
 
     Post.findByIdAndDelete(id, (err) => {
-        if (err) return res.status(400).send(err);
-        res.status(200).json(true);
+        if (err) return res.status(400).json({deleted: false, err});
+        res.status(200).json({
+            deleted: true
+        });
     });
 };

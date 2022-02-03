@@ -10,7 +10,8 @@ import {
     Badge,
     MenuItem,
     Menu,
-    Container
+    Container,
+    ListItemIcon,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -18,7 +19,10 @@ import {
     Mail as MailIcon,
     Notifications as NotificationsIcon,
     MoreVert as MoreIcon,
-    Home as HomeIcon
+    Home as HomeIcon,
+    Logout as LogoutIcon,
+    AccountCircle as AccountCircleIcon,
+    Settings as SettingsIcon
 } from '@mui/icons-material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -78,7 +82,7 @@ const Appbar = (props) => {
                 navigate('/login');
             }
         }
-    }, []);
+    }, [props, navigate]);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -130,6 +134,9 @@ const Appbar = (props) => {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>
+                <ListItemIcon>
+                    <AccountCircleIcon fontSize="small" />
+                </ListItemIcon>
                 <NavLink
                     to={`/profile/${props.User.login.id}`}
                     style={isActive => ({
@@ -138,8 +145,13 @@ const Appbar = (props) => {
                     Profile
                 </NavLink>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-            <MenuItem onClick={(e) => {handleMenuClose(e); logoutFunc()}}>Logout</MenuItem>
+
+            <MenuItem onClick={(e) => {handleMenuClose(e); logoutFunc()}}>
+                <ListItemIcon>
+                    <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                Logout
+            </MenuItem>
         </Menu>
     );
 
@@ -189,6 +201,17 @@ const Appbar = (props) => {
                     </Badge>
                 </IconButton>
                 <p>Notifications</p>
+            </MenuItem>
+
+            {/*---- Settings Icon ----*/}
+            <MenuItem>
+                <IconButton
+                    size="large"
+                    color="inherit"
+                >
+                    <SettingsIcon />
+                </IconButton>
+                <p>Settings</p>
             </MenuItem>
 
             {/*-------- ManuItem Icon -------*/}
@@ -265,6 +288,11 @@ const Appbar = (props) => {
                                 <Badge badgeContent={17} color="error">
                                     <NotificationsIcon />
                                 </Badge>
+                            </IconButton>
+
+                            {/*---- Settings Icon ----*/}
+                            <IconButton size="large" color="inherit">
+                                <SettingsIcon />
                             </IconButton>
 
                             {/*------- Account -------*/}
