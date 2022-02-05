@@ -1,8 +1,11 @@
 // Users Reducer..
 export function UserReducer(state = {}, action) {
     switch (action.type) {
+        case "OWN_PROFILE_INFO":
+            return { ...state, ownProfileInfo: action.payload };
+
         case "USER_BY_ID":
-            return { ...state, userById: action.payload };
+            return { ...state, userInfoById: action.payload };
 
         case "USER_AUTH":
             return { ...state, login: action.payload };

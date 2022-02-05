@@ -1,24 +1,36 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Grid, Container } from '@mui/material';
 import ProfileHead from '../commons/profileHead';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';
 import SuggestedFollows from "../commons/SuggestedFollows";
+import { ownProfileInfo } from '../../redux/actions/UserActions';
 import { currentUserPosts } from '../../redux/actions/PostActions';
 import NotFound from "../widgets/NotFound";
 
 const notFoundColor = 'gray';
 
-class Profile extends React.Component {
-    constructor(props) {
-        super(props);
+const ProfileOwn = (props) => {
+    useEffect(() => {
         // dispatched action here..
-        this.props.dispatch(currentUserPosts());
-    }
+        props.dispatch(ownProfileInfo());
+        props.dispatch(currentUserPosts());
+    }, []);
+
+    // user info there..
+    const userInfo = {
+        firstname: props.ownProfileInfo ? props.ownProfileInfo.firstname : "Loading...",
+        lastname: props.ownProfileInfo ? props.ownProfileInfo.lastname : "Loading...",
+        title: props.ownProfileInfo ? props.ownProfileInfo.title : "Loading...",
+        bio: props.ownProfileInfo ? props.ownProfileInfo.bio : "Loading...",
+        email: props.ownProfileInfo ? props.ownProfileInfo.email : "Loading...",
+        profilePhoto: props.ownProfileInfo ? props.ownProfileInfo.profilePhoto : "Loading...",
+        coverPhoto: props.ownProfileInfo ? props.ownProfileInfo.coverPhoto : "Loading..."
+    };
 
     // show current User Posts
-    showCurrentUserPosts = (Posts) => {
+    const showCurrentUserPosts = (Posts) => {
         if (Posts === null){
             return (
                 <Grid item xs={6} md={8}>
@@ -57,39 +69,35 @@ class Profile extends React.Component {
         ));
     }
 
-    // rendering method..
-    render() {
-        // console.log('profile indexed outputted here -->> ', this.props);
-
-        return (
-            <Container>
-                <Grid container spacing={2}>
-                    {/*---- Profile Head showing here ----*/}
-                    <Grid item xs={8} md={12}>
-                        <ProfileHead />
-                    </Grid>
-
-                    {/*---- Post creating head here ----*/}
-                    <Grid item xs={6} md={8}>
-                        <PostHead />
-                    </Grid>
-
-                    {/*---- Suggested followers showing here ----*/}
-                    <Grid item xs={6} md={4}>
-                       <SuggestedFollows />
-                    </Grid>
-
-                    {/*----- Showing current user posts ----*/}
-                    {this.showCurrentUserPosts(this.props.currentUserPosts ? this.props.currentUserPosts : null)}
+    return (
+        <Container>
+            <Grid container spacing={2}>
+                {/*---- Profile Head showing here ----*/}
+                <Grid item xs={8} md={12}>
+                    <ProfileHead {...userInfo} />
                 </Grid>
-            </Container>
-        );
-    }
-}
+
+                {/*---- Post creating head here ----*/}
+                <Grid item xs={6} md={8}>
+                    <PostHead />
+                </Grid>
+
+                {/*---- Suggested followers showing here ----*/}
+                <Grid item xs={6} md={4}>
+                    <SuggestedFollows />
+                </Grid>
+
+                {/*----- Showing current user posts ----*/}
+                {showCurrentUserPosts(props.currentUserPosts ? props.currentUserPosts : null)}
+            </Grid>
+        </Container>
+    );
+};
+
 
 // mapStateToProps Function..
 const mapStateToProps = (state) => {
-    return {...state.Post};
+    return { ...state.User, ...state.Post };
 };
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps)(ProfileOwn);

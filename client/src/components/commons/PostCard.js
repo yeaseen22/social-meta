@@ -306,21 +306,35 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <Link to={`/profile-others/${ownerId}`}>
+                        {/*---- Show with condition is to Others profile or Own profile ----*/}
+                        {props.login.id !== ownerId ?  (
+                            <Link to={`/profile-others/${ownerId}`}>
+                                <MenuItem onClick={handleOptionClose}>
+                                    <ListItemIcon>
+                                        <PersonIcon />
+                                    </ListItemIcon>
+                                    View Profile
+                                </MenuItem>
+                            </Link>
+                        ) : (
+                            <Link to={`/profile`}>
+                                <MenuItem onClick={handleOptionClose}>
+                                    <ListItemIcon>
+                                        <PersonIcon />
+                                    </ListItemIcon>
+                                    Profile
+                                </MenuItem>
+                            </Link>
+                        )}
+
+                        {props.login.id !== ownerId && (
                             <MenuItem onClick={handleOptionClose}>
                                 <ListItemIcon>
-                                    <PersonIcon />
+                                    <ReportIcon />
                                 </ListItemIcon>
-                                View Profile
+                                Report this post
                             </MenuItem>
-                        </Link>
-
-                        <MenuItem onClick={handleOptionClose}>
-                            <ListItemIcon>
-                                <ReportIcon />
-                            </ListItemIcon>
-                            Report this post
-                        </MenuItem>
+                        )}
                     </Menu>
                 );
 

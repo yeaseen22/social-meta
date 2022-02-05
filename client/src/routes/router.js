@@ -20,8 +20,8 @@ const Router = () => {
                 </Route>
 
                 {/*---- Profile ----*/}
-                <Route path={'/profile/:userId'} exact element={ <PrivateRoute restrictionLoading={true} /> }>
-                    <Route path={'/profile/:userId'} exact element={ <Profile /> } />
+                <Route path={'/profile'} exact element={ <PrivateRoute restrictionLoading={true} /> }>
+                    <Route path={'/profile'} exact element={ <Profile /> } />
                 </Route>
 
                 {/*---- Login.. ----*/}

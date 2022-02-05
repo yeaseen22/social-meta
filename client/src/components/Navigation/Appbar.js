@@ -12,6 +12,10 @@ import {
     Menu,
     Container,
     ListItemIcon,
+    Avatar,
+    Fab,
+    useScrollTrigger,
+    Zoom
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -22,13 +26,20 @@ import {
     Home as HomeIcon,
     Logout as LogoutIcon,
     AccountCircle as AccountCircleIcon,
-    Settings as SettingsIcon
+    Settings as SettingsIcon,
+    KeyboardArrowUp as KeyboardArrowUpIcon
 } from '@mui/icons-material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/UserActions';
+import * as PropTypes from "prop-types";
 
+// color of Back to Top Icon..
+const backToTopIconColor = "primary";
+// ByDefault profile photo path..
+const initialProfileImgPath = "/profileUpload";
 
+// Styling Components..
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -68,6 +79,54 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+
+
+function ScrollTop(props) {
+    const { children, window } = props;
+    // Note that you normally won't need to set the window ref as useScrollTrigger
+    // will default to window.
+    // This is only being set here because the demo is in an iframe.
+    const trigger = useScrollTrigger({
+        target: window ? window() : undefined,
+        disableHysteresis: true,
+        threshold: 100,
+    });
+
+    const handleClick = (event) => {
+        const anchor = (event.target.ownerDocument || document).querySelector(
+            '#back-to-top-anchor',
+        );
+
+        if (anchor) {
+            anchor.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
+    };
+
+    return (
+        <Zoom in={trigger}>
+            <Box
+                onClick={handleClick}
+                role="presentation"
+                sx={{ position: 'fixed', bottom: 16, right: 16 }}
+            >
+                {children}
+            </Box>
+        </Zoom>
+    );
+}
+
+ScrollTop.propTypes = {
+    children: PropTypes.element.isRequired,
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window: PropTypes.func,
+};
+
 
 
 // Appbar component..
@@ -116,6 +175,24 @@ const Appbar = (props) => {
         window.location.reload();
     };
 
+    // show Profile or Avatar..
+    const showProfileOrNot = (User) => {
+        if (User === null){
+            return <AccountCircle />;
+        }
+
+        if (User !== null){
+            if (User.login){
+                return (
+                    <Avatar
+                        src={`${initialProfileImgPath}/${User.login.profilePhoto}`}
+                        style={{width: '28px', height: '28px', border: '1.5px solid white'}}
+                    />
+                );
+            }
+        }
+    };
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -133,18 +210,21 @@ const Appbar = (props) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>
-                <ListItemIcon>
-                    <AccountCircleIcon fontSize="small" />
-                </ListItemIcon>
+                {/*---- Profile navigate from here ----*/}
                 <NavLink
-                    to={`/profile/${props.User.login.id}`}
+                    to={`/profile`}
                     style={isActive => ({
-                        color: isActive ? "green" : "blue"
+                        color: isActive ? "green" : "black"
                     })}>
-                    Profile
+                    <MenuItem onClick={handleMenuClose}>
+                        <ListItemIcon>
+                            <AccountCircleIcon fontSize="small" />
+                        </ListItemIcon>
+
+                        Profile
+                    </MenuItem>
                 </NavLink>
-            </MenuItem>
+
 
             <MenuItem onClick={(e) => {handleMenuClose(e); logoutFunc()}}>
                 <ListItemIcon>
@@ -233,7 +313,7 @@ const Appbar = (props) => {
     //  returning statement..
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar>
                 <Container>
                     <Toolbar>
                         {/*-------- App Name --------*/}
@@ -305,7 +385,7 @@ const Appbar = (props) => {
                                 onClick={handleProfileMenuOpen}
                                 color="inherit"
                             >
-                                <AccountCircle />
+                                {showProfileOrNot(props.User ? props.User : null)}
                             </IconButton>
                         </Box>
 
@@ -326,6 +406,14 @@ const Appbar = (props) => {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+
+            {/*---- Make Scroll Up when page comes down -----*/}
+            <Toolbar id="back-to-top-anchor" />
+            <ScrollTop {...props}>
+                <Fab color={backToTopIconColor} size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUpIcon />
+                </Fab>
+            </ScrollTop>
         </Box>
     );
 }

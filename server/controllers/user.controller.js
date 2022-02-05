@@ -67,9 +67,6 @@ exports.profile = function(req, res){
         createdAt: req.user.createdAt,
         updatedAt: req.user.updatedAt
     });
-
-    console.log(req);
-    res.end();
 };
 
 // Profile (Auth)..

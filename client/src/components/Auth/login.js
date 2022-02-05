@@ -54,7 +54,7 @@ const Login = (props) => {
                     setFormData({ ...formData, backdropLoading: true });
 
                     return setTimeout(() => {
-                        navigate(`/profile/${props.User.login.id}`);
+                        navigate(`/profile`);
                         // window.location.reload();
                     }, 3000);
                 }

@@ -203,7 +203,12 @@ const PostHead = (props) => {
         >
             <Grid container>
                 <Grid item xs={1}>
-                    <img
+                    {/*<img*/}
+                    {/*    className={StylesModule.postProfilePic}*/}
+                    {/*    src={`${profilePath}/${currentUserInfo.userProfilePhoto}`}*/}
+                    {/*    alt="profile-pic"*/}
+                    {/*/>*/}
+                    <Avatar
                         className={StylesModule.postProfilePic}
                         src={`${profilePath}/${currentUserInfo.userProfilePhoto}`}
                         alt="profile-pic"
