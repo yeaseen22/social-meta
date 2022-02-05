@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper } from '@mui/material';
+import { Grid, Paper, Avatar } from '@mui/material';
 import StylesModule from '../../css/profileHead.module.css';
 
 // profile head component here..
@@ -19,10 +19,16 @@ const ProfileHead = (props) => {
 
             </div>
             <div className={StylesModule.profile}>
-                <img
+                {/*<img*/}
+                {/*    src={`${profilePath}/${props.profilePhoto}`}*/}
+                {/*    alt="profilePhoto"*/}
+                {/*    className={StylesModule.profilePic}*/}
+                {/*/>*/}
+                <Avatar
                     src={`${profilePath}/${props.profilePhoto}`}
                     alt="profilePhoto"
                     className={StylesModule.profilePic}
+                    style={{ height: '150px', width: '150px' }}
                 />
 
                 <Grid container spacing={2}>
