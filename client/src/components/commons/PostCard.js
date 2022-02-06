@@ -79,7 +79,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo,
             postId: selectedPostInfo.postId,
             postBody: selectedPostInfo.postBody,
             imageFile: selectedPostInfo.postImage,
-            imagePreview: `${initialPostImgPath}/${selectedPostInfo.postImage}`
+            imagePreview: selectedPostInfo.postImage ? `${initialPostImgPath}/${selectedPostInfo.postImage}` : null
         });
 
         // clean-up function..
@@ -227,7 +227,7 @@ const PostCard = (props) => {
         return () => {
             setUserByOwner(null);
         };
-    }, [ownerId]);
+    }, []);
 
     // current loggedIn user's information..
     const currentUserInfo = {
@@ -291,6 +291,18 @@ const PostCard = (props) => {
             navigate('/');
         }, 2000);
     }
+
+    // rendering Post Image or Not post only text..
+    const renderImageOrNot = (image) => (
+        image !== null ? (
+            <CardMedia
+                component="img"
+                height="500"
+                image={`${initialPostImgPath}/${postImage}`}
+                alt="Paella dish"
+            />
+        ): null
+    );
 
     // To rendering Post Menu as Profile Or Home View..
     const renderMenuBaseOnComponentType = (type) => {
@@ -449,16 +461,11 @@ const PostCard = (props) => {
             />
 
             {/*---- Post Image here -----*/}
-            <CardMedia
-                component="img"
-                height="500"
-                image={`${initialPostImgPath}/${postImage}`}
-                alt="Paella dish"
-            />
+            {renderImageOrNot(postImage !== undefined ? postImage : null)}
 
             {/*---- Post Body here ----*/}
             <CardContent>
-                <Typography variant="body2" color="text.primary"
+                <Typography variant="body1" color="text.primary"
                             dangerouslySetInnerHTML={{
                                 __html: postBody
                             } }

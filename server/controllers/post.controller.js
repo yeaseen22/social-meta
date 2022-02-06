@@ -51,7 +51,12 @@ exports.createPost = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
     // post.set('ownerId', currentLoggedInUserId);
     post.ownerId = currentLoggedInUserId;
-    post.image = req.file.originalname;
+
+    // if there is new post image update file to make it up..
+    // and if no new update image file so don't need update extra..
+    if (req.file !== undefined){
+        post.image = req.file.originalname;
+    }
 
     post.save(function (error, docs) {
         if (error) return res.json({ success: false, error });
