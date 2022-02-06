@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f17d5596-40b3-4769-8d63-2c7602090273" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/src/components/commons/PostCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/commons/PostCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/commons/postHead.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/commons/postHead.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/post.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/models/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/models/post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +95,8 @@
       <workItem from="1644036462123" duration="3764000" />
       <workItem from="1644134773804" duration="2052000" />
       <workItem from="1644149162264" duration="4209000" />
+      <workItem from="1644171366340" duration="223000" />
+      <workItem from="1644172494140" duration="121000" />
     </task>
     <servers />
   </component>
