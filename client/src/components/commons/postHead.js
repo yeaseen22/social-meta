@@ -162,9 +162,13 @@ const PostHead = (props) => {
         setTimeout(() => {
             setPostData({...postData, loading: false});
             setPostModal(false);
+
+            // redirecting to home page..
+            navigate('/');
         }, 2000);
     };
 
+    // if face some error so take this...
     if (props.Post){
         if (props.Post.createdPost){
             const { success } = props.Post.createdPost;
@@ -175,14 +179,6 @@ const PostHead = (props) => {
                         <AlertNotify type="ERROR" message="Server ERROR! reload app & try again." />
                     </div>
                 );
-            }
-
-            if (success) {
-                // Redirect Home after make Post..
-                setTimeout(() => {
-                    // redirecting for home route..
-                    navigate('/');
-                }, 3000);
             }
         }
     }
