@@ -3,6 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="f17d5596-40b3-4769-8d63-2c7602090273" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientMobile/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/clientMobile/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientMobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/clientMobile/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientMobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/clientMobile/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clientMobile/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/clientMobile/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
