@@ -6,6 +6,7 @@ import SuggestedFollows from "../commons/SuggestedFollows";
 import { connect } from 'react-redux';
 import { readAllPosts } from '../../redux/actions/PostActions';
 import NotFound from "../widgets/NotFound";
+import FriendsBar from "../commons/FriendsBar";
 
 const notFoundColor = 'gray';
 
@@ -20,31 +21,27 @@ class Home extends React.Component{
     showAllPosts = (Posts) => {
         if (Posts === null){
             return (
-                <Grid item xs={6} md={8}>
                     <NotFound
                         msg={"Post Not Found!"}
                         color={notFoundColor}
                         size={100}
                     />
-                </Grid>
             );
         }
 
         if (Posts.length < 1){
             return (
-                <Grid item xs={6} md={8}>
                     <NotFound
                         msg={"Post Not Found!"}
                         color={notFoundColor}
                         size={100}
                     />
-                </Grid>
             );
         }
 
         return Posts.length && Posts.map((post) => (
-            <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
+                    key={post._id}
                     postType="HOME"
                     postId={post._id}
                     ownerId={post.ownerId}
@@ -52,7 +49,6 @@ class Home extends React.Component{
                     postImage={post.image}
                     createdAt={post.createdAt}
                 />
-            </Grid>
         ));
     }
 
@@ -69,12 +65,18 @@ class Home extends React.Component{
                             </Paper>
                         </Grid>
 
-                        <Grid item xs={6} md={4}>
-                            <SuggestedFollows />
+                        <Grid item xs={4} md={4} style={{ marginTop: '2rem' }}>
+                            <FriendsBar />
                         </Grid>
 
                         {/*----- Showing all posts ----*/}
-                        {this.showAllPosts(this.props.allPosts ? this.props.allPosts : null)}
+                        <Grid item xs={8} md={8}>
+                            {this.showAllPosts(this.props.allPosts ? this.props.allPosts : null)}
+                        </Grid>
+
+                        <Grid item xs={6} md={4}>
+                            <SuggestedFollows />
+                        </Grid>
                     </Grid>
                 </Container>
             </>
