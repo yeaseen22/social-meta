@@ -38,7 +38,7 @@ const Router = () => {
                 {/* <Route path={'/temporary'} exact element={<Temporary />} /> */}
 
                 {/*---- ProfileOthers means userById ----*/}
-                <Route path={'/profile-others/:userId'} exact element={ <PrivateRoute restrictionLoading={false} /> }>
+                <Route path={'/profile-others/:userId'} exact element={ <PrivateRoute restrictionLoading={true} /> }>
                     <Route path={'/profile-others/:userId'} exact element={ <ProfileOthers /> } />
                 </Route>
             </Routes>

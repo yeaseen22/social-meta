@@ -8,6 +8,7 @@ import SuggestedFollows from "../commons/SuggestedFollows";
 import { ownProfileInfo } from '../../redux/actions/UserActions';
 import { currentUserPosts } from '../../redux/actions/PostActions';
 import NotFound from "../widgets/NotFound";
+import FriendsBar from "../commons/FriendsBar";
 
 const notFoundColor = 'gray';
 
@@ -33,31 +34,27 @@ const ProfileOwn = (props) => {
     const showCurrentUserPosts = (Posts) => {
         if (Posts === null){
             return (
-                <Grid item xs={6} md={8}>
-                    <NotFound
-                        msg={"No Post!"}
-                        color={notFoundColor}
-                        size={100}
-                    />
-                </Grid>
+                <NotFound
+                    msg={"No Post!"}
+                    color={notFoundColor}
+                    size={100}
+                />
             );
         }
 
         if (Posts.length < 1){
             return (
-                <Grid item xs={6} md={8}>
-                    <NotFound
-                        msg={"No Post!"}
-                        color={notFoundColor}
-                        size={100}
-                    />
-                </Grid>
+                <NotFound
+                    msg={"No Post!"}
+                    color={notFoundColor}
+                    size={100}
+                />
             );
         }
 
         return Posts.length && Posts.map((post) => (
-            <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
+                    key={post._id}
                     postType="PROFILE"
                     postId={post._id}
                     ownerId={post.ownerId}
@@ -65,7 +62,6 @@ const ProfileOwn = (props) => {
                     postImage={post.image}
                     createdAt={post.createdAt}
                 />
-            </Grid>
         ));
     }
 
@@ -84,11 +80,14 @@ const ProfileOwn = (props) => {
 
                 {/*---- Suggested followers showing here ----*/}
                 <Grid item xs={6} md={4}>
+                    <FriendsBar/>
                     <SuggestedFollows />
                 </Grid>
 
                 {/*----- Showing current user posts ----*/}
-                {showCurrentUserPosts(props.currentUserPosts ? props.currentUserPosts : null)}
+                <Grid item xs={8} md={8}>
+                    {showCurrentUserPosts(props.currentUserPosts ? props.currentUserPosts : null)}
+                </Grid>
             </Grid>
         </Container>
     );

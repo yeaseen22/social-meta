@@ -7,6 +7,8 @@ import { postsByUserId } from '../../redux/actions/PostActions';
 import { useParams } from 'react-router-dom';
 import NotFound from "../widgets/NotFound";
 import PostCard from "../commons/PostCard";
+import Birthdate from "../commons/Birthdate";
+import FriendsBar from "../commons/FriendsBar";
 
 const notFoundColor = 'gray';
 
@@ -57,8 +59,8 @@ const ProfileOthers = (props) => {
         }
 
         return Posts.length && Posts.map((post) => (
-            <Grid key={post._id} item xs={6} md={8}>
                 <PostCard
+                    key={post._id}
                     postType="PROFILE_OTHERS"
                     postId={post._id}
                     ownerId={post.ownerId}
@@ -66,7 +68,6 @@ const ProfileOthers = (props) => {
                     postImage={post.image}
                     createdAt={post.createdAt}
                 />
-            </Grid>
         ));
     }
 
@@ -79,13 +80,17 @@ const ProfileOthers = (props) => {
                 </Grid>
 
                 {/*----- Showing current user posts ----*/}
-                {showPostsByUserId(props.postsByUserId ? props.postsByUserId : null)}
+                <Grid item xs={8} md={8}>
+                    {showPostsByUserId(props.postsByUserId ? props.postsByUserId : null)}
+                </Grid>
 
                 {/*---- BirthDate Section ----*/}
-                <Grid item xs={2} md={4}>
-                    <div>
-                        <h3>Birthdate here.</h3>
-                    </div>
+                <Grid item xs={6} md={4}>
+                    {/*---- Show ----*/}
+                    <FriendsBar/>
+                    <Birthdate  />
+                    <Birthdate  />
+                    <Birthdate  />
                 </Grid>
             </Grid>
         </Container>
