@@ -9,6 +9,8 @@ import { ownProfileInfo } from '../../redux/actions/UserActions';
 import { currentUserPosts } from '../../redux/actions/PostActions';
 import NotFound from "../widgets/NotFound";
 import FriendsBar from "../commons/FriendsBar";
+import Birthdate from "../commons/Birthdate";
+import Footer from "../commons/Footer";
 
 const notFoundColor = 'gray';
 
@@ -81,12 +83,18 @@ const ProfileOwn = (props) => {
                 {/*---- Suggested followers showing here ----*/}
                 <Grid item xs={6} md={4}>
                     <FriendsBar/>
-                    <SuggestedFollows />
                 </Grid>
 
                 {/*----- Showing current user posts ----*/}
                 <Grid item xs={8} md={8}>
                     {showCurrentUserPosts(props.currentUserPosts ? props.currentUserPosts : null)}
+                </Grid>
+
+                {/*---- BirthDate Section ----*/}
+                <Grid item xs={6} md={4}>
+                    <SuggestedFollows />
+                    <Birthdate  />
+                    <Footer />
                 </Grid>
             </Grid>
         </Container>
