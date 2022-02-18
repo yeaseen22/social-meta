@@ -25,7 +25,7 @@ const SuggestedFollows = () => {
 
 
     return (
-        <Paper style={{ marginTop: '1rem', position: 'absolute', width: 358 }}>
+        <Paper style={{ marginTop: '1rem', marginBottom: '1rem', width: 358 }}>
                <List>
                    {/*---- 1st ----*/}
                    <ListItem alignItems="flex-start">

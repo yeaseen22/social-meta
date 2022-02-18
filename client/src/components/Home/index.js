@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { readAllPosts } from '../../redux/actions/PostActions';
 import NotFound from "../widgets/NotFound";
 import FriendsBar from "../commons/FriendsBar";
+import Footer from "../commons/Footer";
 
 const notFoundColor = 'gray';
 
@@ -76,6 +77,7 @@ class Home extends React.Component{
 
                         <Grid item xs={6} md={4}>
                             <SuggestedFollows />
+                            <Footer />
                         </Grid>
                     </Grid>
                 </Container>

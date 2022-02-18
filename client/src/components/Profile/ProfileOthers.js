@@ -9,6 +9,8 @@ import NotFound from "../widgets/NotFound";
 import PostCard from "../commons/PostCard";
 import Birthdate from "../commons/Birthdate";
 import FriendsBar from "../commons/FriendsBar";
+import SuggestedFollows from "../commons/SuggestedFollows";
+import Footer from "../commons/Footer";
 
 const notFoundColor = 'gray';
 
@@ -88,9 +90,9 @@ const ProfileOthers = (props) => {
                 <Grid item xs={6} md={4}>
                     {/*---- Show ----*/}
                     <FriendsBar/>
+                    <SuggestedFollows />
                     <Birthdate  />
-                    <Birthdate  />
-                    <Birthdate  />
+                    <Footer />
                 </Grid>
             </Grid>
         </Container>
