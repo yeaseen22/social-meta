@@ -1489,7 +1489,12 @@
   dependencies:
     "semver" "^6.3.0"
 
-"semver@^5.6.0", "semver@^5.7.1":
+"semver@^5.6.0":
+  "integrity" "sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-5.7.1.tgz"
+  "version" "5.7.1"
+
+"semver@^5.7.1":
   "integrity" "sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-5.7.1.tgz"
   "version" "5.7.1"
@@ -1509,14 +1514,7 @@
   "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
   "version" "6.3.0"
 
-"semver@^7.3.4":
-  "integrity" "sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ=="
-  "resolved" "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz"
-  "version" "7.3.5"
-  dependencies:
-    "lru-cache" "^6.0.0"
-
-"semver@^7.3.5":
+"semver@^7.3.4", "semver@^7.3.5":
   "integrity" "sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz"
   "version" "7.3.5"
@@ -1599,7 +1597,7 @@
   "resolved" "https://registry.npmjs.org/streamsearch/-/streamsearch-0.1.2.tgz"
   "version" "0.1.2"
 
-"string_decoder@^1.1.1", "string_decoder@~1.1.1":
+"string_decoder@^1.1.1":
   "integrity" "sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg=="
   "resolved" "https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz"
   "version" "1.1.1"
@@ -1610,6 +1608,13 @@
   "integrity" "sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ="
   "resolved" "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz"
   "version" "0.10.31"
+
+"string_decoder@~1.1.1":
+  "integrity" "sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg=="
+  "resolved" "https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz"
+  "version" "1.1.1"
+  dependencies:
+    "safe-buffer" "~5.1.0"
 
 "string-width@^1.0.2 || 2 || 3 || 4", "string-width@^4.0.0", "string-width@^4.1.0", "string-width@^4.2.0", "string-width@^4.2.2", "string-width@^4.2.3":
   "integrity" "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="
