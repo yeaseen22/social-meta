@@ -9,7 +9,11 @@ import {
     Avatar,
     Button
 } from "@mui/material";
-import { AddCircle as AddCircleIcon, RemoveCircle as RemoveCircleIcon } from '@mui/icons-material';
+import {
+    AddCircle as AddCircleIcon,
+    RemoveCircle as RemoveCircleIcon,
+    FollowTheSigns as FollowTheSignIcon
+} from '@mui/icons-material';
 
 // Suggested Connection component..
 const SuggestedFollows = () => {
