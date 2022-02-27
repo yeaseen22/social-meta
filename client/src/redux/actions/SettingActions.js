@@ -7,7 +7,7 @@ export function themeModeLight(){
     };
 
     return {
-        type: "THEME_MOOD_LIGHT",
+        type: "THEME_MODE_LIGHT",
         payload: themeMode
     };
 }
@@ -21,7 +21,7 @@ export function themeModeDark(){
     };
 
     return {
-        type: "THEME_MOOD_DARK",
+        type: "THEME_MODE_DARK",
         payload: themeMode
     };
 }

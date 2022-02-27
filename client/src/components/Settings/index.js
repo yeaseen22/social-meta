@@ -19,6 +19,7 @@ import {
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { themeModeLight, themeModeDark } from '../../redux/actions/SettingActions';
+import StylesModule from '../../css/settings.module.css';
 
 // Main Settings Component..
 const Settings = (props) => {
@@ -36,6 +37,7 @@ const Settings = (props) => {
     // console.log(props);
 
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
 
     // toggle drawer is there..
     const toggleDrawer = (open) => (event) => {
@@ -45,14 +47,20 @@ const Settings = (props) => {
         setDrawerOpen(open);
     };
 
+    // make light mode..
+    const makeLightMode = () => {
+        setDarkMode(false);
+        props.dispatch(themeModeLight());
+    };
+
     // make dark mode..
     const makeDarkMode = () => {
+        setDarkMode(true);
         props.dispatch(themeModeDark());
-        console.log(props);
     };
 
     // list component..
-    const list = (anchor, dispatch) => (
+    const list = (anchor) => (
            <Box
                sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 450 }}
                role="presentation"
@@ -70,17 +78,18 @@ const Settings = (props) => {
                </List>
                <Divider style={{ background: iconColor }} />
 
+               {/*----- Application's Theme Mode Here -----*/}
                <List>
                    <ListItem>
                        <ListItemText primary={'Theme Mode'} />
                    </ListItem>
                    <ListItem>
-                       <ListItemIcon>
-                           <LightModeIcon />
+                       <ListItemIcon onClick={makeLightMode} style={{ color: iconColor }}>
+                           <LightModeIcon className={StylesModule.modeIcon} style={{ background: `${!darkMode && 'lightgrey'}` }} />
                        </ListItemIcon>
 
-                       <ListItemIcon onClick={makeDarkMode}>
-                           <DarkModeIcon />
+                       <ListItemIcon onClick={makeDarkMode} style={{ color: iconColor }}>
+                           <DarkModeIcon className={StylesModule.modeIcon} style={{ background: `${darkMode && 'lightgrey'}` }} />
                        </ListItemIcon>
                    </ListItem>
                </List>

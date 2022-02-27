@@ -4,10 +4,10 @@ export function SettingsReducer(state = {
 }, action){
     switch (action.type){
         case "THEME_MODE_LIGHT":
-            return { ...state, themeMood: action.payload };
+            return { ...state, themeMode: action.payload };
 
         case "THEME_MODE_DARK":
-            return { ...state, themeMood: action.payload };
+            return { ...state, themeMode: action.payload };
 
         default:
             return state;
