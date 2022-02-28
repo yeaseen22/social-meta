@@ -1,9 +1,13 @@
-// Theme Mood Light..
+// Theme Mode Light..
 export function themeModeLight(){
     const themeMode = {
         backgroundColor: 'white',
         textColor: 'black',
-        iconColor: 'gray'
+        iconColor: 'gray',
+        cardBackgroundColor: '',
+        cardFontColor: '',
+        cardSubFontColor: '',
+        cardBorder: ''
     };
 
     return {
@@ -12,12 +16,16 @@ export function themeModeLight(){
     };
 }
 
-// Theme Mood Dark..
+// Theme Mode Dark..
 export function themeModeDark(){
     const themeMode = {
         backgroundColor: 'black',
         textColor: 'lightgray',
-        iconColor: 'gray'
+        iconColor: 'gray',
+        cardBackgroundColor: 'black',
+        cardFontColor: 'lightgray',
+        cardSubFontColor: 'gray',
+        cardBorder: '1px solid gray'
     };
 
     return {

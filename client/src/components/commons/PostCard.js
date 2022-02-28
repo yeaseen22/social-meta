@@ -205,6 +205,9 @@ const PostCard = (props) => {
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
 
+    // ThemeMode..
+    const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder } = props.themeMode;
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
 
@@ -439,7 +442,7 @@ const PostCard = (props) => {
 
     // Returning statement..
     return (
-        <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+        <Card style={{ marginTop: '1rem', marginBottom: '1rem', color: cardFontColor, background: cardBackgroundColor, border: cardBorder }}>
             <CardHeader
                 avatar={
                     <Avatar
@@ -450,7 +453,7 @@ const PostCard = (props) => {
                 action={
                     <>
                         <IconButton aria-label="settings" onClick={handleOptionOpen}>
-                            <MoreVertIcon />
+                            <MoreVertIcon style={{ color: cardFontColor }} />
                         </IconButton>
 
                         {renderMenuBaseOnComponentType(props.postType)}
@@ -458,6 +461,7 @@ const PostCard = (props) => {
                 }
                 title={showNameOrProfileOrTitle('NAME')}
                 subheader={showNameOrProfileOrTitle('TITLE')}
+                subheaderTypographyProps={{ color: cardSubFontColor }}
             />
 
             {/*---- Post Image here -----*/}
@@ -465,12 +469,12 @@ const PostCard = (props) => {
 
             {/*---- Post Body here ----*/}
             <CardContent>
-                <Typography variant="body1" color="text.primary"
+                <Typography variant="body1"
                             dangerouslySetInnerHTML={{
                                 __html: postBody
                             } }
                 />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color={cardSubFontColor}>
                     Created at: {createdAt}
                 </Typography>
             </CardContent>
@@ -478,10 +482,10 @@ const PostCard = (props) => {
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                    <FavoriteIcon style={{ color: cardFontColor }} />
                 </IconButton>
                 <IconButton aria-label="share">
-                    <ShareIcon />
+                    <ShareIcon style={{ color: cardFontColor }} />
                 </IconButton>
                 <ExpandMore
                     expand={expanded}
@@ -489,7 +493,7 @@ const PostCard = (props) => {
                     aria-expanded={expanded}
                     aria-label="show more"
                 >
-                    <ExpandMoreIcon />
+                    <ExpandMoreIcon style={{ color: cardFontColor }} />
                 </ExpandMore>
             </CardActions>
 
@@ -526,11 +530,11 @@ const PostCard = (props) => {
             </Collapse>
         </Card>
     );
-};
+}
 
 // mapStateToProps..
 const mapStateToProps = (state) => {
-    return {...state.Post, ...state.User};
+    return {...state.Post, ...state.User, ...state.Settings};
 };
 
 export default connect(mapStateToProps)(PostCard);

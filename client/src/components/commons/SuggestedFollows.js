@@ -14,10 +14,14 @@ import {
     RemoveCircle as RemoveCircleIcon,
     FollowTheSigns as FollowTheSignIcon
 } from '@mui/icons-material';
+import { connect } from "react-redux";
 
 // Suggested Connection component..
-const SuggestedFollows = () => {
+const SuggestedFollows = (props) => {
     const [followToggle, setFollowToggle] = React.useState(false);
+
+    // ThemeMode..
+    const { backgroundColor, textColor, cardSubFontColor } = props.Settings.themeMode;
 
     const connectToggleClicked = () => {
         setFollowToggle(!followToggle ? true : false);
@@ -27,9 +31,9 @@ const SuggestedFollows = () => {
         left: '10px',
     };
 
-
+    // returning statement..
     return (
-        <Paper style={{ marginTop: '1rem', marginBottom: '1rem', width: 358 }}>
+        <Paper style={{ marginTop: '1rem', marginBottom: '1rem', width: 358, background: backgroundColor, color: textColor }}>
                <List>
                    {/*---- 1st ----*/}
                    <ListItem alignItems="flex-start">
@@ -40,7 +44,9 @@ const SuggestedFollows = () => {
                            primary="Asad Anik"
                            secondary={
                                <React.Fragment>
-                                   {!followToggle ? "Not followed yet - " : "You are following - "}
+                                   <span style={{ color: cardSubFontColor }}>
+                                       {!followToggle ? "Not followed yet - " : "You are following - "}
+                                   </span>
 
                                    <Button
                                        variant="outlined"
@@ -56,7 +62,7 @@ const SuggestedFollows = () => {
                        />
                    </ListItem>
 
-                   <Divider variant="inset" component="li" />
+                   <Divider variant="inset" component="li" style={{ background: cardSubFontColor }} />
 
                    {/*---- 2nd ----*/}
                    <ListItem alignItems="flex-start">
@@ -67,7 +73,9 @@ const SuggestedFollows = () => {
                            primary="Unknown User"
                            secondary={
                                <React.Fragment>
-                                   {!followToggle ? "Not followed yet - " : "You are following - "}
+                                    <span style={{ color: cardSubFontColor }}>
+                                       {!followToggle ? "Not followed yet - " : "You are following - "}
+                                   </span>
 
                                    <Button
                                        variant="outlined"
@@ -83,7 +91,7 @@ const SuggestedFollows = () => {
                        />
                    </ListItem>
 
-                   <Divider variant="inset" component="li" />
+                   <Divider variant="inset" component="li" style={{ background: cardSubFontColor }} />
 
                    {/*---- 3rd ----*/}
                    <ListItem alignItems="flex-start">
@@ -94,7 +102,9 @@ const SuggestedFollows = () => {
                            primary="Jenny Lara"
                            secondary={
                                <React.Fragment>
-                                   {!followToggle ? "Not followed yet - " : "You are following - "}
+                                    <span style={{ color: cardSubFontColor }}>
+                                       {!followToggle ? "Not followed yet - " : "You are following - "}
+                                   </span>
 
                                    <Button
                                        variant="outlined"
@@ -114,4 +124,11 @@ const SuggestedFollows = () => {
     );
 };
 
-export default SuggestedFollows;
+// mapStateToProps..
+const mapStateToProps = (state) => {
+    return {
+        Settings: state.Settings
+    };
+};
+
+export default connect(mapStateToProps)(SuggestedFollows);
