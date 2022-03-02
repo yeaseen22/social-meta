@@ -51,20 +51,8 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-// Global style for Modal..
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 'auto',
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-};
-
-
 // Modal of Edit Post..
-const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo, handleUpdate }) => {
+const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, selectedPostInfo, handleUpdate }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',
@@ -92,6 +80,24 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo,
             });
         }
     }, []);
+
+    // themeMode..
+    const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
+
+
+    // Global style for Modal..
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 'auto',
+        bgcolor: backgroundColor,
+        color: textColor,
+        border: cardBorder,
+        boxShadow: 24,
+    };
+
 
     // Stylesheet for uploader component..
     const uploaderStyle = {
@@ -158,6 +164,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo,
                     }
                     title={`${currentUserInfo.userFirstname} ${currentUserInfo.userLastname}`}
                     subheader={currentUserInfo.userTitle}
+                    subheaderTypographyProps={{ color: cardSubFontColor }}
                 />
                 <CardContent>
                     <textarea
@@ -204,6 +211,9 @@ const PostCard = (props) => {
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
+
+    // ThemeMode..
+    const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder } = props.themeMode;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
@@ -305,7 +315,11 @@ const PostCard = (props) => {
     );
 
     // To rendering Post Menu as Profile Or Home View..
-    const renderMenuBaseOnComponentType = (type) => {
+    const renderMenuBaseOnComponentType = (type, themeMode) => {
+
+        // themeMode..
+        const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
+
         switch (type){
             case "HOME":
                 return (
@@ -315,7 +329,7 @@ const PostCard = (props) => {
                         open={optionOpen}
                         onClose={handleOptionClose}
                         MenuListProps={{
-                            'aria-labelledby': 'basic-button',
+                            'aria-labelledby': 'basic-button'
                         }}
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
@@ -370,6 +384,7 @@ const PostCard = (props) => {
 
                         {/*---- EditModal here ----*/}
                         <EditModal
+                            themeMode={themeMode}
                             editModal={editModal}
                             setEditModal={setEditModal}
                             currentUserInfo={currentUserInfo}
@@ -439,7 +454,7 @@ const PostCard = (props) => {
 
     // Returning statement..
     return (
-        <Card style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+        <Card style={{ marginTop: '1rem', marginBottom: '1rem', color: cardFontColor, background: cardBackgroundColor, border: cardBorder }}>
             <CardHeader
                 avatar={
                     <Avatar
@@ -450,14 +465,15 @@ const PostCard = (props) => {
                 action={
                     <>
                         <IconButton aria-label="settings" onClick={handleOptionOpen}>
-                            <MoreVertIcon />
+                            <MoreVertIcon style={{ color: cardFontColor }} />
                         </IconButton>
 
-                        {renderMenuBaseOnComponentType(props.postType)}
+                        {renderMenuBaseOnComponentType(props.postType, props.themeMode)}
                     </>
                 }
                 title={showNameOrProfileOrTitle('NAME')}
                 subheader={showNameOrProfileOrTitle('TITLE')}
+                subheaderTypographyProps={{ color: cardSubFontColor }}
             />
 
             {/*---- Post Image here -----*/}
@@ -465,12 +481,12 @@ const PostCard = (props) => {
 
             {/*---- Post Body here ----*/}
             <CardContent>
-                <Typography variant="body1" color="text.primary"
+                <Typography variant="body1"
                             dangerouslySetInnerHTML={{
                                 __html: postBody
                             } }
                 />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color={cardSubFontColor}>
                     Created at: {createdAt}
                 </Typography>
             </CardContent>
@@ -478,10 +494,10 @@ const PostCard = (props) => {
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                    <FavoriteIcon style={{ color: cardFontColor }} />
                 </IconButton>
                 <IconButton aria-label="share">
-                    <ShareIcon />
+                    <ShareIcon style={{ color: cardFontColor }} />
                 </IconButton>
                 <ExpandMore
                     expand={expanded}
@@ -489,7 +505,7 @@ const PostCard = (props) => {
                     aria-expanded={expanded}
                     aria-label="show more"
                 >
-                    <ExpandMoreIcon />
+                    <ExpandMoreIcon style={{ color: cardFontColor }} />
                 </ExpandMore>
             </CardActions>
 
@@ -526,11 +542,11 @@ const PostCard = (props) => {
             </Collapse>
         </Card>
     );
-};
+}
 
 // mapStateToProps..
 const mapStateToProps = (state) => {
-    return {...state.Post, ...state.User};
+    return {...state.Post, ...state.User, ...state.Settings};
 };
 
 export default connect(mapStateToProps)(PostCard);

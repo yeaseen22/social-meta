@@ -33,6 +33,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/UserActions';
 import * as PropTypes from "prop-types";
+import Settings from '../Settings';
 
 // color of Back to Top Icon..
 const backToTopIconColor = "primary";
@@ -372,7 +373,7 @@ const Appbar = (props) => {
 
                             {/*---- Settings Icon ----*/}
                             <IconButton size="large" color="inherit">
-                                <SettingsIcon />
+                                <Settings />
                             </IconButton>
 
                             {/*------- Account -------*/}

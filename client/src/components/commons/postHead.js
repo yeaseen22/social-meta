@@ -22,25 +22,30 @@ import { useNavigate } from 'react-router-dom';
 // Global initial profilePhoto path for Modal..
 const initialProfileImgPath = "/profileUpload";
 
-// Global style for Modal..
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 'auto',
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-};
-
 // Modal Component..
-const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, userLastname, userProfilePhoto, userTitle }) => {
+const PostModal = ({ themeMode, postModal, setPostModal, clickToSubmit, userFirstname, userLastname, userProfilePhoto, userTitle }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',
         imagePreview: '',
         loading: false
     });
+
+    // themeMode..
+    const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
+
+    // Global style for Modal..
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 'auto',
+        bgcolor: backgroundColor,
+        color: textColor,
+        boxShadow: 24,
+        border: cardBorder
+    };
 
     const uploaderStyle = {
         width: '100%',
@@ -94,6 +99,7 @@ const PostModal = ({ postModal, setPostModal, clickToSubmit, userFirstname, user
                         }
                         title={`${userFirstname} ${userLastname}`}
                         subheader={userTitle}
+                        subheaderTypographyProps={{ color: cardSubFontColor }}
                     />
                     <CardContent>
                         <TextEditor
@@ -145,6 +151,9 @@ const PostHead = (props) => {
         backgroundColor: 'rgb(25 118 209)',
         marginTop: '1rem'
     };
+
+    // themeMode..
+    const { backgroundColor } = props.Settings.themeMode;
 
     // Submit Post..
     const clickToSubmit = (event, postData, setPostData) => {
@@ -218,10 +227,12 @@ const PostHead = (props) => {
                             type="text"
                             placeholder="Create your post now.."
                             disabled={true}
+                            style={{ background: backgroundColor }}
                         />
                     </div>
 
                     <PostModal
+                        themeMode={props.Settings.themeMode}
                         postModal={postModal}
                         setPostModal={setPostModal}
                         clickToSubmit={clickToSubmit}
@@ -240,7 +251,8 @@ const PostHead = (props) => {
 const mapStateToProps = (state) => {
     return {
         Post: state.Post,
-        User: state.User
+        User: state.User,
+        Settings: state.Settings
     };
 };
 

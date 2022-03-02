@@ -13,12 +13,12 @@ const Layout = (props) => {
 
         if (props.User.login.isAuth) {
             return (
-                <>
+                <div style={props.Settings.themeMode}>
                     <Appbar />
                     <Container>
                         {props.children}
                     </Container>
-                </>
+                </div>
             );
         }
     }
@@ -32,7 +32,8 @@ const Layout = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        User: state.User
+        User: state.User,
+        Settings: state.Settings
     };
 };
 

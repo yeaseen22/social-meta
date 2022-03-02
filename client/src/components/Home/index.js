@@ -57,7 +57,7 @@ class Home extends React.Component{
         // console.log(this.props.Posts);
 
         return (
-            <>
+            <div>
                 <Container>
                     <Grid container spacing={2}>
                         <Grid item xs={6} md={8}>
@@ -81,7 +81,7 @@ class Home extends React.Component{
                         </Grid>
                     </Grid>
                 </Container>
-            </>
+            </div>
         );
     }
 }

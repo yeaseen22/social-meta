@@ -1,0 +1,9 @@
+/* Styling the CSS Modules */
+.modeIcon{
+    padding: 10px;
+    border-radius: 100%;
+}
+
+.modeIcon:hover{
+    background: lightgrey;
+}

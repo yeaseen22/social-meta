@@ -12,7 +12,7 @@ const styles = makeStyles(() => ({
         padding: '10px',
         border: '1px solid lightgray',
         height: 'auto',
-        borderRadius: '5px'
+        borderRadius: '5px',
     }
 }));
 
