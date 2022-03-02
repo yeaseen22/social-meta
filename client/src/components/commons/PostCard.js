@@ -51,20 +51,8 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-// Global style for Modal..
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 'auto',
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-};
-
-
 // Modal of Edit Post..
-const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo, handleUpdate }) => {
+const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, selectedPostInfo, handleUpdate }) => {
     const [postData, setPostData] = React.useState({
         postBody: '',
         imageFile: '',
@@ -92,6 +80,24 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo,
             });
         }
     }, []);
+
+    // themeMode..
+    const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
+
+
+    // Global style for Modal..
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 'auto',
+        bgcolor: backgroundColor,
+        color: textColor,
+        border: cardBorder,
+        boxShadow: 24,
+    };
+
 
     // Stylesheet for uploader component..
     const uploaderStyle = {
@@ -158,6 +164,7 @@ const EditModal = ({ editModal, setEditModal, currentUserInfo, selectedPostInfo,
                     }
                     title={`${currentUserInfo.userFirstname} ${currentUserInfo.userLastname}`}
                     subheader={currentUserInfo.userTitle}
+                    subheaderTypographyProps={{ color: cardSubFontColor }}
                 />
                 <CardContent>
                     <textarea
@@ -308,7 +315,11 @@ const PostCard = (props) => {
     );
 
     // To rendering Post Menu as Profile Or Home View..
-    const renderMenuBaseOnComponentType = (type) => {
+    const renderMenuBaseOnComponentType = (type, themeMode) => {
+
+        // themeMode..
+        const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
+
         switch (type){
             case "HOME":
                 return (
@@ -318,7 +329,7 @@ const PostCard = (props) => {
                         open={optionOpen}
                         onClose={handleOptionClose}
                         MenuListProps={{
-                            'aria-labelledby': 'basic-button',
+                            'aria-labelledby': 'basic-button'
                         }}
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
@@ -373,6 +384,7 @@ const PostCard = (props) => {
 
                         {/*---- EditModal here ----*/}
                         <EditModal
+                            themeMode={themeMode}
                             editModal={editModal}
                             setEditModal={setEditModal}
                             currentUserInfo={currentUserInfo}
@@ -456,7 +468,7 @@ const PostCard = (props) => {
                             <MoreVertIcon style={{ color: cardFontColor }} />
                         </IconButton>
 
-                        {renderMenuBaseOnComponentType(props.postType)}
+                        {renderMenuBaseOnComponentType(props.postType, props.themeMode)}
                     </>
                 }
                 title={showNameOrProfileOrTitle('NAME')}
