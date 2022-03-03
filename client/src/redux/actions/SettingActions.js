@@ -1,3 +1,16 @@
+import axios from 'axios';
+
+// Initial Mode..
+export function initialMode(initialTheme){
+    const request = axios.post('/api/user_themeMode', initialTheme)
+        .then(response => response.data)
+        .catch(err => console.log(`ERR! from response data of initialTheme -- ${err.message}`));
+
+    return {
+        type: "INITIAL_THEME_MODE",
+        payload: request
+    };
+}
 
 // Theme Mode High-Contrast..
 export function themeModeHighContrast(){

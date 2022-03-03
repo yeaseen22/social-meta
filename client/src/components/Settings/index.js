@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Drawer,
@@ -18,11 +18,27 @@ import {
 } from '@mui/icons-material';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
+import { initialMode, themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
 import StylesModule from '../../css/settings.module.css';
 
 // Main Settings Component..
 const Settings = (props) => {
+    // ThemeMode Hook..
+    // const [themeMode, setThemeMode] = useState({});
+    //
+    // // useEffect Hook..
+    // useEffect(() => {
+    //     const initialTheme = props.Settings.themeMode;
+    //     props.dispatch(initialMode(initialTheme));
+    //
+    //     // cleanup function..
+    //     return () => {
+    //         setThemeMode({});
+    //     };
+    // }, []);
+    //
+    // console.log('Initial ThemeMode -->> ', themeMode);
+
     const { backgroundColor, textColor, iconColor } = props.Settings.themeMode;
 
     // Styled Paper Component..

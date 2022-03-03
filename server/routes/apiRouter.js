@@ -2,11 +2,16 @@ const express = require('express'),
     router = express.Router(),
     userController = require('../controllers/user.controller'),
     postController = require('../controllers/post.controller'),
+    settingController = require('../controllers/setting.controller'),
     auth = require('../middleware/auth'),
     emailChecker = require('../middleware/emailCheck'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+
+/**----
+ * GET REQUESTS..
+ * ----**/
 // User Profile by id..
 router.get('/profile_by_id', userController.profileById);
 
@@ -38,7 +43,15 @@ router.get('/user_posts', postController.specificUserPosts);
 router.get('/logout', auth, userController.logout);
 
 
-// POST..
+/**----
+ * POST REQUESTS..
+ * ----**/
+// Update themeMode..
+router.post('/user_themeMode/update', auth, settingController.updateThemeMode);
+
+// Make themeMode by user..
+router.post('/user_themeMode', auth, settingController.selectThemeMode);
+
 // Uploading profile pic and update mongo users data..
 router.post('/profile_upload', profileUpload.single("file"), userController.uploadProfilePic);
 
@@ -54,6 +67,9 @@ router.post('/post_create', auth, postUpload.single("file"), postController.crea
 // Update Post..
 router.post('/post_update', postUpload.single("file"), postController.updatePost);
 
+/**----
+ * DELETE REQUESTS..
+ * ----**/
 // Delete Post..
 router.delete('/post_delete', postController.deletePost);
 
