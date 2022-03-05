@@ -1,11 +1,25 @@
 const Setting = require('../models/Setting');
 
+// Load Settings by UserId..
+exports.loadThemeByUserId = function(req, res){
+    const userId = String(req.user._id);
+
+    Setting.find({userId: userId}).exec((err, docs) => {
+        if (err) return res.status(400).send(err);
+
+        const onlyThemeMode = docs[0].themeMode;
+        res.status(200).send(onlyThemeMode);
+    });
+};
+
 // Updating any themeMode..
 exports.updateThemeMode = function(req, res){
     const settingId = req.query.settingId;
     const settings = new Setting(req.body);
 
-    Setting.findByIdAndUpdate({ _id: settingId }, settings, { new: true })
+    console.log(settings);
+
+    Setting.findByIdAndUpdate({ _id: settingId }, { themeMode: settings.themeMode }, { new: true })
         .then(docs => {
             res.status(200).json({ success: true, docs });
         }).catch(err => {

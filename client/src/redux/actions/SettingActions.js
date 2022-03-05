@@ -24,6 +24,12 @@ export function themeModeHighContrast(){
         cardBorder: '1px solid gray'
     };
 
+    const request = axios.post(`/api/user_themeMode/update`, themeMode)
+        .then(response => response.data)
+        .catch(err => console.log(`ERR! from response data of themeHighContrast mode -- ${err.message}`));
+
+    console.log(request);
+
     return {
         type: "THEME_MODE_HIGH_CONTRAST",
         payload: themeMode

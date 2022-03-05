@@ -10,8 +10,11 @@ const express = require('express'),
 
 
 /**----
- * GET REQUESTS..
+ * ---- GET REQUESTS ---- ..
  * ----**/
+// Get Theme by userId..
+router.get('/user_themeMode/get', auth, settingController.loadThemeByUserId);
+
 // User Profile by id..
 router.get('/profile_by_id', userController.profileById);
 
@@ -44,7 +47,7 @@ router.get('/logout', auth, userController.logout);
 
 
 /**----
- * POST REQUESTS..
+ * ---- POST REQUESTS ---- ..
  * ----**/
 // Update themeMode..
 router.post('/user_themeMode/update', auth, settingController.updateThemeMode);
@@ -68,7 +71,7 @@ router.post('/post_create', auth, postUpload.single("file"), postController.crea
 router.post('/post_update', postUpload.single("file"), postController.updatePost);
 
 /**----
- * DELETE REQUESTS..
+ * ----- DELETE REQUESTS ---- ..
  * ----**/
 // Delete Post..
 router.delete('/post_delete', postController.deletePost);

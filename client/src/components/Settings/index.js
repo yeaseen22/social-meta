@@ -25,19 +25,17 @@ import StylesModule from '../../css/settings.module.css';
 const Settings = (props) => {
     // ThemeMode Hook..
     // const [themeMode, setThemeMode] = useState({});
-    //
-    // // useEffect Hook..
-    // useEffect(() => {
-    //     const initialTheme = props.Settings.themeMode;
-    //     props.dispatch(initialMode(initialTheme));
-    //
-    //     // cleanup function..
-    //     return () => {
-    //         setThemeMode({});
-    //     };
-    // }, []);
-    //
-    // console.log('Initial ThemeMode -->> ', themeMode);
+
+    // useEffect Hook..
+    useEffect(() => {
+        const initialTheme = props.Settings;
+        props.dispatch(initialMode(initialTheme));
+
+        // cleanup function..
+        return () => {
+            // setThemeMode({});
+        };
+    }, []);
 
     const { backgroundColor, textColor, iconColor } = props.Settings.themeMode;
 
