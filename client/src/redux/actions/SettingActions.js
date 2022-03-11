@@ -6,6 +6,10 @@ export function initialMode(initialTheme){
         .then(response => response.data)
         .catch(err => console.log(`ERR! from response data of initialTheme -- ${err.message}`));
 
+    // const request = axios.get(`/api/user_themeMode/get`)
+    //     .then(response => response.data)
+    //     .catch(err => console.log(`ERR! from response data of initialTheme -- ${err.message}`));
+
     return {
         type: "INITIAL_THEME_MODE",
         payload: request

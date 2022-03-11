@@ -28,14 +28,15 @@ const Settings = (props) => {
 
     // useEffect Hook..
     useEffect(() => {
-        const initialTheme = props.Settings;
-        props.dispatch(initialMode(initialTheme));
+        props.dispatch(initialMode());
 
         // cleanup function..
         return () => {
             // setThemeMode({});
         };
     }, []);
+
+    console.log(' -- here is the props -- ', props);
 
     const { backgroundColor, textColor, iconColor } = props.Settings.themeMode;
 

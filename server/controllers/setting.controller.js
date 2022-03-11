@@ -14,14 +14,17 @@ exports.loadThemeByUserId = function(req, res){
 
 // Updating any themeMode..
 exports.updateThemeMode = function(req, res){
-    const settingId = req.query.settingId;
     const settings = new Setting(req.body);
+    const userId = String(req.user._id);
 
     console.log(settings);
 
-    Setting.findByIdAndUpdate({ _id: settingId }, { themeMode: settings.themeMode }, { new: true })
+    Setting.findByIdAndUpdate({ userId: userId }, { themeMode: settings.themeMode }, { new: true })
         .then(docs => {
-            res.status(200).json({ success: true, docs });
+            res.status(200).json({
+                success: true,
+                themeMode: docs.themeMode
+            });
         }).catch(err => {
             res.status(400).json({ success: false, err });
     });
@@ -41,7 +44,7 @@ exports.selectThemeMode = function(req, res){
 
         res.json({
             success: true,
-            docs
+            themeMode: docs.themeMode
         });
     });
 };
