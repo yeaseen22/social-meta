@@ -19,9 +19,36 @@ import { connect } from "react-redux";
 // Suggested Connection component..
 const SuggestedFollows = (props) => {
     const [followToggle, setFollowToggle] = React.useState(false);
+    const [themeMode, setThemeMode] = React.useState({
+        backgroundColor: '',
+        textColor: '',
+        cardSubFontColor: ''
+    });
 
     // ThemeMode..
-    const { backgroundColor, textColor, cardSubFontColor } = props.Settings.themeMode;
+    // const { backgroundColor, textColor, cardSubFontColor } = props.Settings.themeMode;
+
+   React.useEffect(() => {
+       // Hook body..
+       if (props.Settings){
+           if (props.Settings.themeMode){
+               const { backgroundColor, textColor, cardSubFontColor } = props.Settings.themeMode;
+               setThemeMode({backgroundColor, textColor, cardSubFontColor});
+           }
+       }
+
+       // cleanup function here..
+       return () => {
+           setThemeMode({
+               backgroundColor: '',
+               textColor: '',
+               cardSubFontColor: ''
+           });
+       };
+   }, [props.Settings]);
+
+   console.log('Props here -- ', props);
+
 
     const connectToggleClicked = () => {
         setFollowToggle(!followToggle ? true : false);
@@ -33,7 +60,7 @@ const SuggestedFollows = (props) => {
 
     // returning statement..
     return (
-        <Paper style={{ marginTop: '1rem', marginBottom: '1rem', width: 358, background: backgroundColor, color: textColor }}>
+        <Paper style={{ marginTop: '1rem', marginBottom: '1rem', width: 358, background: themeMode.backgroundColor, color: themeMode.textColor }}>
                <List>
                    {/*---- 1st ----*/}
                    <ListItem alignItems="flex-start">
@@ -44,7 +71,7 @@ const SuggestedFollows = (props) => {
                            primary="Asad Anik"
                            secondary={
                                <React.Fragment>
-                                   <span style={{ color: cardSubFontColor }}>
+                                   <span style={{ color: themeMode.cardSubFontColor }}>
                                        {!followToggle ? "Not followed yet - " : "You are following - "}
                                    </span>
 
@@ -62,7 +89,7 @@ const SuggestedFollows = (props) => {
                        />
                    </ListItem>
 
-                   <Divider variant="inset" component="li" style={{ background: cardSubFontColor }} />
+                   <Divider variant="inset" component="li" style={{ background: themeMode.cardSubFontColor }} />
 
                    {/*---- 2nd ----*/}
                    <ListItem alignItems="flex-start">
@@ -73,7 +100,7 @@ const SuggestedFollows = (props) => {
                            primary="Unknown User"
                            secondary={
                                <React.Fragment>
-                                    <span style={{ color: cardSubFontColor }}>
+                                    <span style={{ color: themeMode.cardSubFontColor }}>
                                        {!followToggle ? "Not followed yet - " : "You are following - "}
                                    </span>
 
@@ -91,7 +118,7 @@ const SuggestedFollows = (props) => {
                        />
                    </ListItem>
 
-                   <Divider variant="inset" component="li" style={{ background: cardSubFontColor }} />
+                   <Divider variant="inset" component="li" style={{ background: themeMode.cardSubFontColor }} />
 
                    {/*---- 3rd ----*/}
                    <ListItem alignItems="flex-start">
@@ -102,7 +129,7 @@ const SuggestedFollows = (props) => {
                            primary="Jenny Lara"
                            secondary={
                                <React.Fragment>
-                                    <span style={{ color: cardSubFontColor }}>
+                                    <span style={{ color: themeMode.cardSubFontColor }}>
                                        {!followToggle ? "Not followed yet - " : "You are following - "}
                                    </span>
 

@@ -17,6 +17,8 @@ const userSchema = mongoose.Schema({
     coverPhoto: { type: String, default: "cover" },
     birthdate: { type: String },
     title: { type: String },
+    themeMode: { type: String, required: false, default: 'lightMode' },
+    colorMode: { type: String, required: false, default: 'royalblue' },
     token: { type: String },
 }, {
     timestamps: true

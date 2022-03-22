@@ -13,7 +13,7 @@ const express = require('express'),
  * ---- GET REQUESTS ---- ..
  * ----**/
 // Get Theme by userId..
-router.get('/user_themeMode/get', auth, settingController.loadThemeByUserId);
+router.get('/user_themeMode_get', auth, settingController.getThemeMode);
 
 // User Profile by id..
 router.get('/profile_by_id', userController.profileById);
@@ -49,11 +49,14 @@ router.get('/logout', auth, userController.logout);
 /**----
  * ---- POST REQUESTS ---- ..
  * ----**/
+// User's themeMode name update..
+router.post('/user_themeMode_updateName', auth, userController.updateThemeMode);
+
 // Update themeMode..
-router.post('/user_themeMode/update', auth, settingController.updateThemeMode);
+router.post('/user_themeMode_update', auth, settingController.updateThemeMode);
 
 // Make themeMode by user..
-router.post('/user_themeMode', auth, settingController.selectThemeMode);
+router.post('/user_themeMode_set', auth, settingController.setThemeMode);
 
 // Uploading profile pic and update mongo users data..
 router.post('/profile_upload', profileUpload.single("file"), userController.uploadProfilePic);

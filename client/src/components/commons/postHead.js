@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Grid,
     Paper,
@@ -142,6 +142,29 @@ const PostModal = ({ themeMode, postModal, setPostModal, clickToSubmit, userFirs
 const PostHead = (props) => {
     const profilePath = "/profileUpload";
     const [postModal, setPostModal] = useState(false);
+    const [themeMode, setThemeMode] = useState({
+        backgroundColor: '',
+        textColor: '',
+        cardBorder: '',
+        cardSubFontColor: ''
+    });
+
+    // useEffect Hook..
+    useEffect(() => {
+        // themeMode..
+        if(props.Settings){
+            if (props.Settings.themeMode){
+                const { backgroundColor, textColor, cardBorder, cardSubFontColor } = props.Settings.themeMode;
+                setThemeMode({backgroundColor, textColor, cardBorder, cardSubFontColor});
+            }
+        }
+
+        // cleanup function..
+        return () => {
+            setThemeMode({backgroundColor: '', textColor: '', cardBorder: '', cardSubFontColor: ''});
+        };
+    }, [props.Settings]);
+
 
     // React-Router-Dom Navigate..
     const navigate = useNavigate();
@@ -151,9 +174,6 @@ const PostHead = (props) => {
         backgroundColor: 'rgb(25 118 209)',
         marginTop: '1rem'
     };
-
-    // themeMode..
-    const { backgroundColor } = props.Settings.themeMode;
 
     // Submit Post..
     const clickToSubmit = (event, postData, setPostData) => {
@@ -227,12 +247,12 @@ const PostHead = (props) => {
                             type="text"
                             placeholder="Create your post now.."
                             disabled={true}
-                            style={{ background: backgroundColor }}
+                            style={{ background: themeMode.backgroundColor }}
                         />
                     </div>
 
                     <PostModal
-                        themeMode={props.Settings.themeMode}
+                        themeMode={themeMode}
                         postModal={postModal}
                         setPostModal={setPostModal}
                         clickToSubmit={clickToSubmit}

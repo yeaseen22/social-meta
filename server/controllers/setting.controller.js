@@ -1,7 +1,7 @@
 const Setting = require('../models/Setting');
 
 // Load Settings by UserId..
-exports.loadThemeByUserId = function(req, res){
+exports.getThemeMode = function(req, res){
     const userId = String(req.user._id);
 
     Setting.find({userId: userId}).exec((err, docs) => {
@@ -17,13 +17,12 @@ exports.updateThemeMode = function(req, res){
     const settings = new Setting(req.body);
     const userId = String(req.user._id);
 
-    console.log(settings);
-
-    Setting.findByIdAndUpdate({ userId: userId }, { themeMode: settings.themeMode }, { new: true })
+    Setting.findOneAndUpdate({ userId: userId }, { themeMode: settings.themeMode }, { new: true })
         .then(docs => {
+            if(!docs) return res.json({ success: false, msg: 'Settings Theme not found for update!' });
+
             res.status(200).json({
-                success: true,
-                themeMode: docs.themeMode
+               ...docs.themeMode
             });
         }).catch(err => {
             res.status(400).json({ success: false, err });
@@ -31,7 +30,7 @@ exports.updateThemeMode = function(req, res){
 };
 
 // Selecting any themeMode..
-exports.selectThemeMode = function(req, res){
+exports.setThemeMode = function(req, res){
     const settings = new Setting(req.body);
 
     // make with userId..
@@ -41,10 +40,10 @@ exports.selectThemeMode = function(req, res){
 
     settings.save(function(err, docs){
         if (err) return res.json({ success: false, err });
+        if (!docs) return res.json({ success: false, msg: 'Settings Themes not found' });
 
         res.json({
-            success: true,
-            themeMode: docs.themeMode
+            ...docs.themeMode
         });
     });
 };

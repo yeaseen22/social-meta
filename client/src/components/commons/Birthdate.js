@@ -6,6 +6,38 @@ import { connect } from 'react-redux';
 
 // Component of Birthdate..
 const Birthdate = (props) => {
+    // ThemeMode here..
+    const [themeMode, setThemeMode] = React.useState({
+        backgroundColor: 'white',
+        cardBorder: 'lightgray',
+        textColor: 'black'
+    });
+
+    // useEffect.. Hook..
+    React.useEffect(() => {
+        // setting from Redux store..
+        if (props.Settings){
+           if (props.Settings.themeMode){
+               // themeMode..
+               const { backgroundColor, cardBorder, textColor } = props.Settings.themeMode;
+               // set the theme..
+               setThemeMode({
+                   backgroundColor,
+                   cardBorder,
+                   textColor
+               });
+           }
+        }
+        // cleanup function here..
+        return () => {
+            setThemeMode({
+                backgroundColor: '',
+                cardBorder: '',
+                textColor: ''
+            });
+        };
+    }, [props.Settings]);
+
     // CSS Style for birthdate icon..
     const commonThemeColor = 'royalblue';
     const birthdateIcon = {
@@ -23,12 +55,16 @@ const Birthdate = (props) => {
         textAlign: 'center'
     };
 
-    // themeMode..
-    const { backgroundColor, cardBorder, textColor } = props.Settings.themeMode;
-
     // returning statement..
     return (
-        <Paper className={StylesModule.birthdatePaper} style={{ background: backgroundColor, border: cardBorder, color: textColor }}>
+        <Paper
+            className={StylesModule.birthdatePaper}
+            style={{
+                background: themeMode.backgroundColor,
+                border: themeMode.cardBorder,
+                color: themeMode.textColor
+            }}
+        >
             <h3>
                 <span><CakeIcon style={birthdateIcon} /></span>
                 <span> </span>

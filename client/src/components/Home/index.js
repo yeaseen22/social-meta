@@ -62,21 +62,21 @@ class Home extends React.Component{
                     <Grid container spacing={2}>
                         <Grid item xs={6} md={8}>
                             <Paper>
-                                <PostHead />
+                                 <PostHead />
                             </Paper>
                         </Grid>
 
                         <Grid item xs={4} md={4} style={{ marginTop: '2rem' }}>
-                            <FriendsBar />
+                             <FriendsBar />
                         </Grid>
 
                         {/*----- Showing all posts ----*/}
                         <Grid item xs={8} md={8}>
-                            {this.showAllPosts(this.props.allPosts ? this.props.allPosts : null)}
+                             {this.showAllPosts(this.props.allPosts ? this.props.allPosts : null)}
                         </Grid>
 
                         <Grid item xs={6} md={4}>
-                            <SuggestedFollows />
+                             <SuggestedFollows />
                             <Footer />
                         </Grid>
                     </Grid>

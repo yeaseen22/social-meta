@@ -212,11 +212,16 @@ const PostCard = (props) => {
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
 
-    // ThemeMode..
-    const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder } = props.themeMode;
-
     const [anchorEl, setAnchorEl] = React.useState(null);
     const optionOpen = Boolean(anchorEl);
+    const [themeMode, setThemeMode] = React.useState({
+        cardBackgroundColor: 'white',
+        cardFontColor: 'black',
+        cardSubFontColor: 'gray',
+        cardBorder: 'lightgray',
+        backgroundColor: 'white',
+        textColor: 'black',
+    });
 
     // React Router navigation..
     const navigate = useNavigate();
@@ -233,11 +238,33 @@ const PostCard = (props) => {
     useEffect( () => {
         fetchUserByOwnerId(ownerId);
 
+        // setting themeMode..
+        if (props.themeMode){
+            // ThemeMode..
+            const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder, backgroundColor, textColor } = props.themeMode;
+            setThemeMode({
+                cardBackgroundColor,
+                cardFontColor,
+                cardSubFontColor,
+                cardBorder,
+                backgroundColor,
+                textColor
+            });
+        }
+
         // useEffect's cleanup function..
         return () => {
             setUserByOwner(null);
+            setThemeMode({
+                cardBackgroundColor: 'white',
+                cardFontColor: 'black',
+                cardSubFontColor: 'gray',
+                cardBorder: 'lightgray',
+                backgroundColor: 'white',
+                textColor: 'black',
+            });
         };
-    }, []);
+    }, [props.themeMode]);
 
     // current loggedIn user's information..
     const currentUserInfo = {
@@ -454,7 +481,7 @@ const PostCard = (props) => {
 
     // Returning statement..
     return (
-        <Card style={{ marginTop: '1rem', marginBottom: '1rem', color: cardFontColor, background: cardBackgroundColor, border: cardBorder }}>
+        <Card style={{ marginTop: '1rem', marginBottom: '1rem', color: themeMode.cardFontColor, background: themeMode.cardBackgroundColor, border: themeMode.cardBorder }}>
             <CardHeader
                 avatar={
                     <Avatar
@@ -465,15 +492,15 @@ const PostCard = (props) => {
                 action={
                     <>
                         <IconButton aria-label="settings" onClick={handleOptionOpen}>
-                            <MoreVertIcon style={{ color: cardFontColor }} />
+                            <MoreVertIcon style={{ color: themeMode.cardFontColor }} />
                         </IconButton>
 
-                        {renderMenuBaseOnComponentType(props.postType, props.themeMode)}
+                        {renderMenuBaseOnComponentType(props.postType, themeMode)}
                     </>
                 }
                 title={showNameOrProfileOrTitle('NAME')}
                 subheader={showNameOrProfileOrTitle('TITLE')}
-                subheaderTypographyProps={{ color: cardSubFontColor }}
+                subheaderTypographyProps={{ color: themeMode.cardSubFontColor }}
             />
 
             {/*---- Post Image here -----*/}
@@ -486,7 +513,7 @@ const PostCard = (props) => {
                                 __html: postBody
                             } }
                 />
-                <Typography variant="body2" color={cardSubFontColor}>
+                <Typography variant="body2" color={themeMode.cardSubFontColor}>
                     Created at: {createdAt}
                 </Typography>
             </CardContent>
@@ -494,10 +521,10 @@ const PostCard = (props) => {
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
-                    <FavoriteIcon style={{ color: cardFontColor }} />
+                    <FavoriteIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>
                 <IconButton aria-label="share">
-                    <ShareIcon style={{ color: cardFontColor }} />
+                    <ShareIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>
                 <ExpandMore
                     expand={expanded}
@@ -505,7 +532,7 @@ const PostCard = (props) => {
                     aria-expanded={expanded}
                     aria-label="show more"
                 >
-                    <ExpandMoreIcon style={{ color: cardFontColor }} />
+                    <ExpandMoreIcon style={{ color: themeMode.cardFontColor }} />
                 </ExpandMore>
             </CardActions>
 
