@@ -1,5 +1,23 @@
 const User = require('../models/user');
 
+// user themeMode update..
+exports.updateThemeMode = function(req, res){
+    const userId = req.user._id;
+    const themeMode = req.query.themeMode;
+
+    User.findByIdAndUpdate({_id: userId}, {themeMode: themeMode}, {new: true})
+        .then(docs => {
+            res.status(200).json({
+                isUpdate: true,
+                docs
+            });
+        })
+        .catch(error => res.json({
+            isUpdate: false,
+            error
+        }));
+};
+
 // Profile By Id..
 exports.profileById = function(req, res){
   const userId = req.query.userId;
@@ -78,7 +96,9 @@ exports.profileAuth = function(req, res){
         firstname: req.user.firstname,
         lastname: req.user.lastname,
         title: req.user.title,
-        profilePhoto: req.user.profilePhoto
+        profilePhoto: req.user.profilePhoto,
+        themeMode: req.user.themeMode,
+        colorMode: req.user.colorMode,
         // token: req.user.token
     });
 };

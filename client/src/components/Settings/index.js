@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Drawer,
@@ -12,34 +12,102 @@ import {
     MoveToInbox as InboxIcon,
     Mail as MailIcon,
     Settings as SettingsIcon,
-    LightMode as LightModeIcon,
-    DarkMode as DarkModeIcon,
-    Contrast as ContrastIcon
 } from '@mui/icons-material';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
-import StylesModule from '../../css/settings.module.css';
+import { initialMode, themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
+import ThemeMode from './ThemeMode';
 
 // Main Settings Component..
 const Settings = (props) => {
-    const { backgroundColor, textColor, iconColor } = props.Settings.themeMode;
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [lightMode, setLightMode] = useState(true);
+    const [darkMode, setDarkMode] = useState(false);
+    const [contrastMode, setContrastMode] = useState(false);
+
+    const initialTheme = {
+        themeMode: {
+            backgroundColor: 'white',
+            textColor: 'black',
+            iconColor: 'pink'
+        }
+    };
+
+    // React Hook...
+    useEffect(() => {
+        // useEffect.. body area..
+        // const { themeMode } = props.User.login;
+
+        if (props.User){
+           if (props.User.login){
+               const { themeMode } = props.User.login;
+
+               // console.log('MODE  -->> ', themeMode);
+
+               if (themeMode === 'lightMode'){
+                   setLightMode(true);
+                   setDarkMode(false);
+                   setContrastMode(false);
+                   props.dispatch(themeModeLight());
+               }
+
+               if (themeMode === 'darkMode'){
+                   setLightMode(false);
+                   setDarkMode(true);
+                   setContrastMode(false);
+                   props.dispatch(themeModeDark());
+               }
+
+               if (themeMode === 'contrastMode'){
+                   setLightMode(false);
+                   setDarkMode(false);
+                   setContrastMode(true);
+                   props.dispatch(themeModeHighContrast());
+               }
+           }
+        }
+
+
+        // cleanup function...
+        return () => {
+            setLightMode(false);
+            setDarkMode(false);
+            setContrastMode(false);
+        };
+    }, [props.User.login]);
+
+    console.log('Settings ReducthmeMode.ers here -- ', props);
+
+    // themeMode Object..
+    const themeMode = { backgroundColor: 'white', textColor: 'black', iconColor: 'gray' };
+
+    if(props.Settings){
+        if (props.Settings.themeMode){
+            // themeMode's here..
+            const {  backgroundColor, textColor, iconColor  } = props.Settings.themeMode;
+
+            themeMode.backgroundColor = backgroundColor;
+            themeMode.textColor = textColor;
+            themeMode.iconColor = iconColor;
+
+            // setThemeMode({
+            //     backgroundColor,
+            //     textColor,
+            //     iconColor
+            // });
+        }
+    }
+
+    console.log('Theme is now for there -- ', themeMode);
 
     // Styled Paper Component..
     // Used this Styled Component to pass CSS to Drawer's Paper props inner drawer component..
     const StyledPaper = styled.div`
       // my styles
       border-radius: 20px 0 0 20px;
-      background: ${backgroundColor};
-      color: ${textColor};
+      background: ${themeMode.backgroundColor};
+      color: ${themeMode.textColor};
     `;
-
-    // console.log(props);
-
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [lightMode, setLightMode] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
-    const [contrastMode, setContrastMode] = useState(false);
 
     // toggle drawer is there..
     const toggleDrawer = (open) => (event) => {
@@ -84,49 +152,40 @@ const Settings = (props) => {
                <List>
                    {/*--- This is first header here for settings and close the settings ----*/}
                    <ListItem>
-                       <ListItemIcon style={{ color: iconColor }}>
+                       <ListItemIcon style={{ color: themeMode.iconColor }}>
                            <SettingsIcon />
                        </ListItemIcon>
                        <ListItemText primary={'Settings'} />
                    </ListItem>
                </List>
-               <Divider style={{ background: iconColor }} />
+               <Divider style={{ background: themeMode.iconColor }} />
 
                {/*----- Application's Theme Mode Here -----*/}
-               <List>
-                   <ListItem>
-                       <ListItemText primary={'Theme Mode'} />
-                   </ListItem>
-                   <ListItem>
-                       <ListItemIcon onClick={makeLightMode} style={{ color: iconColor }}>
-                           <LightModeIcon className={StylesModule.modeIcon} style={{ background: `${lightMode && 'lightgrey'}` }} />
-                       </ListItemIcon>
-
-                       <ListItemIcon onClick={makeDarkMode} style={{ color: iconColor }}>
-                           <DarkModeIcon className={StylesModule.modeIcon} style={{ background: `${darkMode && 'lightgrey'}` }} />
-                       </ListItemIcon>
-
-                       <ListItemIcon onClick={makeContrastMode} style={{ color: iconColor }}>
-                           <ContrastIcon className={StylesModule.modeIcon} style={{ background: `${contrastMode && 'lightgrey'}` }} />
-                       </ListItemIcon>
-                   </ListItem>
-               </List>
+               <ThemeMode
+                    lightMode={lightMode}
+                    darkMode={darkMode}
+                    contrastMode={contrastMode}
+                    iconColor={themeMode.iconColor}
+                    makeLightMode={makeLightMode}
+                    makeDarkMode={makeDarkMode}
+                    makeContrastMode={makeContrastMode}
+                />
 
                <List>
                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                        <ListItem button key={text}>
-                           <ListItemIcon style={{ color: iconColor }}>
+                           <ListItemIcon style={{ color: themeMode.iconColor }}>
                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                            </ListItemIcon>
                            <ListItemText primary={text} />
                        </ListItem>
                    ))}
                </List>
-               <Divider style={{ background: iconColor }} />
+               <Divider style={{ background: themeMode.iconColor }} />
                <List>
                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
                        <ListItem button key={text}>
-                           <ListItemIcon style={{ color: iconColor }}>
+                           <ListItemIcon style={{ color: themeMode.iconColor }}>
                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                            </ListItemIcon>
                            <ListItemText primary={text} />
@@ -158,7 +217,8 @@ const Settings = (props) => {
 // mapStateToProps...
 const mapStateToProps = (state) => {
     return {
-        Settings: state.Settings
+        Settings: state.Settings,
+        User: state.User
     };
 };
 

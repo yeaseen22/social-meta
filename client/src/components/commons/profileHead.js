@@ -8,12 +8,41 @@ const ProfileHead = (props) => {
     const profilePath = "/profileUpload";
     const coverPath = "/coverUpload";
 
-    // ThemeMode..
-    const { backgroundColor, textColor, cardBorder } = props.Settings.themeMode;
+    // ThemeMode here..
+    const [themeMode, setThemeMode] = React.useState({
+        backgroundColor: '',
+        cardBorder: '',
+        textColor: ''
+    });
+
+    // useEffect.. Hook..
+    React.useEffect(() => {
+        // setting from Redux store..
+        if (props.Settings){
+           if (props.Settings.themeMode){
+               // themeMode..
+               const { backgroundColor, cardBorder, textColor } = props.Settings.themeMode;
+               // set the theme..
+               setThemeMode({
+                   backgroundColor,
+                   cardBorder,
+                   textColor
+               });
+           }
+        }
+        // cleanup function here..
+        return () => {
+            setThemeMode({
+                backgroundColor: '',
+                cardBorder: '',
+                textColor: ''
+            });
+        };
+    }, [props.Settings]);
 
     // returning statement..
     return (
-        <Paper className={StylesModule.paper} style={{ background: backgroundColor, border: cardBorder }}>
+        <Paper className={StylesModule.paper} style={{ background: themeMode.backgroundColor, border: themeMode.cardBorder }}>
             <div className={StylesModule.cover}>
                 <img
                     src={`${coverPath}/demoCover.jpeg`}
@@ -36,7 +65,7 @@ const ProfileHead = (props) => {
                 />
 
                 <Grid container spacing={2}>
-                    <Grid item xs={8} className={StylesModule.profileInfoText1} style={{ color: textColor }}>
+                    <Grid item xs={8} className={StylesModule.profileInfoText1} style={{ color: themeMode.textColor }}>
                         <h1>
                             <span>{props.firstname} {props.lastname}</span>
                             <span>({props.title})</span>
@@ -44,7 +73,7 @@ const ProfileHead = (props) => {
                         <p>{props.bio}</p>
                     </Grid>
 
-                    <Grid item xs={4} className={StylesModule.profileInfoText2} style={{ color: textColor }}>
+                    <Grid item xs={4} className={StylesModule.profileInfoText2} style={{ color: themeMode.textColor }}>
                         <p>
                             <span>{props.email}</span>
                         </p>

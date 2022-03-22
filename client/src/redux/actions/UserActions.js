@@ -1,5 +1,18 @@
 import axios from 'axios';
 
+// initial themeMode setting..
+const initialThemeModeSetting = {
+    themeMode: {
+        backgroundColor: 'white',
+        textColor: 'black',
+        iconColor: 'gray',
+        cardBackgroundColor: '',
+        cardFontColor: '',
+        cardSubFontColor: '',
+        cardBorder: ''
+    }
+};
+
 // Own Profile..
 export function ownProfileInfo(){
     const request = axios.get('/api/profile')
@@ -61,8 +74,8 @@ export function loginUser(data){
 }
 
 // Sign Up User..
-export function register(data){
-    const request = axios.post('/api/register', data)
+export async function register(data){
+    const request = await axios.post('/api/register', data)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to post user register -> ', err.message));
 
