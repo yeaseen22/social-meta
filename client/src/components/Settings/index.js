@@ -15,8 +15,9 @@ import {
 } from '@mui/icons-material';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { initialMode, themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
+import { themeModeLight, themeModeDark, themeModeHighContrast } from '../../redux/actions/SettingActions';
 import ThemeMode from './ThemeMode';
+import AppColor from './AppColor';
 
 // Main Settings Component..
 const Settings = (props) => {
@@ -25,13 +26,13 @@ const Settings = (props) => {
     const [darkMode, setDarkMode] = useState(false);
     const [contrastMode, setContrastMode] = useState(false);
 
-    const initialTheme = {
-        themeMode: {
-            backgroundColor: 'white',
-            textColor: 'black',
-            iconColor: 'pink'
-        }
-    };
+    // const initialTheme = {
+    //     themeMode: {
+    //         backgroundColor: 'white',
+    //         textColor: 'black',
+    //         iconColor: 'pink'
+    //     }
+    // };
 
     // React Hook...
     useEffect(() => {
@@ -76,7 +77,7 @@ const Settings = (props) => {
         };
     }, [props.User.login]);
 
-    console.log('Settings ReducthmeMode.ers here -- ', props);
+    // console.log('Settings ReducthmeMode.ers here -- ', props);
 
     // themeMode Object..
     const themeMode = { backgroundColor: 'white', textColor: 'black', iconColor: 'gray' };
@@ -170,6 +171,9 @@ const Settings = (props) => {
                     makeDarkMode={makeDarkMode}
                     makeContrastMode={makeContrastMode}
                 />
+
+                {/*----- Application's App Color Here -----*/}
+                <AppColor />
 
                <List>
                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (

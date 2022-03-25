@@ -18,6 +18,8 @@ const ThemeMode = ({
             <ListItem>
                 <ListItemText primary={'Theme Mode'} />
             </ListItem>
+
+            {/*--------- ThemeMode's  -------*/}
             <ListItem>
                 <ListItemIcon onClick={makeLightMode} style={{ color: iconColor }}>
                     <LightModeIcon className={StylesModule.modeIcon} style={{ background: `${lightMode && 'lightgrey'}` }} />
