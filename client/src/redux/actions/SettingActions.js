@@ -1,49 +1,5 @@
 import axios from 'axios';
 
-// Initial Mode..
-// export async function initialMode() {
-//
-//     console.log('---- CALLED THE INITIAL-MODE HERE -----');
-//
-//     const initialThemeModeSetting = {
-//         themeMode: {
-//             backgroundColor: 'white',
-//             textColor: 'black',
-//             iconColor: 'gray',
-//             cardBackgroundColor: '',
-//             cardFontColor: '',
-//             cardSubFontColor: '',
-//             cardBorder: ''
-//         }
-//     };
-//
-//     // make change to backend & DB...
-//     await axios.post('/api/user_themeMode_updateName?themeMode=lightMode')
-//         .then(response => response.data)
-//         .catch(err => console.log('ERR!! error when try to maked lightMode Action -- ', err.message));
-//
-//
-//     // set initial-Settings for this user...
-//     const request = await axios.post(`/api/user_themeMode_set`, initialThemeModeSetting)
-//         .then(response => response.data)
-//         .catch(err => console.log('ERR! when try to post initialThemeModeSetting User Action -- ', err.message));
-//
-//     // Testing purpass..
-//     // const themeMode = {
-//     //     backgroundColor: 'black',
-//     //     textColor: 'lightgray',
-//     //     iconColor: 'gray',
-//     //     cardBackgroundColor: 'black',
-//     //     cardFontColor: 'lightgray',
-//     //     cardSubFontColor: 'gray',
-//     //     cardBorder: '1px solid gray'
-//     // };
-//
-//     return {
-//         type: "INITIAL_THEME_MODE",
-//         payload: request,
-//     };
-// }
 
 // Theme Mode High-Contrast..
 export async function themeModeHighContrast() {
