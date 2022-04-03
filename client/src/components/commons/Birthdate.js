@@ -12,21 +12,27 @@ const Birthdate = (props) => {
         cardBorder: 'lightgray',
         textColor: 'black'
     });
+    const [appColor, setAppColor] = React.useState('royalblue');
 
     // useEffect.. Hook..
     React.useEffect(() => {
         // setting from Redux store..
-        if (props.Settings){
-           if (props.Settings.themeMode){
-               // themeMode..
-               const { backgroundColor, cardBorder, textColor } = props.Settings.themeMode;
-               // set the theme..
-               setThemeMode({
-                   backgroundColor,
-                   cardBorder,
-                   textColor
-               });
-           }
+        if (props.Settings) {
+            if (props.Settings.themeMode) {
+                // themeMode..
+                const { backgroundColor, cardBorder, textColor } = props.Settings.themeMode;
+                // set the theme..
+                setThemeMode({
+                    backgroundColor,
+                    cardBorder,
+                    textColor
+                });
+            }
+
+            if (props.Settings.appColor) {
+                const { appColor } = props.Settings;
+                setAppColor(appColor.backgroundColor);
+            }
         }
         // cleanup function here..
         return () => {
@@ -35,11 +41,12 @@ const Birthdate = (props) => {
                 cardBorder: '',
                 textColor: ''
             });
+            setAppColor('royalblue');
         };
     }, [props.Settings]);
 
     // CSS Style for birthdate icon..
-    const commonThemeColor = 'royalblue';
+    const commonThemeColor = appColor;
     const birthdateIcon = {
         fontSize: '30px',
         position: 'relative',

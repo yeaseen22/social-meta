@@ -1,6 +1,53 @@
 import axios from 'axios';
 
+/** ---------------- Settings AppColor here ------------------ **/
+// App Color's ...
+export async function appColorBlack() {
+    const appColor = {
+        backgroundColor: 'black',
+    };
 
+    return {
+        type: 'APP_COLOR_BLACK',
+        payload: appColor
+    };
+}
+
+export async function appColorRoyalblue() {
+    const appColor = {
+        backgroundColor: 'royalblue',
+    };
+
+    return {
+        type: 'APP_COLOR_ROYALBLUE',
+        payload: appColor
+    };
+}
+
+export async function appColorGreen() {
+    const appColor = {
+        backgroundColor: 'green',
+    };
+
+    return {
+        type: 'APP_COLOR_GREEN',
+        payload: appColor
+    };
+}
+
+export async function appColorRed() {
+    const appColor = {
+        backgroundColor: 'red'
+    };
+
+    return {
+        type: 'APP_COLOR_RED',
+        payload: appColor
+    };
+}
+
+
+/** ---------------- Settings ThemeMode here ------------------ **/
 // Theme Mode High-Contrast..
 export async function themeModeHighContrast() {
     const themeModeName = "contrastMode";

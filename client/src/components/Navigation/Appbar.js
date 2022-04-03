@@ -35,8 +35,7 @@ import { logout } from '../../redux/actions/UserActions';
 import * as PropTypes from "prop-types";
 import Settings from '../Settings';
 
-// color of Back to Top Icon..
-const backToTopIconColor = "primary";
+
 // ByDefault profile photo path..
 const initialProfileImgPath = "/profileUpload";
 
@@ -134,14 +133,28 @@ ScrollTop.propTypes = {
 const Appbar = (props) => {
     // useNavigate Hook from react-router-dom..
     const navigate = useNavigate();
+    const [AppbarBG, setAppbarBG] = React.useState('royalblue');
 
     React.useEffect(() => {
-        if (props.User){
-            if (props.User.logout){
+        if (props.User) {
+            if (props.User.logout) {
                 // so make redirect..
                 navigate('/login');
             }
         }
+
+        if (props.Settings) {
+            if (props.Settings.appColor) {
+                const { appColor } = props.Settings;
+                setAppbarBG(appColor.backgroundColor);
+            }
+        }
+
+        // React Cleanup Function...
+        return () => {
+            setAppbarBG('royalblue');
+        };
+
     }, [props, navigate]);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -178,16 +191,16 @@ const Appbar = (props) => {
 
     // show Profile or Avatar..
     const showProfileOrNot = (User) => {
-        if (User === null){
+        if (User === null) {
             return <AccountCircle />;
         }
 
-        if (User !== null){
-            if (User.login){
+        if (User !== null) {
+            if (User.login) {
                 return (
                     <Avatar
                         src={`${initialProfileImgPath}/${User.login.profilePhoto}`}
-                        style={{width: '28px', height: '28px', border: '1.5px solid white'}}
+                        style={{ width: '28px', height: '28px', border: '1.5px solid white' }}
                     />
                 );
             }
@@ -211,23 +224,23 @@ const Appbar = (props) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-                {/*---- Profile navigate from here ----*/}
-                <NavLink
-                    to={`/profile`}
-                    style={isActive => ({
-                        color: isActive ? "green" : "black"
-                    })}>
-                    <MenuItem onClick={handleMenuClose}>
-                        <ListItemIcon>
-                            <AccountCircleIcon fontSize="small" />
-                        </ListItemIcon>
+            {/*---- Profile navigate from here ----*/}
+            <NavLink
+                to={`/profile`}
+                style={isActive => ({
+                    color: isActive ? "green" : "black"
+                })}>
+                <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                        <AccountCircleIcon fontSize="small" />
+                    </ListItemIcon>
 
-                        Profile
-                    </MenuItem>
-                </NavLink>
+                    Profile
+                </MenuItem>
+            </NavLink>
 
 
-            <MenuItem onClick={(e) => {handleMenuClose(e); logoutFunc()}}>
+            <MenuItem onClick={(e) => { handleMenuClose(e); logoutFunc() }}>
                 <ListItemIcon>
                     <LogoutIcon fontSize="small" />
                 </ListItemIcon>
@@ -311,10 +324,12 @@ const Appbar = (props) => {
         </Menu>
     );
 
+    // console.log('AppBar PROPS -- ', props);
+
     //  returning statement..
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar>
+            <AppBar style={{ backgroundColor: AppbarBG }}>
                 <Container>
                     <Toolbar>
                         {/*-------- App Name --------*/}
@@ -411,7 +426,7 @@ const Appbar = (props) => {
             {/*---- Make Scroll Up when page comes down -----*/}
             <Toolbar id="back-to-top-anchor" />
             <ScrollTop {...props}>
-                <Fab color={backToTopIconColor} size="small" aria-label="scroll back to top">
+                <Fab style={{backgroundColor: AppbarBG, color: 'white'}} size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />
                 </Fab>
             </ScrollTop>
@@ -422,7 +437,8 @@ const Appbar = (props) => {
 // mapStateToProps..
 const mapStateToProps = (state) => {
     return {
-        User: state.User
+        User: state.User,
+        Settings: state.Settings
     };
 };
 

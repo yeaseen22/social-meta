@@ -4,13 +4,9 @@ import { LightMode as LightModeIcon, DarkMode as DarkModeIcon, Contrast as Contr
 import StylesModule from '../../css/settings.module.css';
 
 const ThemeMode = ({ 
-    lightMode,
-    darkMode,
-    contrastMode,
+    themeModes,
     iconColor,
-    makeLightMode, 
-    makeDarkMode, 
-    makeContrastMode 
+    makeChangeThemeMode
 }) => {
 
     return (
@@ -21,16 +17,16 @@ const ThemeMode = ({
 
             {/*--------- ThemeMode's  -------*/}
             <ListItem>
-                <ListItemIcon onClick={makeLightMode} style={{ color: iconColor }}>
-                    <LightModeIcon className={StylesModule.modeIcon} style={{ background: `${lightMode && 'lightgrey'}` }} />
+                <ListItemIcon onClick={() => makeChangeThemeMode('lightMode')} style={{ color: iconColor }}>
+                    <LightModeIcon className={StylesModule.modeIcon} style={{ background: `${themeModes.lightMode && 'lightgrey'}` }} />
                 </ListItemIcon>
 
-                <ListItemIcon onClick={makeDarkMode} style={{ color: iconColor }}>
-                    <DarkModeIcon className={StylesModule.modeIcon} style={{ background: `${darkMode && 'lightgrey'}` }} />
+                <ListItemIcon onClick={() => makeChangeThemeMode('darkMode')} style={{ color: iconColor }}>
+                    <DarkModeIcon className={StylesModule.modeIcon} style={{ background: `${themeModes.darkMode && 'lightgrey'}` }} />
                 </ListItemIcon>
 
-                <ListItemIcon onClick={makeContrastMode} style={{ color: iconColor }}>
-                    <ContrastIcon className={StylesModule.modeIcon} style={{ background: `${contrastMode && 'lightgrey'}` }} />
+                <ListItemIcon onClick={() => makeChangeThemeMode('contrastMode')} style={{ color: iconColor }}>
+                    <ContrastIcon className={StylesModule.modeIcon} style={{ background: `${themeModes.contrastMode && 'lightgrey'}` }} />
                 </ListItemIcon>
             </ListItem>
         </List>

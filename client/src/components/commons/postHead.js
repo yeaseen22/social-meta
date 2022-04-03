@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Grid,
     Paper,
@@ -9,7 +9,7 @@ import {
     Card,
     Button,
 } from '@mui/material';
-import {Cancel as CancelIcon, Send as SendIcon} from '@mui/icons-material';
+import { Cancel as CancelIcon, Send as SendIcon } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import StylesModule from '../../css/postHead.module.css';
 import TextEditor from '../widgets/TextEditor';
@@ -74,7 +74,7 @@ const PostModal = ({ themeMode, postModal, setPostModal, clickToSubmit, userFirs
                 loadingPosition="start"
                 variant="contained"
                 fullWidth={true}
-                startIcon={<SendIcon/>}
+                startIcon={<SendIcon />}
             >
                 post
             </LoadingButton>
@@ -89,50 +89,50 @@ const PostModal = ({ themeMode, postModal, setPostModal, clickToSubmit, userFirs
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-                <Card sx={style}>
-                    <CardHeader
-                        avatar={
-                            <Avatar
-                                alt={'No User'}
-                                src={`${initialProfileImgPath}/${userProfilePhoto}`}
-                            />
-                        }
-                        title={`${userFirstname} ${userLastname}`}
-                        subheader={userTitle}
-                        subheaderTypographyProps={{ color: cardSubFontColor }}
+            <Card sx={style}>
+                <CardHeader
+                    avatar={
+                        <Avatar
+                            alt={'No User'}
+                            src={`${initialProfileImgPath}/${userProfilePhoto}`}
+                        />
+                    }
+                    title={`${userFirstname} ${userLastname}`}
+                    subheader={userTitle}
+                    subheaderTypographyProps={{ color: cardSubFontColor }}
+                />
+                <CardContent>
+                    <TextEditor
+                        postData={postData}
+                        setPostData={setPostData}
+                        editorPlaceholder="Write your post here..."
+                        type="postBody"
                     />
-                    <CardContent>
-                        <TextEditor
-                            postData={postData}
-                            setPostData={setPostData}
-                            editorPlaceholder="Write your post here..."
-                            type="postBody"
-                        />
-                        <Uploader
-                            customStyle={uploaderStyle}
-                            postData={postData}
-                            setPostData={setPostData}
-                        />
+                    <Uploader
+                        customStyle={uploaderStyle}
+                        postData={postData}
+                        setPostData={setPostData}
+                    />
 
-                        {/*---- Post-Submit button or loading ----*/}
-                        <div style={{marginTop: '0.5rem'}}>
-                            {postSubmitButton(postData.loading)}
-                        </div>
+                    {/*---- Post-Submit button or loading ----*/}
+                    <div style={{ marginTop: '0.5rem' }}>
+                        {postSubmitButton(postData.loading)}
+                    </div>
 
-                        {/*---- Post submit Cancel button ----*/}
-                        <div style={{marginTop: '0.5rem'}}>
-                            <Button
-                                variant="contained"
-                                fullWidth={true}
-                                color="error"
-                                endIcon={<CancelIcon/>}
-                                onClick={() => setPostModal(false)}
-                            >
-                                cancel
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+                    {/*---- Post submit Cancel button ----*/}
+                    <div style={{ marginTop: '0.5rem' }}>
+                        <Button
+                            variant="contained"
+                            fullWidth={true}
+                            color="error"
+                            endIcon={<CancelIcon />}
+                            onClick={() => setPostModal(false)}
+                        >
+                            cancel
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
         </Modal>
     );
 };
@@ -148,20 +148,26 @@ const PostHead = (props) => {
         cardBorder: '',
         cardSubFontColor: ''
     });
+    const [AppColor, setAppColor] = useState('royalblue');
 
     // useEffect Hook..
     useEffect(() => {
         // themeMode..
-        if(props.Settings){
-            if (props.Settings.themeMode){
+        if (props.Settings) {
+            if (props.Settings.themeMode) {
                 const { backgroundColor, textColor, cardBorder, cardSubFontColor } = props.Settings.themeMode;
-                setThemeMode({backgroundColor, textColor, cardBorder, cardSubFontColor});
+                setThemeMode({ backgroundColor, textColor, cardBorder, cardSubFontColor });
+            }
+
+            if (props.Settings.appColor) {
+                const { appColor } = props.Settings;
+                setAppColor(appColor.backgroundColor);
             }
         }
 
         // cleanup function..
         return () => {
-            setThemeMode({backgroundColor: '', textColor: '', cardBorder: '', cardSubFontColor: ''});
+            setThemeMode({ backgroundColor: '', textColor: '', cardBorder: '', cardSubFontColor: '' });
         };
     }, [props.Settings]);
 
@@ -171,7 +177,7 @@ const PostHead = (props) => {
 
     const paperStyle = {
         padding: '10px',
-        backgroundColor: 'rgb(25 118 209)',
+        backgroundColor: AppColor,
         marginTop: '1rem'
     };
 
@@ -179,7 +185,7 @@ const PostHead = (props) => {
     const clickToSubmit = (event, postData, setPostData) => {
         event.preventDefault();
 
-        setPostData({...postData, loading: true});
+        setPostData({ ...postData, loading: true });
 
         const formData = new FormData();
         formData.append('body', postData.postBody);
@@ -189,7 +195,7 @@ const PostHead = (props) => {
         props.dispatch(postCreate(formData));
 
         setTimeout(() => {
-            setPostData({...postData, loading: false});
+            setPostData({ ...postData, loading: false });
             setPostModal(false);
 
             // redirecting to home page..
@@ -198,13 +204,13 @@ const PostHead = (props) => {
     };
 
     // if face some error so take this...
-    if (props.Post){
-        if (props.Post.createdPost){
+    if (props.Post) {
+        if (props.Post.createdPost) {
             const { success } = props.Post.createdPost;
 
             if (!success) {
                 return (
-                    <div style={{marginTop: '1rem'}}>
+                    <div style={{ marginTop: '1rem' }}>
                         <AlertNotify type="ERROR" message="Server ERROR! reload app & try again." />
                     </div>
                 );
