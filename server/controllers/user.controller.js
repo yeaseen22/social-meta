@@ -1,5 +1,23 @@
 const User = require('../models/user');
 
+// user colorMode update..
+exports.updateColorMode = function(req, res){
+    const userId = req.user._id;
+    const colorMode = req.query.colorMode;
+
+    User.findByIdAndUpdate({_id: userId}, {colorMode: colorMode}, {new: true})
+        .then(docs => {
+            res.status(200).json({
+                isUpdate: true,
+                docs
+            });
+        })
+        .catch(error => res.json({
+            isUpdate: false,
+            error
+        }));
+};
+
 // user themeMode update..
 exports.updateThemeMode = function(req, res){
     const userId = req.user._id;

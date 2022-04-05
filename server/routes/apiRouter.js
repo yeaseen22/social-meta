@@ -46,7 +46,11 @@ router.get('/logout', auth, userController.logout);
 /**----
  * ---- POST REQUESTS ---- ..
  * ----**/
-// User's themeMode name update..
+
+// User's colorMode update..
+router.post('/user_colorMode_update', auth, userController.updateColorMode);
+
+// User's themeMode update..
 router.post('/user_themeMode_updateName', auth, userController.updateThemeMode);
 
 // Uploading profile pic and update mongo users data..
