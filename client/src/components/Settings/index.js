@@ -147,7 +147,7 @@ const Settings = (props) => {
         }
     }
 
-    // console.log('Theme is now for there -- ', themeMode);
+    // console.log('Theme is now for there -- ', themeModes);
 
     // Styled Paper Component..
     // Used this Styled Component to pass CSS to Drawer's Paper props inner drawer component..
@@ -282,10 +282,10 @@ const Settings = (props) => {
             />
 
             {/*----- Change Primary Email -----*/}
-            <ChangeEmail />
+            <ChangeEmail themeModes={themeModes} />
 
             {/*----- Change Password -----*/}
-            <ChangePassword />
+            <ChangePassword themeModes={themeModes} />
         </Box>
     );
 
