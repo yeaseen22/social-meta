@@ -222,6 +222,7 @@ const PostCard = (props) => {
         backgroundColor: 'white',
         textColor: 'black',
     });
+    const [isLiked, setIsLiked] = React.useState(false);
 
     // React Router navigation..
     const navigate = useNavigate();
@@ -520,9 +521,17 @@ const PostCard = (props) => {
 
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon style={{ color: themeMode.cardFontColor }} />
+                <IconButton 
+                    aria-label="add to favorites"
+                    onClick={() => !isLiked ? setIsLiked(true) : setIsLiked(false)}
+                >
+                    <FavoriteIcon style={{ color: !isLiked ? themeMode.cardFontColor : 'red' }} />
                 </IconButton>
+                {/* Numbers of Like */}
+                <span>
+                    { !isLiked ? 0 : 1 }
+                </span>
+
                 <IconButton aria-label="share">
                     <ShareIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>

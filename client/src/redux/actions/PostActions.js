@@ -1,5 +1,13 @@
 import axios from 'axios';
 
+// Liked Post here..
+export function likedPost(){
+    return {
+        type: "LIKED_POST",
+        payload: null
+    };
+}
+
 // User Posts for ProfileOthers..
 export function postsByUserId(userId){
     const request = axios.get(`/api/user_posts?userId=${userId}`)
