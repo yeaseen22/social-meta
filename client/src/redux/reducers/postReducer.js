@@ -1,8 +1,11 @@
 // Posts Reducer..
 export function PostReducer(state={}, action){
     switch (action.type){
+        case "LIKES_BY_POST_ID":
+            return { ...state, likes: action.payload };
+
         case "LIKED_POST":
-            return { ...state, likedPost: action.payload };
+            return { ...state, likes: action.payload };
 
         case "POSTS_BY_USER_ID":
             return { ...state, postsByUserId: action.payload };

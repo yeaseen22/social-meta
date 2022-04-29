@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import {
     Card,
@@ -29,9 +29,9 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { deletePost, updatePost } from '../../redux/actions/PostActions';
+import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
-import {LoadingButton} from "@mui/lab";
+import { LoadingButton } from "@mui/lab";
 import Uploader from "../widgets/Uploader";
 
 
@@ -139,7 +139,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                 loadingPosition="start"
                 variant="contained"
                 fullWidth={true}
-                startIcon={<SendIcon/>}
+                startIcon={<SendIcon />}
             >
                 Update
             </LoadingButton>
@@ -172,7 +172,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                         placeholder="Make Update from previous post.."
                         style={postBodyInputStyle}
                         onChange={(e) => {
-                            setPostData({...postData, postBody: e.target.value})
+                            setPostData({ ...postData, postBody: e.target.value })
                         }}
                     />
                     <Uploader
@@ -182,16 +182,16 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                     />
 
                     {/*---- Post-Submit button or loading ----*/}
-                    <div style={{marginTop: '0.5rem'}}>
+                    <div style={{ marginTop: '0.5rem' }}>
                         {postSubmitButton(postData.loading)}
                     </div>
 
-                    <div style={{marginTop: '0.5rem'}}>
+                    <div style={{ marginTop: '0.5rem' }}>
                         <Button
                             variant="contained"
                             fullWidth={true}
                             color="error"
-                            endIcon={<CancelIcon/>}
+                            endIcon={<CancelIcon />}
                             onClick={() => setEditModal(false)}
                         >
                             cancel
@@ -207,7 +207,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
 
 // Main PostCard's Component..
 const PostCard = (props) => {
-    const { ownerId, postId, postBody, postImage, createdAt } = props;
+    const { ownerId, postId, postBody, postImage, createdAt, postLikes } = props;
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
@@ -224,11 +224,13 @@ const PostCard = (props) => {
     });
     const [isLiked, setIsLiked] = React.useState(false);
 
+    // console.log(props.allPosts);
+
     // React Router navigation..
     const navigate = useNavigate();
 
-    const fetchUserByOwnerId = async(id) => {
-            await axios.get(`/api/find_user?ownerId=${id}`)
+    const fetchUserByOwnerId = async (id) => {
+        await axios.get(`/api/find_user?ownerId=${id}`)
             .then(response => {
                 setUserByOwner(response.data);
             })
@@ -236,11 +238,11 @@ const PostCard = (props) => {
     };
 
     // useEffect hook..
-    useEffect( () => {
+    useEffect(() => {
         fetchUserByOwnerId(ownerId);
 
         // setting themeMode..
-        if (props.themeMode){
+        if (props.themeMode) {
             // ThemeMode..
             const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder, backgroundColor, textColor } = props.themeMode;
             setThemeMode({
@@ -284,6 +286,26 @@ const PostCard = (props) => {
         postCreatedAt: createdAt
     };
 
+    // LikePost..
+    const handleLikePost = () => {
+        const newPost = {
+            _id: postId,
+            body: postBody,
+        };
+
+        // To Make Increment Likes..
+        if (!isLiked) {
+            setIsLiked(true);
+            props.dispatch(likedPost(true, postId, newPost));
+        }
+
+        // To Make Decrement Likes
+        if (isLiked) {
+            setIsLiked(false);
+            props.dispatch(likedPost(false, postId, newPost));
+        }
+    };
+
     // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -302,7 +324,7 @@ const PostCard = (props) => {
         event.preventDefault();
 
         // Confirmation to delete or not..
-        if (window.confirm("Are you sure want to delete?")){
+        if (window.confirm("Are you sure want to delete?")) {
             // make delete req. to server..
             props.dispatch(deletePost(postId));
             window.location.reload();
@@ -312,7 +334,7 @@ const PostCard = (props) => {
     // to Update Post..
     const handleUpdate = (event, postData, setPostData) => {
         event.preventDefault();
-        setPostData({...postData, loading: true});
+        setPostData({ ...postData, loading: true });
 
         // FormData Class to Object..
         const formData = new FormData();
@@ -324,7 +346,7 @@ const PostCard = (props) => {
         props.dispatch(updatePost(formData));
 
         setTimeout(() => {
-            setPostData({...postData, loading: false});
+            setPostData({ ...postData, loading: false });
             // redirect to home..
             navigate('/');
         }, 2000);
@@ -339,7 +361,7 @@ const PostCard = (props) => {
                 image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
-        ): null
+        ) : null
     );
 
     // To rendering Post Menu as Profile Or Home View..
@@ -348,7 +370,7 @@ const PostCard = (props) => {
         // themeMode..
         const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
 
-        switch (type){
+        switch (type) {
             case "HOME":
                 return (
                     <Menu
@@ -361,7 +383,7 @@ const PostCard = (props) => {
                         }}
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
-                        {props.login.id !== ownerId ?  (
+                        {props.login.id !== ownerId ? (
                             <Link to={`/profile-others/${ownerId}`}>
                                 <MenuItem onClick={handleOptionClose}>
                                     <ListItemIcon>
@@ -420,7 +442,7 @@ const PostCard = (props) => {
                             handleUpdate={handleUpdate}
                         />
 
-                        <MenuItem onClick={(e) => {handleOptionClose(e); clickToDeletePost(e, props.postId)}}>
+                        <MenuItem onClick={(e) => { handleOptionClose(e); clickToDeletePost(e, props.postId) }}>
                             <ListItemIcon>
                                 <DeleteIcon />
                             </ListItemIcon>
@@ -456,21 +478,21 @@ const PostCard = (props) => {
 
     // showing profile firstname lastname or profile photo of userByOwnerId..
     const showNameOrProfileOrTitle = (type) => {
-        switch (type){
+        switch (type) {
             case "NAME":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.firstname} ${userByOwner.foundUser.lastname}`;
 
             case "PROFILE":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.profilePhoto}`;
 
             case "TITLE":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.title}`;
@@ -510,9 +532,9 @@ const PostCard = (props) => {
             {/*---- Post Body here ----*/}
             <CardContent>
                 <Typography variant="body1"
-                            dangerouslySetInnerHTML={{
-                                __html: postBody
-                            } }
+                    dangerouslySetInnerHTML={{
+                        __html: postBody
+                    }}
                 />
                 <Typography variant="body2" color={themeMode.cardSubFontColor}>
                     Created at: {createdAt}
@@ -521,15 +543,15 @@ const PostCard = (props) => {
 
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
-                <IconButton 
+                <IconButton
                     aria-label="add to favorites"
-                    onClick={() => !isLiked ? setIsLiked(true) : setIsLiked(false)}
+                    onClick={handleLikePost}
                 >
                     <FavoriteIcon style={{ color: !isLiked ? themeMode.cardFontColor : 'red' }} />
                 </IconButton>
                 {/* Numbers of Like */}
                 <span>
-                    { !isLiked ? 0 : 1 }
+                    { postLikes }
                 </span>
 
                 <IconButton aria-label="share">
@@ -582,7 +604,7 @@ const PostCard = (props) => {
 
 // mapStateToProps..
 const mapStateToProps = (state) => {
-    return {...state.Post, ...state.User, ...state.Settings};
+    return { ...state.Post, ...state.User, ...state.Settings };
 };
 
 export default connect(mapStateToProps)(PostCard);

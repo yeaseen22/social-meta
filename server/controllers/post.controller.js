@@ -1,5 +1,44 @@
 const Post = require('../models/post');
 
+// Update Post Like...
+exports.likePost = function (req, res) {
+    const postId = req.query.postId;
+    const likes = req.query.likes;
+    const post = new Post(req.body);
+
+    // Adding like...
+    post.likes = likes;
+
+    Post.findByIdAndUpdate({_id: postId}, post, { new: true })
+        .then(docs => {
+            res.status(200).json({
+                success: true,
+                likes: docs.likes
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                success: false,
+                err
+            });
+        });
+};
+
+// Get Post Like...
+exports.getLikes = function (req, res) {
+    const postId = req.query.postId;
+
+    Post.findById({_id: postId}, (err, post) => {
+        if (err) return res.json({success: false, err});
+        if (!post) return res.json({success: false, message: 'Post not found!'});
+
+        res.status(200).json({
+            success: true,
+            likes: post.likes
+        });
+    });
+};
+
 // Read Post..
 exports.readPost = function(req, res) {
     const postId = req.query.postId;

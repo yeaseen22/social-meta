@@ -12,6 +12,9 @@ const express = require('express'),
  * ---- GET REQUESTS ---- ..
  * ----**/
 
+// Get Likes from Post...
+router.get('/get_post_likes', postController.getLikes);
+
 // User Profile by id..
 router.get('/profile_by_id', userController.profileById);
 
@@ -46,6 +49,9 @@ router.get('/logout', auth, userController.logout);
 /**----
  * ---- POST REQUESTS ---- ..
  * ----**/
+
+// Make Like a Post..
+router.post('/post_like', auth, postController.likePost);
 
 // User's colorMode update..
 router.post('/user_colorMode_update', auth, userController.updateColorMode);
