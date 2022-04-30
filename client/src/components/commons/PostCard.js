@@ -476,6 +476,19 @@ const PostCard = (props) => {
         }
     };
 
+    // showing Post Likes...
+    const showPostLikes = (liked, likes) => {
+        // increments showing..
+        if (liked){
+            return ++likes -1;
+        }
+
+        // decrements showing..
+        if (!liked){
+            return --likes;
+        }
+    };
+
     // showing profile firstname lastname or profile photo of userByOwnerId..
     const showNameOrProfileOrTitle = (type) => {
         switch (type) {
@@ -551,7 +564,7 @@ const PostCard = (props) => {
                 </IconButton>
                 {/* Numbers of Like */}
                 <span>
-                    { postLikes }
+                    { showPostLikes(isLiked, postLikes) }
                 </span>
 
                 <IconButton aria-label="share">
