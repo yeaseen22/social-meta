@@ -49,12 +49,14 @@ class Home extends React.Component{
                     postBody={post.body}
                     postImage={post.image}
                     createdAt={post.createdAt}
+                    updatedAt={post.updatedAt}
+                    postLikes={post.likes ? post.likes : 0}
                 />
         ));
     }
 
     render() {
-        // console.log(this.props.Posts);
+        console.log('Posts from home -- ', this.props.allPosts);
 
         return (
             <div>

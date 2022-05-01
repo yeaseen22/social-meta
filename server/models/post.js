@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const postSchema = mongoose.Schema({
     image: { type: String, required: false },
     body: { type: String, required: false, maxLength: 2000 },
-    ownerId: { type: String, required: false }
+    ownerId: { type: String, required: false },
+    likes: { type: Number, required: false, defaultValue: 0 },
+    isLiked: { type: Boolean, required: false, defaultValue: false }
 }, {
     timestamps: true
 });

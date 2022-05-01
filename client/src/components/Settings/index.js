@@ -9,8 +9,6 @@ import {
     ListItemText
 } from '@mui/material';
 import {
-    MoveToInbox as InboxIcon,
-    Mail as MailIcon,
     Settings as SettingsIcon,
 } from '@mui/icons-material';
 import styled from 'styled-components';
@@ -26,6 +24,8 @@ import {
 } from '../../redux/actions/SettingActions';
 import ThemeMode from './ThemeMode';
 import AppColor from './AppColor';
+import ChangeEmail from './ChangeEmail';
+import ChangePassword from './ChangePassword';
 
 
 // Main Settings Component..
@@ -147,7 +147,7 @@ const Settings = (props) => {
         }
     }
 
-    // console.log('Theme is now for there -- ', themeMode);
+    // console.log('Theme is now for there -- ', themeModes);
 
     // Styled Paper Component..
     // Used this Styled Component to pass CSS to Drawer's Paper props inner drawer component..
@@ -281,27 +281,11 @@ const Settings = (props) => {
                 makeChangeAppColor={makeChangeAppColor}
             />
 
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon style={{ color: themeMode.iconColor }}>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
-            <Divider style={{ background: themeMode.iconColor }} />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon style={{ color: themeMode.iconColor }}>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
+            {/*----- Change Primary Email -----*/}
+            <ChangeEmail themeModes={themeModes} />
+
+            {/*----- Change Password -----*/}
+            <ChangePassword themeModes={themeModes} />
         </Box>
     );
 

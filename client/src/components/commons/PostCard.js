@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import {
     Card,
@@ -29,10 +29,11 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { deletePost, updatePost } from '../../redux/actions/PostActions';
+import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
-import {LoadingButton} from "@mui/lab";
+import { LoadingButton } from "@mui/lab";
 import Uploader from "../widgets/Uploader";
+import Comments from './Comments';
 
 
 // path for initialPath for image as post image..
@@ -139,7 +140,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                 loadingPosition="start"
                 variant="contained"
                 fullWidth={true}
-                startIcon={<SendIcon/>}
+                startIcon={<SendIcon />}
             >
                 Update
             </LoadingButton>
@@ -172,7 +173,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                         placeholder="Make Update from previous post.."
                         style={postBodyInputStyle}
                         onChange={(e) => {
-                            setPostData({...postData, postBody: e.target.value})
+                            setPostData({ ...postData, postBody: e.target.value })
                         }}
                     />
                     <Uploader
@@ -182,16 +183,16 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                     />
 
                     {/*---- Post-Submit button or loading ----*/}
-                    <div style={{marginTop: '0.5rem'}}>
+                    <div style={{ marginTop: '0.5rem' }}>
                         {postSubmitButton(postData.loading)}
                     </div>
 
-                    <div style={{marginTop: '0.5rem'}}>
+                    <div style={{ marginTop: '0.5rem' }}>
                         <Button
                             variant="contained"
                             fullWidth={true}
                             color="error"
-                            endIcon={<CancelIcon/>}
+                            endIcon={<CancelIcon />}
                             onClick={() => setEditModal(false)}
                         >
                             cancel
@@ -207,7 +208,7 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
 
 // Main PostCard's Component..
 const PostCard = (props) => {
-    const { ownerId, postId, postBody, postImage, createdAt } = props;
+    const { ownerId, postId, postBody, postImage, createdAt, updatedAt, postLikes } = props;
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
@@ -222,12 +223,15 @@ const PostCard = (props) => {
         backgroundColor: 'white',
         textColor: 'black',
     });
+    const [isLiked, setIsLiked] = React.useState(false);
+
+    // console.log(props.allPosts);
 
     // React Router navigation..
     const navigate = useNavigate();
 
-    const fetchUserByOwnerId = async(id) => {
-            await axios.get(`/api/find_user?ownerId=${id}`)
+    const fetchUserByOwnerId = async (id) => {
+        await axios.get(`/api/find_user?ownerId=${id}`)
             .then(response => {
                 setUserByOwner(response.data);
             })
@@ -235,11 +239,11 @@ const PostCard = (props) => {
     };
 
     // useEffect hook..
-    useEffect( () => {
+    useEffect(() => {
         fetchUserByOwnerId(ownerId);
 
         // setting themeMode..
-        if (props.themeMode){
+        if (props.themeMode) {
             // ThemeMode..
             const { cardBackgroundColor, cardFontColor, cardSubFontColor, cardBorder, backgroundColor, textColor } = props.themeMode;
             setThemeMode({
@@ -283,6 +287,26 @@ const PostCard = (props) => {
         postCreatedAt: createdAt
     };
 
+    // LikePost..
+    const handleLikePost = () => {
+        const newPost = {
+            _id: postId,
+            body: postBody,
+        };
+
+        // To Make Increment Likes..
+        if (!isLiked) {
+            setIsLiked(true);
+            props.dispatch(likedPost(true, postId, newPost));
+        }
+
+        // To Make Decrement Likes
+        if (isLiked) {
+            setIsLiked(false);
+            props.dispatch(likedPost(false, postId, newPost));
+        }
+    };
+
     // expandClick handle function..
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -301,7 +325,7 @@ const PostCard = (props) => {
         event.preventDefault();
 
         // Confirmation to delete or not..
-        if (window.confirm("Are you sure want to delete?")){
+        if (window.confirm("Are you sure want to delete?")) {
             // make delete req. to server..
             props.dispatch(deletePost(postId));
             window.location.reload();
@@ -311,7 +335,7 @@ const PostCard = (props) => {
     // to Update Post..
     const handleUpdate = (event, postData, setPostData) => {
         event.preventDefault();
-        setPostData({...postData, loading: true});
+        setPostData({ ...postData, loading: true });
 
         // FormData Class to Object..
         const formData = new FormData();
@@ -323,7 +347,7 @@ const PostCard = (props) => {
         props.dispatch(updatePost(formData));
 
         setTimeout(() => {
-            setPostData({...postData, loading: false});
+            setPostData({ ...postData, loading: false });
             // redirect to home..
             navigate('/');
         }, 2000);
@@ -338,7 +362,7 @@ const PostCard = (props) => {
                 image={`${initialPostImgPath}/${postImage}`}
                 alt="Paella dish"
             />
-        ): null
+        ) : null
     );
 
     // To rendering Post Menu as Profile Or Home View..
@@ -347,7 +371,7 @@ const PostCard = (props) => {
         // themeMode..
         const { backgroundColor, textColor, cardBorder, cardSubFontColor } = themeMode;
 
-        switch (type){
+        switch (type) {
             case "HOME":
                 return (
                     <Menu
@@ -360,7 +384,7 @@ const PostCard = (props) => {
                         }}
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
-                        {props.login.id !== ownerId ?  (
+                        {props.login.id !== ownerId ? (
                             <Link to={`/profile-others/${ownerId}`}>
                                 <MenuItem onClick={handleOptionClose}>
                                     <ListItemIcon>
@@ -419,7 +443,7 @@ const PostCard = (props) => {
                             handleUpdate={handleUpdate}
                         />
 
-                        <MenuItem onClick={(e) => {handleOptionClose(e); clickToDeletePost(e, props.postId)}}>
+                        <MenuItem onClick={(e) => { handleOptionClose(e); clickToDeletePost(e, props.postId) }}>
                             <ListItemIcon>
                                 <DeleteIcon />
                             </ListItemIcon>
@@ -453,23 +477,36 @@ const PostCard = (props) => {
         }
     };
 
+    // showing Post Likes...
+    const showPostLikes = (liked, likes) => {
+        // increments showing..
+        if (liked) {
+            return ++likes - 1;
+        }
+
+        // decrements showing..
+        if (!liked) {
+            return --likes;
+        }
+    };
+
     // showing profile firstname lastname or profile photo of userByOwnerId..
     const showNameOrProfileOrTitle = (type) => {
-        switch (type){
+        switch (type) {
             case "NAME":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.firstname} ${userByOwner.foundUser.lastname}`;
 
             case "PROFILE":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.profilePhoto}`;
 
             case "TITLE":
-                if (userByOwner === null){
+                if (userByOwner === null) {
                     return "Loading...";
                 }
                 return `${userByOwner.foundUser.title}`;
@@ -509,20 +546,31 @@ const PostCard = (props) => {
             {/*---- Post Body here ----*/}
             <CardContent>
                 <Typography variant="body1"
-                            dangerouslySetInnerHTML={{
-                                __html: postBody
-                            } }
+                    dangerouslySetInnerHTML={{
+                        __html: postBody
+                    }}
                 />
                 <Typography variant="body2" color={themeMode.cardSubFontColor}>
                     Created at: {createdAt}
+                </Typography>
+                <Typography variant="body2" color={themeMode.cardSubFontColor}>
+                    Updated at: {updatedAt}
                 </Typography>
             </CardContent>
 
             {/*---- ExpandMore button and for dropdown here ----*/}
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon style={{ color: themeMode.cardFontColor }} />
+                <IconButton
+                    aria-label="add to favorites"
+                    onClick={handleLikePost}
+                >
+                    <FavoriteIcon style={{ color: !isLiked ? themeMode.cardFontColor : 'red' }} />
                 </IconButton>
+                {/* Numbers of Like */}
+                <span>
+                    {showPostLikes(isLiked, postLikes)}
+                </span>
+
                 <IconButton aria-label="share">
                     <ShareIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>
@@ -539,33 +587,7 @@ const PostCard = (props) => {
             {/*---- Collapse Area Section ----*/}
             {/*---- It will be the future Comments section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                        aside for 10 minutes.
-                    </Typography>
-                    <Typography paragraph>
-                        Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                        medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                        occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                        large plate and set aside, leaving chicken and chorizo in the pan. Add
-                        pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                        stirring often until thickened and fragrant, about 10 minutes. Add
-                        saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                    </Typography>
-                    <Typography paragraph>
-                        Add rice and stir very gently to distribute. Top with artichokes and
-                        peppers, and cook without stirring, until most of the liquid is absorbed,
-                        15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                        mussels, tucking them down into the rice, and cook again without
-                        stirring, until mussels have opened and rice is just tender, 5 to 7
-                        minutes more. (Discard any mussels that don’t open.)
-                    </Typography>
-                    <Typography>
-                        Set aside off of the heat to let rest for 10 minutes, and then serve.
-                    </Typography>
-                </CardContent>
+                <Comments />
             </Collapse>
         </Card>
     );
@@ -573,7 +595,7 @@ const PostCard = (props) => {
 
 // mapStateToProps..
 const mapStateToProps = (state) => {
-    return {...state.Post, ...state.User, ...state.Settings};
+    return { ...state.Post, ...state.User, ...state.Settings };
 };
 
 export default connect(mapStateToProps)(PostCard);

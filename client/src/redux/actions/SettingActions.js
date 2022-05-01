@@ -5,7 +5,11 @@ import axios from 'axios';
 export async function appColorBlack() {
     const appColor = {
         backgroundColor: 'black',
-    };
+    };  
+
+    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+        .then(response => response.data)
+        .catch(err => console.log('ERR!! error when try to maked Black ColorMode Action -- ', err.message));
 
     return {
         type: 'APP_COLOR_BLACK',
@@ -18,6 +22,10 @@ export async function appColorRoyalblue() {
         backgroundColor: 'royalblue',
     };
 
+    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+        .then(response => response.data)
+        .catch(err => console.log('ERR!! error when try to maked Royalblue ColorMode Action -- ', err.message));
+
     return {
         type: 'APP_COLOR_ROYALBLUE',
         payload: appColor
@@ -29,6 +37,10 @@ export async function appColorGreen() {
         backgroundColor: 'green',
     };
 
+    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+        .then(response => response.data)
+        .catch(err => console.log('ERR!! error when try to maked Green ColorMode Action -- ', err.message));
+
     return {
         type: 'APP_COLOR_GREEN',
         payload: appColor
@@ -39,6 +51,10 @@ export async function appColorRed() {
     const appColor = {
         backgroundColor: 'red'
     };
+
+    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+        .then(response => response.data)
+        .catch(err => console.log('ERR!! error when try to maked Red ColorMode Action -- ', err.message));
 
     return {
         type: 'APP_COLOR_RED',

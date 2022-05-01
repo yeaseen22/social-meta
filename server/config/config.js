@@ -10,13 +10,13 @@
 const config = {
     production: {
         SECRET: process.env.SECRET,
-        DATABASE: process.env.DATABASE,
+        MONGO_URI: process.env.DATABASE,
         HOST: process.env.HOST,
         PORT: process.env.PORT
     },
     default: {
         SECRET: 'SUPERSECRET',
-        DATABASE: 'mongodb://localhost:27017/socialMeta',
+        MONGO_URI: 'mongodb://localhost:27017/socialMeta',
         HOST: 'localhost',
         PORT: 8080
     }

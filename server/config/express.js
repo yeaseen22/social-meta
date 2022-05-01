@@ -2,8 +2,9 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     cors = require('cors'),
-    mongoose = require('mongoose'),
-    config = require('./config').get(process.env.NODE_ENV),
+    mongoose = require('mongoose')
+    // config = require('./config').get(process.env.NODE_ENV),
+    require('dotenv').config(),
     apiRouter = require('../routes/apiRouter');
 
 // Exports init function..
@@ -19,7 +20,9 @@ module.exports.init = () => {
     mongoose.Promise = global.Promise;
 
     // Mongoose Connection..
-    mongoose.connect(config.DATABASE, mongoOptions, function (error) {
+    // if use config.js file so it will be config.MONGO_URI..
+    // if use .env file so it will be process.env.MONGO_URI..
+    mongoose.connect(process.env.MONGO_URI, mongoOptions, function (error) {
         if (error) return console.log(error);
         console.log('------ Mongoose is connected! -------');
     });

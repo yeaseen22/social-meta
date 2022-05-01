@@ -69,6 +69,8 @@ const ProfileOthers = (props) => {
                     postBody={post.body}
                     postImage={post.image}
                     createdAt={post.createdAt}
+                    updatedAt={post.updatedAt}
+                    postLikes={post.likes ? post.likes : 0}
                 />
         ));
     }
