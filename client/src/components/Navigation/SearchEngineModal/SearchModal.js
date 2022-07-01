@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Typography, Box, InputBase } from '@mui/material';
-import { RestorePageRounded, Search as SearchIcon } from '@mui/icons-material';
+import { RestorePageRounded, Search as SearchIcon, EditLocationAlt as EditLocationAltIcon } from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NotFound from '../../widgets/NotFound';
@@ -60,8 +60,7 @@ const styleModalBox = {
     border: '1px solid lightgray',
     boxShadow: 24,
     p: 1,
-    borderRadius: 2,
-    textAlign: 'center'
+    borderRadius: 2
 };
 
 const styleSearchBar = {
@@ -101,7 +100,8 @@ const SearchModal = (props) => {
         const filteredData = AllUsers.filter(item => {
             const firstname = item.firstname.toLowerCase();
             const lastname = item.lastname.toLowerCase();
-            const userValue = searchValue.toLowerCase();
+            let userValue = searchValue.toLowerCase();
+            userValue = userValue.split(' ', 1).toString();
 
             if (firstname === userValue){
                 return firstname === userValue;
@@ -126,14 +126,28 @@ const SearchModal = (props) => {
     console.log("Filtered OR Search Result -- ", filteredUsers);
 
     // Founded Data..
-    const foundedData = () => {
-        return (
-            <>
-                <FoundUser />
-                <FoundUser />
-                <FoundUser />
-            </>
-        );
+    const foundedData = (handleClose) => {
+        if (filteredUsers.length > 0) {
+            return (
+                <>
+                    {filteredUsers.map(user => {
+                        return (
+                            <FoundUser 
+                                key={user._id} 
+                                handleClose={handleClose} 
+                                userId={user._id}
+                                firstname={user.firstname}
+                                lastname={user.lastname}
+                                email={user.email}
+                                title={user.title}
+                                profilePhoto={user.profilePhoto}
+                            />
+                        );
+                    })}
+                </>
+            );
+        }
+        return notFoundedData();
     }
 
     // Not Founded Data..
@@ -165,9 +179,12 @@ const SearchModal = (props) => {
                             onChange={handleSearchKeyChange}
                         />
                     </Search>
+
+                    {/* ---- Select Search For ----- */}
+                    <EditLocationAltIcon />
                     
                     {/* ----- Search Result Data Area ----- */}
-                    { !foundData ? notFoundedData() : foundedData() }
+                    { !foundData ? notFoundedData() : foundedData(handleClose) }
                 </Box>
             </Modal>
         </>

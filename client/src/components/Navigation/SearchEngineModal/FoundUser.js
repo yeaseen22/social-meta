@@ -3,22 +3,25 @@ import { Box, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-const FoundUser = () => {
+const FoundUser = ({ handleClose, userId, firstname, lastname, email, title, profilePhoto }) => {
     // Naviagate..
     const navigate = useNavigate();
 
     // Redirect to..
     const clickToRedirect = () => {
-        navigate(`/profile-others`);
+        navigate(`/profile-others/${userId}`);
+        handleClose();
     };
 
     // Search Box Design..
     const styleSearchResultBox = {
         border: '1px solid lightgray',
         borderRadius: 3,
-        padding: 10,
         display: 'inline-flex',
-        marginBottom: '0.5rem'
+        marginBottom: '0.5rem',
+        width: '100%',
+        paddingTop: 10,
+        paddingBottom: 10
     };
 
     const styleResultChild = {
@@ -38,20 +41,18 @@ const FoundUser = () => {
         <Box style={styleSearchResultBox}>
             {/* ---- Profile Image ---- */}
             <div style={styleResultChild} onClick={clickToRedirect}>
-                <img src="" alt="Asad Anik" style={styleImg} />
+                <img src={`/profileUpload/${profilePhoto}`} alt="Asad Anik" style={styleImg} />
             </div>
 
             {/* ---- Firstname & Lastname */}
             <div style={styleResultChild} onClick={clickToRedirect}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    <span>Asad Anik</span>
-                    <span>{" "}</span>
-                    <span>(Engineer)</span>
+                <Typography id="modal-modal-title" variant="h6" component="h3">
+                    <span>{firstname}<span>{" "}</span>{lastname}</span>
                 </Typography>
 
                 {/* ---- Title ---- */}
                 <Typography id="modal-modal-description" style={{ color: 'gray' }}>
-                    <span>engr.asadanik@gmail.com</span>
+                    <span>{title}</span>
                 </Typography>
             </div>
 
