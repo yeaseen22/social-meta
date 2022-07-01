@@ -3,8 +3,8 @@ import { Avatar, Grid, Paper } from "@material-ui/core";
 const imgLink =
     "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
 
-// Comments Component..
-const Comments = () => {
+// ViewComments Component..
+const ViewComments = () => {
     return (
         <div style={{ padding: 15 }} className="App">
             <h2>Comments</h2>
@@ -64,4 +64,4 @@ const Comments = () => {
     );
 };
 
-export default Comments;
+export default ViewComments;

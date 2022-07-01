@@ -25,15 +25,17 @@ import {
     Person as PersonIcon,
     Report as ReportIcon,
     Send as SendIcon,
-    Cancel as CancelIcon
+    Cancel as CancelIcon,
+    Comment as CommentIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
 import { LoadingButton } from "@mui/lab";
-import Uploader from "../widgets/Uploader";
-import Comments from './Comments';
+import Uploader from "../widgets/Uploader"; 
+import ViewComments from '../Comment/ViewComments';
+import MakeComments from '../Comment/MakeComments';
 
 
 // path for initialPath for image as post image..
@@ -224,6 +226,7 @@ const PostCard = (props) => {
         textColor: 'black',
     });
     const [isLiked, setIsLiked] = React.useState(false);
+    const [commentModal, setCommentModal] = React.useState(false);
 
     // console.log(props.allPosts);
 
@@ -479,14 +482,16 @@ const PostCard = (props) => {
 
     // showing Post Likes...
     const showPostLikes = (liked, likes) => {
-        // increments showing..
-        if (liked) {
-            return ++likes - 1;
-        }
+        likes = likes + 1;
 
         // decrements showing..
         if (!liked) {
             return --likes;
+        }
+
+        // increments showing..
+        if (liked) {
+            return ++likes - 1;
         }
     };
 
@@ -571,9 +576,21 @@ const PostCard = (props) => {
                     {showPostLikes(isLiked, postLikes)}
                 </span>
 
-                <IconButton aria-label="share">
-                    <ShareIcon style={{ color: themeMode.cardFontColor }} />
+                {/* CommentIcon to make Comment */}
+                <IconButton 
+                    aria-label="comment"
+                    onClick={() => setCommentModal(true)}
+                >
+                    <CommentIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>
+
+                {/* Showing the MakeComments Modal */}
+                <MakeComments 
+                    showModal={commentModal}
+                    setCommentModal={setCommentModal}
+                />
+
+                {/* ExpandMore icon to see all comments */}
                 <ExpandMore
                     expand={expanded}
                     onClick={handleExpandClick}
@@ -587,7 +604,7 @@ const PostCard = (props) => {
             {/*---- Collapse Area Section ----*/}
             {/*---- It will be the future Comments section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <Comments />
+                <ViewComments />
             </Collapse>
         </Card>
     );

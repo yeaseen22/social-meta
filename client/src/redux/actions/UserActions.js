@@ -96,3 +96,15 @@ export function profileUpload(data){
         payload: request
     };
 }
+
+// Show All Users..
+export async function showAllUsers(){
+    const request = axios.get('/api/read_all_users')
+        .then(response => response.data.users)
+        .catch(err => console.log('Get ERR! when try to fetch all users data.', err.message));
+
+    return {
+        type: "ALL_USERS",
+        payload: request
+    };
+}

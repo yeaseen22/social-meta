@@ -34,6 +34,7 @@ import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/UserActions';
 import * as PropTypes from "prop-types";
 import Settings from '../Settings';
+import SearchModal from './SearchEngineModal/SearchModal';
 
 
 // ByDefault profile photo path..
@@ -131,6 +132,9 @@ ScrollTop.propTypes = {
 
 // Appbar component..
 const Appbar = (props) => {
+    // Search Modal open Hook..
+    const [searchModalOpen, setSearchModalOpen] = React.useState(false);
+
     // useNavigate Hook from react-router-dom..
     const navigate = useNavigate();
     const [AppbarBG, setAppbarBG] = React.useState('royalblue');
@@ -178,6 +182,15 @@ const Appbar = (props) => {
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    // Handle Search Modal Open & Close..
+    const handleSearchClose = () => {
+        setSearchModalOpen(false);
+    };
+
+    const handleSearchOpen = () => {
+        setSearchModalOpen(true);
     };
 
     // Logout function..
@@ -350,7 +363,10 @@ const Appbar = (props) => {
                             <StyledInputBase
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onClick={handleSearchOpen}
+                                disabled={true}
                             />
+                            <SearchModal open={searchModalOpen} handleClose={handleSearchClose} />
                         </Search>
 
                         <Box sx={{ flexGrow: 1 }} />
