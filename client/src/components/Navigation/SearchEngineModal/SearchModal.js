@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, Typography, Box, InputBase, Button } from '@mui/material';
 import {
-    RestorePageRounded,
     Search as SearchIcon,
     EditLocationAlt as EditLocationAltIcon,
     SupervisedUserCircle as SupervisedUserCircleIcon,
@@ -12,6 +11,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import NotFound from '../../widgets/NotFound';
 import { connect } from 'react-redux';
 import { showAllUsers } from '../../../redux/actions/UserActions';
+import { readAllPosts } from '../../../redux/actions/PostActions';
 import FoundUser from './FoundUser';
 import FoundPost from './FoundPost';
 
@@ -65,9 +65,13 @@ const styleModalBox = {
     width: 600,
     bgcolor: 'background.paper',
     border: '1px solid lightgray',
+    paddingLeft: 1,
+    paddingRight: 1,
     boxShadow: 24,
-    p: 1,
-    borderRadius: 2
+    borderRadius: 2,
+    maxHeight: 500,
+    overflow: 'scroll',
+    scrollBehavior: 'smooth'
 };
 
 const styleSearchBar = {
@@ -76,6 +80,8 @@ const styleSearchBar = {
     border: '1px solid lightgray',
     marginBottom: 10,
     width: '90%',
+    position: 'sticky',
+    top: 0,
 };
 
 const styleSearchTypeIcon = {
@@ -114,6 +120,7 @@ const SearchModal = (props) => {
     // React Hook UseEffect..
     React.useEffect(() => {
         props.dispatch(showAllUsers());
+        props.dispatch(readAllPosts());
     }, []);
 
     // console.log('--- Props --- ', props);
@@ -176,10 +183,10 @@ const SearchModal = (props) => {
 
         // Put all users inside the Array Hook..
         setAllUsers(props.users.allUsers);
-        
         // Put all posts inside the Array Hook..
         setAllPosts(props.posts.allPosts);
 
+        // Search Engine Function..
         searchEngine(TYPE, searchValue);
     };
 
@@ -200,7 +207,6 @@ const SearchModal = (props) => {
                                     userId={user._id}
                                     firstname={user.firstname}
                                     lastname={user.lastname}
-                                    email={user.email}
                                     title={user.title}
                                     profilePhoto={user.profilePhoto}
                                 />
@@ -218,9 +224,10 @@ const SearchModal = (props) => {
                     <>
                         {filteredPosts.map(post => {
                             return (
-                                <FoundPost 
+                                <FoundPost
                                     key={post._id}
                                     handleClose={handleClose}
+                                    postId={post._id}
                                     body={post.body}
                                     image={post.image}
                                     ownerId={post.ownerId}
@@ -253,7 +260,7 @@ const SearchModal = (props) => {
                 arial-describedby="modal-modal-description"
             >
                 <Box sx={styleModalBox}>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', position: 'sticky', top: 0, background: 'white', paddingTop: 5 }}>
                         {/* ---- Search Bar ---- */}
                         <Search style={styleSearchBar}>
                             <SearchIconWrapper>

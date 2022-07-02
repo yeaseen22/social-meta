@@ -3,7 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-const FoundUser = ({ handleClose, userId, firstname, lastname, email, title, profilePhoto }) => {
+const FoundUser = ({ handleClose, userId, firstname, lastname, title, profilePhoto }) => {
     // Naviagate..
     const navigate = useNavigate();
 
