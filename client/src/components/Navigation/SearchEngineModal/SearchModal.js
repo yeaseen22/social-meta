@@ -1,12 +1,19 @@
 import React from 'react';
-import { Modal, Typography, Box, InputBase } from '@mui/material';
-import { RestorePageRounded, Search as SearchIcon, EditLocationAlt as EditLocationAltIcon } from '@mui/icons-material';
+import { Modal, Typography, Box, InputBase, Button } from '@mui/material';
+import {
+    RestorePageRounded,
+    Search as SearchIcon,
+    EditLocationAlt as EditLocationAltIcon,
+    SupervisedUserCircle as SupervisedUserCircleIcon,
+    DynamicFeed as DynamicFeedIcon
+} from '@mui/icons-material';
 import { styled, alpha } from '@mui/material/styles';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NotFound from '../../widgets/NotFound';
 import { connect } from 'react-redux';
 import { showAllUsers } from '../../../redux/actions/UserActions';
 import FoundUser from './FoundUser';
+import FoundPost from './FoundPost';
 
 // Styling Components..
 const Search = styled('div')(({ theme }) => ({
@@ -68,17 +75,41 @@ const styleSearchBar = {
     margin: 0,
     border: '1px solid lightgray',
     marginBottom: 10,
-    width: '100%',
+    width: '90%',
+};
+
+const styleSearchTypeIcon = {
+    fontSize: 35,
+    padding: 5,
+    backgroundColor: 'gray',
+    // marginLeft: 10,
+    borderRadius: 5,
+    color: 'white',
+    cursor: 'pointer',
+    marginTop: -11
+};
+
+const styleJustifySearchTypes = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: 5,
+    border: '1px solid lightgray',
+    margin: 5,
+    cursor: 'pointer',
 };
 
 // SearchModal here..
 const SearchModal = (props) => {
     const { open, handleClose } = props;
     const [searchKeyPressed, setSearchKeyPressed] = React.useState(false);
-    const [foundData, setFoundData] = React.useState(true);
+    // const [foundData, setFoundData] = React.useState(true);
     const [searchText, setSearchText] = React.useState('');
     const [AllUsers, setAllUsers] = React.useState([]);
+    const [AllPosts, setAllPosts] = React.useState([]);
     const [filteredUsers, setFilteredUsers] = React.useState([]);
+    const [filteredPosts, setFilteredPosts] = React.useState([]);
+    const [searchTypeOpen, setSearchTypeOpen] = React.useState(false);
+    const [typeOfSearch, setTypeOfSearch] = React.useState('USER');
 
     // React Hook UseEffect..
     React.useEffect(() => {
@@ -87,34 +118,49 @@ const SearchModal = (props) => {
 
     // console.log('--- Props --- ', props);
 
-    // OnChange handler Function..
-    const handleSearchKeyChange = (event) => {
-        const searchValue = event.target.value;
-        setSearchText(searchValue);
+    // Search type close handle function..
+    const handleSearchTypeClose = () => {
+        setSearchTypeOpen(false);
+    };
 
-        // Put all users inside the Array Hook..
-        setAllUsers(props.users.allUsers);
-        // console.log('See All Users Array == ', AllUsers);
+    const searchEngine = (TYPE, searchValue) => {
+        // SEARCH FOR USERS..
+        if (TYPE === 'USER') {
+            // Make Filter for the Search data..
+            const filteredData = AllUsers.filter(item => {
+                const firstname = item.firstname.toLowerCase();
+                const lastname = item.lastname.toLowerCase();
+                let userValue = searchValue.toLowerCase();
+                userValue = userValue.split(' ', 1).toString();
 
-        // Make Filter for the Search data..
-        const filteredData = AllUsers.filter(item => {
-            const firstname = item.firstname.toLowerCase();
-            const lastname = item.lastname.toLowerCase();
-            let userValue = searchValue.toLowerCase();
-            userValue = userValue.split(' ', 1).toString();
+                if (firstname === userValue) {
+                    return firstname === userValue;
+                }
 
-            if (firstname === userValue){
-                return firstname === userValue;
-            }
+                if (lastname === userValue) {
+                    return lastname === userValue;
+                }
+            });
 
-            if (lastname === userValue){
-                return lastname === userValue;
-            }
-        });
+            // console.log('Getting the new Filtered data -- ', filteredData);
+            // Make Filtered Data put into the React Hook..
+            setFilteredUsers(filteredData);
+        }
 
-        // console.log('Getting the new Filtered data -- ', filteredData);
-        // Make Filtered Data put into the React Hook..
-        setFilteredUsers(filteredData);
+        // SEARCH FOR POSTS..
+        if (TYPE === 'POST') {
+            const filteredData = AllPosts.filter(item => {
+                let postBody = item.body;
+                const userValue = searchValue.toLowerCase();
+                postBody = postBody.replace(/<\/?[^>]+(>|$)/g, "");
+                postBody = postBody.toLowerCase();
+
+                return postBody.indexOf(userValue) > -1;
+            });
+
+            // Make Filtered Data pu into the React Hook..
+            setFilteredPosts(filteredData);
+        }
 
         if (searchValue.length > 0) {
             setSearchKeyPressed(true);
@@ -123,30 +169,70 @@ const SearchModal = (props) => {
         }
     };
 
-    console.log("Filtered OR Search Result -- ", filteredUsers);
+    // OnChange handler Function..
+    const handleSearchKeyChange = (event, TYPE) => {
+        const searchValue = event.target.value;
+        setSearchText(searchValue);
+
+        // Put all users inside the Array Hook..
+        setAllUsers(props.users.allUsers);
+        
+        // Put all posts inside the Array Hook..
+        setAllPosts(props.posts.allPosts);
+
+        searchEngine(TYPE, searchValue);
+    };
+
+    // console.log("Filtered OR Search Result -- ", filteredUsers);
+    // console.log("Filtered Posts == ", filteredPosts);
 
     // Founded Data..
-    const foundedData = (handleClose) => {
-        if (filteredUsers.length > 0) {
-            return (
-                <>
-                    {filteredUsers.map(user => {
-                        return (
-                            <FoundUser 
-                                key={user._id} 
-                                handleClose={handleClose} 
-                                userId={user._id}
-                                firstname={user.firstname}
-                                lastname={user.lastname}
-                                email={user.email}
-                                title={user.title}
-                                profilePhoto={user.profilePhoto}
-                            />
-                        );
-                    })}
-                </>
-            );
+    const foundedData = (handleClose, TYPE) => {
+        if (TYPE === 'USER') {
+            if (filteredUsers.length > 0) {
+                return (
+                    <>
+                        {filteredUsers.map(user => {
+                            return (
+                                <FoundUser
+                                    key={user._id}
+                                    handleClose={handleClose}
+                                    userId={user._id}
+                                    firstname={user.firstname}
+                                    lastname={user.lastname}
+                                    email={user.email}
+                                    title={user.title}
+                                    profilePhoto={user.profilePhoto}
+                                />
+                            );
+                        })}
+                    </>
+                );
+            }
+            return notFoundedData();
         }
+
+        if (TYPE === 'POST') {
+            if (filteredPosts.length > 0) {
+                return (
+                    <>
+                        {filteredPosts.map(post => {
+                            return (
+                                <FoundPost 
+                                    key={post._id}
+                                    handleClose={handleClose}
+                                    body={post.body}
+                                    image={post.image}
+                                    ownerId={post.ownerId}
+                                />
+                            );
+                        })}
+                    </>
+                );
+            }
+            return notFoundedData();
+        }
+
         return notFoundedData();
     }
 
@@ -167,24 +253,63 @@ const SearchModal = (props) => {
                 arial-describedby="modal-modal-description"
             >
                 <Box sx={styleModalBox}>
-                    {/* ---- Search Bar ---- */}
-                    <Search style={styleSearchBar}>
-                        <SearchIconWrapper>
-                            {!searchKeyPressed ? <SearchIcon /> : <LoadingButton loading style={{ marginLeft: '-20px' }} />}
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            style={{ width: '100%', fontSize: '20px' }}
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={handleSearchKeyChange}
-                        />
-                    </Search>
+                    <div style={{ display: 'flex' }}>
+                        {/* ---- Search Bar ---- */}
+                        <Search style={styleSearchBar}>
+                            <SearchIconWrapper>
+                                {!searchKeyPressed ? <SearchIcon /> : <LoadingButton loading style={{ marginLeft: '-20px' }} />}
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                style={{ width: '100%', fontSize: '20px' }}
+                                placeholder={typeOfSearch === 'USER' ? 'Search User..' : 'Search Post..'}
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={(event) => handleSearchKeyChange(event, typeOfSearch)}
+                            />
+                        </Search>
 
-                    {/* ---- Select Search For ----- */}
-                    <EditLocationAltIcon />
-                    
+                        {/* ---- Select Search For Type Change ----- */}
+                        <Button onClick={() => setSearchTypeOpen(true)}>
+                            <EditLocationAltIcon style={styleSearchTypeIcon} />
+                        </Button>
+
+                        <Modal
+                            open={searchTypeOpen}
+                            onClose={handleSearchTypeClose}
+                            arial-labelledby="modal-modal-description"
+                            airal-describedby="modal-modal-description"
+                        >
+                            <Box sx={{ ...styleModalBox, width: 200 }}>
+                                <h3 id="child-modal-title">Type of Search</h3>
+
+                                <div
+                                    style={{
+                                        ...styleJustifySearchTypes,
+                                        backgroundColor: typeOfSearch === 'USER' && 'gray',
+                                        color: typeOfSearch === 'USER' && 'white',
+                                    }}
+                                    onClick={() => setTypeOfSearch('USER')}
+                                >
+                                    <SupervisedUserCircleIcon />
+                                    <Typography>User Search</Typography>
+                                </div>
+
+                                <div
+                                    style={{
+                                        ...styleJustifySearchTypes,
+                                        backgroundColor: typeOfSearch === 'POST' && 'gray',
+                                        color: typeOfSearch === 'POST' && 'white',
+                                    }}
+                                    onClick={() => setTypeOfSearch('POST')}
+                                >
+                                    <DynamicFeedIcon />
+                                    <Typography>Post Search</Typography>
+                                </div>
+                            </Box>
+                        </Modal>
+                    </div>
+
                     {/* ----- Search Result Data Area ----- */}
-                    { !foundData ? notFoundedData() : foundedData(handleClose) }
+                    {foundedData(handleClose, typeOfSearch)}
                 </Box>
             </Modal>
         </>
@@ -194,7 +319,8 @@ const SearchModal = (props) => {
 // MapStateToProps..
 const mapStateToProps = (state) => {
     return {
-        users: state.User
+        users: state.User,
+        posts: state.Post
     };
 };
 

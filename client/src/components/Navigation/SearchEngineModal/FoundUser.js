@@ -17,11 +17,12 @@ const FoundUser = ({ handleClose, userId, firstname, lastname, email, title, pro
     const styleSearchResultBox = {
         border: '1px solid lightgray',
         borderRadius: 3,
-        display: 'inline-flex',
+        display: 'flex',
         marginBottom: '0.5rem',
         width: '100%',
         paddingTop: 10,
-        paddingBottom: 10
+        paddingBottom: 10,
+        justifyContent: 'space-between'
     };
 
     const styleResultChild = {
@@ -56,7 +57,7 @@ const FoundUser = ({ handleClose, userId, firstname, lastname, email, title, pro
                 </Typography>
             </div>
 
-            <div style={{paddingTop: '0.5rem'}}>
+            <div style={{paddingTop: '0.5rem', paddingRight: '1rem'}}>
                 <Button variant="outlined" startIcon={<AddIcon />}>
                     Follow
                 </Button>
