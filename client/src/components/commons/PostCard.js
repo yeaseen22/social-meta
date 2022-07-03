@@ -26,14 +26,15 @@ import {
     Report as ReportIcon,
     Send as SendIcon,
     Cancel as CancelIcon,
-    Comment as CommentIcon
+    Comment as CommentIcon,
+    Feed as FeedIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
 import { LoadingButton } from "@mui/lab";
-import Uploader from "../widgets/Uploader"; 
+import Uploader from "../widgets/Uploader";
 import ViewComments from '../Comment/ViewComments';
 import MakeComments from '../Comment/MakeComments';
 
@@ -388,32 +389,52 @@ const PostCard = (props) => {
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
                         {props.login.id !== ownerId ? (
-                            <Link to={`/profile-others/${ownerId}`}>
-                                <MenuItem onClick={handleOptionClose}>
-                                    <ListItemIcon>
-                                        <PersonIcon />
-                                    </ListItemIcon>
-                                    View Profile
-                                </MenuItem>
-                            </Link>
-                        ) : (
-                            <Link to={`/profile`}>
-                                <MenuItem onClick={handleOptionClose}>
-                                    <ListItemIcon>
-                                        <PersonIcon />
-                                    </ListItemIcon>
-                                    Profile
-                                </MenuItem>
-                            </Link>
-                        )}
+                            <div>
+                                <Link to={`/profile-others/${ownerId}`}>
+                                    <MenuItem onClick={handleOptionClose}>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        View Profile
+                                    </MenuItem>
+                                </Link>
 
-                        {props.login.id !== ownerId && (
-                            <MenuItem onClick={handleOptionClose}>
-                                <ListItemIcon>
-                                    <ReportIcon />
-                                </ListItemIcon>
-                                Report this post
-                            </MenuItem>
+                                <Link to={`/post/${props.postId}`}>
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <FeedIcon />
+                                        </ListItemIcon>
+                                        View Post
+                                    </MenuItem>
+                                </Link>
+
+                                <MenuItem onClick={handleOptionClose}>
+                                    <ListItemIcon>
+                                        <ReportIcon />
+                                    </ListItemIcon>
+                                    Report this post
+                                </MenuItem>
+                            </div>
+                        ) : (
+                            <div>
+                                <Link to={`/profile`}>
+                                    <MenuItem onClick={handleOptionClose}>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        Profile
+                                    </MenuItem>
+                                </Link>
+
+                                <Link to={`/post/${props.postId}`}>
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <FeedIcon />
+                                        </ListItemIcon>
+                                        View Post
+                                    </MenuItem>
+                                </Link>
+                            </div>
                         )}
                     </Menu>
                 );
@@ -429,6 +450,15 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
+                        <Link to={`/post/${props.postId}`}>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FeedIcon />
+                                </ListItemIcon>
+                                View Post
+                            </MenuItem>
+                        </Link>
+
                         <MenuItem onClick={(e) => setEditModal(true)}>
                             <ListItemIcon>
                                 <EditIcon />
@@ -466,6 +496,16 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
+
+                        <Link to={`/post/${props.postId}`}>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FeedIcon />
+                                </ListItemIcon>
+                                View Post
+                            </MenuItem>
+                        </Link>
+
                         <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
                                 <ReportIcon />
@@ -577,7 +617,7 @@ const PostCard = (props) => {
                 </span>
 
                 {/* CommentIcon to make Comment */}
-                <IconButton 
+                <IconButton
                     aria-label="comment"
                     onClick={() => setCommentModal(true)}
                 >
@@ -585,7 +625,7 @@ const PostCard = (props) => {
                 </IconButton>
 
                 {/* Showing the MakeComments Modal */}
-                <MakeComments 
+                <MakeComments
                     showModal={commentModal}
                     setCommentModal={setCommentModal}
                 />

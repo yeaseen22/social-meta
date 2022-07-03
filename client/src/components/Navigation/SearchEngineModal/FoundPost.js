@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { readPost } from '../../../redux/actions/PostActions';
 
 const FoundPost = ({ handleClose, postId, body, image, ownerId }) => {
     // Naviagate..
@@ -17,7 +18,7 @@ const FoundPost = ({ handleClose, postId, body, image, ownerId }) => {
 
     // Redirect to..
     const clickToRedirect = () => {
-        // navigate(`/profile-others/${userId}`);
+        navigate(`/post/${postId}`);
         handleClose();
     };
 

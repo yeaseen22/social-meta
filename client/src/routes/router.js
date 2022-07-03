@@ -8,6 +8,7 @@ import Profile from '../components/Profile/ProfileOwn';
 import Login from '../components/Auth/login';
 import Register from '../components/Auth/register';
 import ProfileOthers from '../components/Profile/ProfileOthers';
+import Post from '../components/Post';
 
 // Router..
 const Router = () => {
@@ -40,6 +41,11 @@ const Router = () => {
                 {/*---- ProfileOthers means userById ----*/}
                 <Route path={'/profile-others/:userId'} exact element={ <PrivateRoute restrictionLoading={true} /> }>
                     <Route path={'/profile-others/:userId'} exact element={ <ProfileOthers /> } />
+                </Route>
+
+                {/*---- Specefic Post to See ----*/}
+                <Route path={'/post/:postId'} exact element={ <PrivateRoute restrictionLoading={false} /> }>
+                    <Route path={'/post/:postId'} exact element={ <Post /> } />
                 </Route>
             </Routes>
         </Layout>
