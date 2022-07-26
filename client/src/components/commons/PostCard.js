@@ -390,7 +390,10 @@ const PostCard = (props) => {
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
                         {props.login.id !== ownerId ? (
                             <div>
-                                <Link to={`/profile-others/${ownerId}`}>
+                                <Link 
+                                    to={`/profile-others/${ownerId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
                                     <MenuItem onClick={handleOptionClose}>
                                         <ListItemIcon>
                                             <PersonIcon />
@@ -399,7 +402,10 @@ const PostCard = (props) => {
                                     </MenuItem>
                                 </Link>
 
-                                <Link to={`/post/${props.postId}`}>
+                                <Link 
+                                    to={`/post/${props.postId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
                                     <MenuItem>
                                         <ListItemIcon>
                                             <FeedIcon />
@@ -417,7 +423,10 @@ const PostCard = (props) => {
                             </div>
                         ) : (
                             <div>
-                                <Link to={`/profile`}>
+                                <Link 
+                                    to={`/profile`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
                                     <MenuItem onClick={handleOptionClose}>
                                         <ListItemIcon>
                                             <PersonIcon />
@@ -426,7 +435,10 @@ const PostCard = (props) => {
                                     </MenuItem>
                                 </Link>
 
-                                <Link to={`/post/${props.postId}`}>
+                                <Link 
+                                    to={`/post/${props.postId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
                                     <MenuItem>
                                         <ListItemIcon>
                                             <FeedIcon />
@@ -450,7 +462,10 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <Link to={`/post/${props.postId}`}>
+                        <Link 
+                            to={`/post/${props.postId}`}
+                            style={{ textDecoration: 'none', color: 'black' }}
+                        >
                             <MenuItem>
                                 <ListItemIcon>
                                     <FeedIcon />
@@ -497,7 +512,10 @@ const PostCard = (props) => {
                         }}
                     >
 
-                        <Link to={`/post/${props.postId}`}>
+                        <Link 
+                            to={`/post/${props.postId}`}
+                            style={{ textDecoration: 'none', color: 'black' }}
+                        >
                             <MenuItem>
                                 <ListItemIcon>
                                     <FeedIcon />

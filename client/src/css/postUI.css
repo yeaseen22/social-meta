@@ -1,0 +1,49 @@
+.mainBox{
+    margin: 10px;
+    display: grid;
+    justify-content: center;
+    width: 80%;
+    margin-left: 10%;
+}
+
+.childBox{
+    background: rgb(240, 240, 240);
+    color: black;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin-bottom: 0.5rem;
+}
+
+
+/* Section base */
+.header-box{
+    display: inline-flex;
+}
+.header-box div.profileAvatar img{
+    height: 45px;
+    width: 45px;
+    border-radius: 100%;
+    border: 2px solid #fff;    
+}
+.header-box .profileText{
+    margin-top: 0.3rem;
+    padding-left: 0.5rem;
+}
+.profileText .username-text{
+    font-size: 20px;
+}
+.profileText .title-text{
+    font-size: 12px;
+}
+
+.optionsDotMenu{
+    align-self: center;
+    position: relative;
+    left: 77%;
+    cursor: pointer;
+}
+.optionsDotMenu:hover{
+    background: rgba(229, 229, 229, 0.493);
+    border-radius: 100%;
+}

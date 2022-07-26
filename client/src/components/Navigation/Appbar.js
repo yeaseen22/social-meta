@@ -240,14 +240,14 @@ const Appbar = (props) => {
             {/*---- Profile navigate from here ----*/}
             <NavLink
                 to={`/profile`}
-                style={isActive => ({
-                    color: isActive ? "green" : "black"
-                })}>
+                style={{
+                    color: "black",
+                    textDecoration: 'none',
+                }}>
                 <MenuItem onClick={handleMenuClose}>
                     <ListItemIcon>
                         <AccountCircleIcon fontSize="small" />
                     </ListItemIcon>
-
                     Profile
                 </MenuItem>
             </NavLink>
@@ -373,11 +373,11 @@ const Appbar = (props) => {
 
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                             {/*------- HomeIcon -------*/}
-                            <IconButton size="large" color="inherit">
+                            <IconButton size="large">
                                 <NavLink
                                     to={'/'}
-                                    style={isActive => ({
-                                        color: isActive ? "black" : "white"
+                                    style={({isActive}) => ({
+                                        color: !isActive ? "white" : "black"
                                     })}
                                 >
                                     <HomeIcon />

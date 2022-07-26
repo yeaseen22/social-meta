@@ -13,6 +13,9 @@ const express = require('express'),
  * ---- GET REQUESTS ---- ..
  * ----**/
 
+// Read Comment..
+router.get('/read_comment/:postId', commentController.readComment);
+
 // Get All Users..
 router.get('/read_all_users', userController.showAllUsers);
 

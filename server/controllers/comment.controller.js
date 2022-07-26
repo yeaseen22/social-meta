@@ -1,5 +1,18 @@
 const Comment = require('../models/comment');
 
+// Read Comment...
+exports.readComment = function(req, res){
+    const postId = req.params.postId;
+
+    Comment.find({ postId })
+        .then(docs => {
+            res.status(200).json(docs);
+        })
+        .catch(error => {
+            res.status(400).json(error);
+        });
+};
+
 // Make Comment...
 exports.createComment = function(req, res){
     const comment = new Comment(req.body);
