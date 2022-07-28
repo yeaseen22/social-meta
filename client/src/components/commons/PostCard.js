@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
-    Share as ShareIcon,
     ExpandMore as ExpandMoreIcon,
     MoreVert as MoreVertIcon,
     Edit as EditIcon,
@@ -34,6 +33,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
 import { LoadingButton } from "@mui/lab";
+import CustomButton from '../widgets/Button';
 import Uploader from "../widgets/Uploader";
 import ViewComments from '../Comment/ViewComments';
 import MakeComments from '../Comment/MakeComments';
@@ -128,15 +128,10 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
     // Post Submit Button Or Loading after submit..
     const postSubmitButton = (isLoading) => (
         !isLoading ?
-            <Button
-                variant="contained"
-                fullWidth={true}
-                color="secondary"
-                endIcon={<SendIcon />}
-                onClick={(e) => handleUpdate(e, postData, setPostData)}
-            >
-                Update
-            </Button>
+            <CustomButton 
+                type="UPDATE" 
+                clickHandler={(e) => handleUpdate(e, postData, setPostData)}
+            />
             :
             <LoadingButton
                 loading
@@ -191,15 +186,10 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                     </div>
 
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button
-                            variant="contained"
-                            fullWidth={true}
-                            color="error"
-                            endIcon={<CancelIcon />}
-                            onClick={() => setEditModal(false)}
-                        >
-                            cancel
-                        </Button>
+                        <CustomButton 
+                            type="CANCEL" 
+                            clickHandler={() => setEditModal(false)} 
+                        />
                     </div>
                 </CardContent>
             </Card>

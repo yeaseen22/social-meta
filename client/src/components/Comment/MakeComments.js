@@ -1,14 +1,16 @@
 import React from 'react';
-import { Modal, Card, CardHeader, CardContent, Avatar } from '@mui/material';
+import { Modal, Card, CardHeader, CardContent, Avatar, TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
+import CustomButton from '../widgets/Button';
 
+// Comments making..
 const MakeComments = (props) => {
     // ThemeMode..
     let themeMode = {};
 
-    if (props.Settings){
-        if (props.Settings.themeMode){
-            const { backgroundColor, textColor, cardBorder, cardSubFontColor} = props.Settings.themeMode;
+    if (props.Settings) {
+        if (props.Settings.themeMode) {
+            const { backgroundColor, textColor, cardBorder, cardSubFontColor } = props.Settings.themeMode;
             themeMode = {
                 backgroundColor,
                 textColor,
@@ -31,6 +33,7 @@ const MakeComments = (props) => {
         border: themeMode.cardBorder
     };
 
+    // returning statement..
     return (
         <Modal
             open={props.showModal}
@@ -52,7 +55,29 @@ const MakeComments = (props) => {
                 />
 
                 <CardContent>
-                    <h2>Hi all</h2>
+                    {/* ---- Textarea of comment ---- */}
+                    <TextareaAutosize
+                        aria-label="minimum height"
+                        minRows={3}
+                        placeholder="Leave your comment here.."
+                        style={{
+                            width: 500,
+                            fontSize: '18px',
+                            borderRadius: '5px',
+                            padding: '5px',
+                            marginBottom: '10px',
+                        }}
+                    />
+
+                    {/* ---- Comment ---- */}
+                    <div style={{marginBottom: '0.5rem'}}>
+                        <CustomButton type="COMMENT" clickHandler={() => alert('Make Comment')} />
+                    </div>
+                    
+                    {/* ---- Cancel ---- */}
+                    <div>
+                        <CustomButton type="CANCEL" clickHandler={() => alert('Cancel Button')} />
+                    </div>
                 </CardContent>
             </Card>
         </Modal>
