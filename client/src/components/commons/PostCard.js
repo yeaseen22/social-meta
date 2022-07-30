@@ -636,6 +636,8 @@ const PostCard = (props) => {
                 <MakeComments
                     showModal={commentModal}
                     setCommentModal={setCommentModal}
+                    ownerId={ownerId}
+                    postId={postId}
                 />
 
                 {/* ExpandMore icon to see all comments */}

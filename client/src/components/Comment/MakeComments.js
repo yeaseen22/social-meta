@@ -1,24 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Card, CardHeader, CardContent, Avatar, TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
 import CustomButton from '../widgets/Button';
+import { createComment } from '../../redux/actions/CommentAction';
+import { userInfoById } from '../../redux/actions/UserActions';
 
 // Comments making..
 const MakeComments = (props) => {
+    const [comment, setComment] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
+
+    // async-await function for async task..
+    const dispatchUserByOwnerId = async () => {
+        const { ownerId } = props;
+        await props.dispatch(userInfoById(ownerId));
+    };
+
+    // useEffect Hook..
+    useEffect(() => {
+        dispatchUserByOwnerId();
+    }, []);
+
+    // Let's try the IIFE Function..
+    // Also Async-Await function to handle the async task..
+    (async function () {
+        if (props.User) {
+            const { login: loginUser } = await props.User;
+            if (loginUser) {
+                setUserInfo(loginUser);
+            }
+        }
+    })();
+
+    // console.log('userInfo here -- ', userInfo);
+
     // ThemeMode..
     let themeMode = {};
 
-    if (props.Settings) {
-        if (props.Settings.themeMode) {
-            const { backgroundColor, textColor, cardBorder, cardSubFontColor } = props.Settings.themeMode;
-            themeMode = {
-                backgroundColor,
-                textColor,
-                cardBorder,
-                cardSubFontColor
-            };
+    // Let's try the IIFE Function..
+    // Also Async-Await function to handle the async task..
+    (async function () {
+        if (props.Settings) {
+            if (props.Settings.themeMode) {
+                const { backgroundColor, textColor, cardBorder, cardSubFontColor } = await props.Settings.themeMode;
+                themeMode = {
+                    backgroundColor,
+                    textColor,
+                    cardBorder,
+                    cardSubFontColor
+                };
+            }
         }
-    }
+    })();
 
     // Global style for Modal..
     const style = {
@@ -33,6 +67,24 @@ const MakeComments = (props) => {
         border: themeMode.cardBorder
     };
 
+    // Make Comments Function..
+    const makeComment = async (comment) => {
+        const { postId, ownerId, setCommentModal } = props;
+
+        if (comment) {
+            setIsLoading(true);
+            await props.dispatch(createComment({ comment, ownerId, postId }));
+            setComment('');
+        }
+        // Set Loading to False..
+        setTimeout(() => {
+            setIsLoading(false);
+            setCommentModal(false);
+        }, 1000);
+    };
+
+    console.log(userInfo);
+
     // returning statement..
     return (
         <Modal
@@ -46,11 +98,11 @@ const MakeComments = (props) => {
                     avatar={
                         <Avatar
                             alt={'No User'}
-                            src={''}
+                            src={userInfo.profilePhoto !== 'avatar' ? `/profileUpload/${userInfo.profilePhoto}`:'avatar'}
                         />
                     }
-                    title={'Asad Anik'}
-                    subheader={'My Subheader'}
+                    title={`${userInfo.firstname} ${userInfo.lastname}`}
+                    subheader={userInfo.title}
                     subheaderTypographyProps={{ color: themeMode.cardSubFontColor }}
                 />
 
@@ -60,6 +112,8 @@ const MakeComments = (props) => {
                         aria-label="minimum height"
                         minRows={3}
                         placeholder="Leave your comment here.."
+                        value={comment}
+                        onChange={(event) => setComment(event.target.value)}
                         style={{
                             width: 500,
                             fontSize: '18px',
@@ -70,10 +124,10 @@ const MakeComments = (props) => {
                     />
 
                     {/* ---- Comment ---- */}
-                    <div style={{marginBottom: '0.5rem'}}>
-                        <CustomButton type="COMMENT" clickHandler={() => alert('Make Comment')} />
+                    <div style={{ marginBottom: '0.5rem' }}>
+                        <CustomButton type={!isLoading ? 'COMMENT' : 'LOADING'} clickHandler={() => makeComment(comment)} />
                     </div>
-                    
+
                     {/* ---- Cancel ---- */}
                     <div>
                         <CustomButton type="CANCEL" clickHandler={() => alert('Cancel Button')} />
@@ -87,7 +141,8 @@ const MakeComments = (props) => {
 // mapStateToProps here..
 const mapStateToProps = (state) => {
     return {
-        Settings: state.Settings
+        Settings: state.Settings,
+        User: state.User
     };
 };
 

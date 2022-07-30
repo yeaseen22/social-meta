@@ -5,6 +5,7 @@ import {
     Cancel as CancelIcon, 
     AddComment as AddCommentIcon 
 } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 
 const CustomButton = ({ type, clickHandler }) => {
@@ -48,6 +49,18 @@ const CustomButton = ({ type, clickHandler }) => {
                     >
                         comment
                     </Button>
+                );
+
+            case "LOADING":
+                return (
+                    <LoadingButton 
+                        loading
+                        variant="outlined"
+                        style={{
+                            width: '100%',
+                            height: '30px',
+                        }}
+                    />
                 );
 
             default:
