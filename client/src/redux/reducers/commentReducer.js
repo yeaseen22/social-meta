@@ -5,7 +5,7 @@ export function CommentReducer(state={}, action){
             return { ...state, comments: action.payload };
 
         case "READ_COMMENT":
-            return { ...state, comments: action.payload };
+            return { ...state, read_comments: action.payload };
 
         case "UPDATE_COMMENT":
             return { ...state, comments: action.payload };

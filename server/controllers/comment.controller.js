@@ -2,9 +2,10 @@ const Comment = require('../models/comment');
 
 // Read Comment...
 exports.readComment = function(req, res){
-    const postId = req.params.postId;
+    // const postId = req.params.postId;
+    const postId = req.query.postId;
 
-    Comment.find({ postId })
+    Comment.find({ postId }).sort([['createdAt', -1]])
         .then(docs => {
             res.status(200).json(docs);
         })

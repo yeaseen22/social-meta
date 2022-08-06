@@ -75,6 +75,7 @@ const MakeComments = (props) => {
             setIsLoading(true);
             await props.dispatch(createComment({ comment, ownerId, postId }));
             setComment('');
+            props.setExpandedCommentArea(false);
         }
         // Set Loading to False..
         setTimeout(() => {
@@ -83,7 +84,7 @@ const MakeComments = (props) => {
         }, 1000);
     };
 
-    console.log(userInfo);
+    // console.log(userInfo);
 
     // returning statement..
     return (
@@ -92,7 +93,7 @@ const MakeComments = (props) => {
             onClose={() => props.setCommentModal(false)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-        >
+        > 
             <Card sx={style}>
                 <CardHeader
                     avatar={
@@ -130,7 +131,7 @@ const MakeComments = (props) => {
 
                     {/* ---- Cancel ---- */}
                     <div>
-                        <CustomButton type="CANCEL" clickHandler={() => alert('Cancel Button')} />
+                        <CustomButton type="CANCEL" clickHandler={() => props.setCommentModal(false)} />
                     </div>
                 </CardContent>
             </Card>

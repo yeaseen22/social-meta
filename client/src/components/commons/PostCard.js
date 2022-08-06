@@ -198,7 +198,6 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
 };
 
 
-
 // Main PostCard's Component..
 const PostCard = (props) => {
     const { ownerId, postId, postBody, postImage, createdAt, updatedAt, postLikes } = props;
@@ -624,7 +623,7 @@ const PostCard = (props) => {
                     {showPostLikes(isLiked, postLikes)}
                 </span>
 
-                {/* CommentIcon to make Comment */}
+                {/*---- CommentIcon to make Comment ----*/}
                 <IconButton
                     aria-label="comment"
                     onClick={() => setCommentModal(true)}
@@ -638,6 +637,7 @@ const PostCard = (props) => {
                     setCommentModal={setCommentModal}
                     ownerId={ownerId}
                     postId={postId}
+                    setExpandedCommentArea={setExpanded}
                 />
 
                 {/* ExpandMore icon to see all comments */}
@@ -654,7 +654,7 @@ const PostCard = (props) => {
             {/*---- Collapse Area Section ----*/}
             {/*---- It will be the future Comments section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <ViewComments />
+                <ViewComments ownerId={ownerId} postId={postId} setExpandedCommentArea={setExpanded} />
             </Collapse>
         </Card>
     );

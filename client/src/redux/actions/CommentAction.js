@@ -11,12 +11,23 @@ export async function createComment(data){
 
 // Read Comments with Async-Await..
 export async function readComment(postId){
-    const { data: comments } = await axios.get(`/api/read_comment/${postId}`);
-    return {
-        type: "READ_COMMENT",
-        payload: comments
-    };
-}
+    // const request = axios.get(`/api/read_comment/${postId}`)
+    //     .then(response => response.data)
+    //     .catch(error => {
+    //         console.log('ERR! here -- ', error.message);
+    //     });
+
+    try{
+        const { data: comments } = await axios.get(`/api/read_comment?postId=${postId}`);
+        return {
+            type: "READ_COMMENT",
+            payload: comments
+        };
+
+    }catch(error){
+        console.log('ERR! -- ', error.message);
+    }
+};
 
 // Update Comments with Async-Await..
 export async function updateComment(data){
