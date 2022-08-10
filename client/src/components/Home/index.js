@@ -51,12 +51,13 @@ class Home extends React.Component{
                     createdAt={post.createdAt}
                     updatedAt={post.updatedAt}
                     postLikes={post.likes ? post.likes : 0}
+                    comments={post.comments}
                 />
         ));
     }
 
     render() {
-        console.log('Posts from home -- ', this.props.allPosts);
+        // console.log('Posts from home -- ', this.props.allPosts);
 
         return (
             <div>

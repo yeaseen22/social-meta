@@ -1,4 +1,5 @@
 const Comment = require('../models/comment');
+const Post = require('../models/post');
 
 // Read Comment...
 exports.readComment = function(req, res){
@@ -6,6 +7,7 @@ exports.readComment = function(req, res){
     const postId = req.query.postId;
 
     Comment.find({ postId }).sort([['createdAt', -1]])
+        .populate('user', '-_id -password -createdAt -updatedAt -__v -token')
         .then(docs => {
             res.status(200).json(docs);
         })
@@ -17,15 +19,28 @@ exports.readComment = function(req, res){
 // Make Comment...
 exports.createComment = function(req, res){
     const comment = new Comment(req.body);
+    const postId = req.body.postId;
 
     // currentLoggedInUserId
     const currentLoggedInUserId = req.user._id;
-    comment.ownerId = currentLoggedInUserId;
+    comment.user = currentLoggedInUserId;
     // Also can do like this..
     // comment.set('ownerId', currentLoggedInUserId);
 
-    comment.save(function(error, docs){
+    // postId for comment object..
+    comment.post = postId;
+
+    // Let's save the DB operations..
+    comment.save(async function(error, docs){
         if (error) return res.json({ success: false, error });
+
+        // Pushing comments into Post DB with ref..
+        await Post.updateOne({ _id: postId }, {
+            $push: {
+                comments: comment._id
+            }
+        });
+
         res.status(200).json({
             success: true,
             docs

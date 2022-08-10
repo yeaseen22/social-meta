@@ -56,8 +56,11 @@ exports.readPost = function(req, res) {
 };
 
 // Read all posts..
-exports.readAllPosts = function (req, res) {
-    Post.find().sort([['createdAt', -1]]).exec((err, post) => {
+exports.readAllPosts = function (_req, res) {
+    Post.find()
+        .populate('comments')
+        .sort([['createdAt', -1]])
+        .exec((err, post) => {
         if (err) return res.send(err);
         res.status(200).send(post);
     });

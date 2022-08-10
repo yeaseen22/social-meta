@@ -20,6 +20,9 @@ const userSchema = mongoose.Schema({
     themeMode: { type: String, required: false, default: 'lightMode' },
     colorMode: { type: String, required: false, default: 'royalblue' },
     token: { type: String },
+    // posts: [
+    //     { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }
+    // ]
 }, {
     timestamps: true
 });
