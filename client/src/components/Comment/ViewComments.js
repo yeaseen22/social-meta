@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Grid, Paper } from "@material-ui/core";
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { deleteComment } from '../../redux/actions/CommentAction';
 import { HashSpinner } from '../widgets/SpinnersLoading';
 import { Edit as EditIcon, Delete as DeleteIcon, ConstructionOutlined } from '@mui/icons-material';
@@ -8,28 +9,31 @@ import "../../css/ViewComments.css";
 import EditCommentModal from './EditComment';
 
 
-const imgLink =
-    "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
-
 // ViewComments Component..
 const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
     const [commentsUI, setCommentsUI] = useState([]);
-    const [user, setUser] = useState({});
     const [showEditCommentModal, setEditCommentModal] = useState(false);
     const [selectedComment, setSelectedComment] = React.useState({});
+    let navigate = useNavigate();
 
     useEffect(() => {
         setCommentsUI(comments);
-    }, [comments]);
+
+        // cleanup function..
+        return () => {
+            setCommentsUI([]);
+        };
+    }, []);
 
     // Delete Comment..
-    const removeComment = async (commentId) => {
+    const removeComment = async (commentId, commentsPost) => {
         const confirm = window.confirm('Are you sure want\'s to Remove this comment?');
 
         if (confirm) {
             await props.dispatch(deleteComment(commentId));
             setExpandedCommentArea(false);
             // window.location.reload();
+            navigate(`/post/${commentsPost}`);
         }
     };
 
@@ -40,19 +44,26 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
         }
 
         return comments.map(comment => {
+            // Grave the user from comments > comment..
+            const { user } = comment;
+            const { id: loggedInUserId } = props.User.login;
+
             return (
                 <Paper key={comment._id} style={{ padding: "40px 20px", marginTop: 10 }}>
                     <Grid container wrap="nowrap" spacing={2}>
                         <Grid item>
-                            <Avatar 
-                                alt="Remy Sharp" 
-                                src={imgLink} 
+                            <Avatar
+                                alt={`${user.firstname} ${user.lastname}`}
+                                src={`/profileUpload/${user.profilePhoto}`}
                             />
                         </Grid>
-    
+
                         <Grid justifyContent="left" item xs zeroMinWidth>
-                            {/* <h4 style={{ margin: 0, textAlign: "left" }}>{renderUsernameByOwnerId(comment.ownerId)}</h4> */}
-                            {/* <h4 style={{ margin: 0, textAlign: "left" }}>Asad Anik</h4> */}
+                             <h4 style={{ margin: 0, textAlign: "left" }}>
+                                 <span>{user.firstname}</span>
+                                 <span>{" "}</span>
+                                 <span>{user.lastname}</span>
+                             </h4>
                             <p style={{ textAlign: "left" }}>
                                 {comment.comment}
                             </p>
@@ -61,35 +72,37 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
                                 {comment.updatedAt}
                             </p>
                         </Grid>
-    
-                        <Grid justifyContent="right" item>
-                            {/* ---- Edit Comment Icon Button ---- */}
-                            <div className="action-icons edit-icon">
-                                <EditIcon
-                                    style={{ fontSize: '20px' }}
-                                    onClick={() => {
-                                        setEditCommentModal(true);
-                                        setSelectedComment(comment);
-                                    }}
-                                />
-    
-                                {/* ---- Edit Comment ---- */}
-                                <EditCommentModal
-                                    showCommentModal={showEditCommentModal}
-                                    setEditCommentModal={setEditCommentModal}
-                                    currentComment={selectedComment}
-                                    setExpandedCommentArea={setExpandedCommentArea}
-                                />
-                            </div>
-    
-                            {/* ---- Delete Comment Icon Button ---- */}
-                            <div className="action-icons delete-icon">
-                                <DeleteIcon
-                                    style={{ fontSize: '20px' }}
-                                    onClick={() => removeComment(comment._id)}
-                                />
-                            </div>
-                        </Grid>
+
+                        {user._id === loggedInUserId && (
+                            <Grid justifyContent="right" item>
+                                {/* ---- Edit Comment Icon Button ---- */}
+                                <div className="action-icons edit-icon">
+                                    <EditIcon
+                                        style={{ fontSize: '20px' }}
+                                        onClick={() => {
+                                            setEditCommentModal(true);
+                                            setSelectedComment(comment);
+                                        }}
+                                    />
+
+                                    {/* ---- Edit Comment ---- */}
+                                    <EditCommentModal
+                                        showCommentModal={showEditCommentModal}
+                                        setEditCommentModal={setEditCommentModal}
+                                        currentComment={selectedComment}
+                                        setExpandedCommentArea={setExpandedCommentArea}
+                                    />
+                                </div>
+
+                                {/* ---- Delete Comment Icon Button ---- */}
+                                <div className="action-icons delete-icon">
+                                    <DeleteIcon
+                                        style={{ fontSize: '20px' }}
+                                        onClick={() => removeComment(comment._id, comment.post)}
+                                    />
+                                </div>
+                            </Grid>
+                        )}
                     </Grid>
                 </Paper>
             );

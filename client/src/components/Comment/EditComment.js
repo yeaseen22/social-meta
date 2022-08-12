@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Card, CardHeader, CardContent, TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomButton from '../widgets/Button';
 import { updateComment } from '../../redux/actions/CommentAction';
 
@@ -8,6 +9,7 @@ import { updateComment } from '../../redux/actions/CommentAction';
 const EditComment = ({ showCommentModal, setEditCommentModal, currentComment, setExpandedCommentArea, ...props }) => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [comment, setComment] = React.useState({});
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         setComment(currentComment);
@@ -17,6 +19,8 @@ const EditComment = ({ showCommentModal, setEditCommentModal, currentComment, se
             setComment({});
         };
     }, [currentComment]);
+
+    // console.log('Comment -- ', comment);
 
     // ThemeMode..
     let themeMode = {};
@@ -57,6 +61,7 @@ const EditComment = ({ showCommentModal, setEditCommentModal, currentComment, se
 
         setTimeout(() => {
             setEditCommentModal(false);
+            navigate(`/post/${comment.post}`);
         }, 1000);
     };
 

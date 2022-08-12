@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Card, CardHeader, CardContent, Avatar, TextareaAutosize } from '@mui/material';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomButton from '../widgets/Button';
 import { createComment } from '../../redux/actions/CommentAction';
 import { userInfoById } from '../../redux/actions/UserActions';
@@ -10,11 +11,12 @@ const MakeComments = (props) => {
     const [comment, setComment] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({});
+    const navigate = useNavigate();
 
     // async-await function for async task..
     const dispatchUserByOwnerId = async () => {
         const { ownerId } = props;
-        await props.dispatch(userInfoById(ownerId));
+        return await props.dispatch(userInfoById(ownerId));
     };
 
     // useEffect Hook..
@@ -76,6 +78,7 @@ const MakeComments = (props) => {
             await props.dispatch(createComment({ comment, ownerId, postId }));
             setComment('');
             props.setExpandedCommentArea(false);
+            navigate(`/post/${postId}`);
         }
         // Set Loading to False..
         setTimeout(() => {
@@ -93,7 +96,7 @@ const MakeComments = (props) => {
             onClose={() => props.setCommentModal(false)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-        > 
+        >
             <Card sx={style}>
                 <CardHeader
                     avatar={

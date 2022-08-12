@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Paper, Container } from '@mui/material';
 import PostHead from '../commons/postHead';
 import PostCard from '../commons/PostCard';

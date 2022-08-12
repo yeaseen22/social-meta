@@ -57,8 +57,16 @@ exports.readPost = function(req, res) {
 
 // Read all posts..
 exports.readAllPosts = function (_req, res) {
-    Post.find()
-        .populate('comments')
+    Post.find({})
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
         .sort([['createdAt', -1]])
         .exec((err, post) => {
         if (err) return res.send(err);
@@ -71,7 +79,15 @@ exports.currentUserPosts = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
 
     Post.find({ ownerId: currentLoggedInUserId })
-        .populate('comments')
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
         .sort([['createdAt', -1]])
         .exec((err, docs) => {
         if (err) return res.status(400).send(err);

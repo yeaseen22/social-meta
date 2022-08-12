@@ -229,7 +229,7 @@ const PostCard = (props) => {
     const [commentModal, setCommentModal] = React.useState(false);
 
     // console.log('CHECKING PROPS ---- ', props);
-    console.log('See all comments -- ', comments);
+    // console.log('See all comments -- ', comments);
     // React Router navigation..
     const navigate = useNavigate();
 
@@ -370,8 +370,7 @@ const PostCard = (props) => {
 
     // Rendering comments..
     const renderComments = (comments) => {
-
-        console.log(comments);
+        // console.log(comments);
 
         if (!comments.length) {
             return (
@@ -380,8 +379,8 @@ const PostCard = (props) => {
         }
 
         return (
-            <ViewComments 
-                setExpandedCommentArea={setExpanded}  
+            <ViewComments
+                setExpandedCommentArea={setExpanded}
                 comments={comments}
             />
         );

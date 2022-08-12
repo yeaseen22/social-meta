@@ -1,15 +1,15 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { 
-    Send as SendIcon, 
-    Cancel as CancelIcon, 
-    AddComment as AddCommentIcon 
+import {
+    Send as SendIcon,
+    Cancel as CancelIcon,
+    AddComment as AddCommentIcon
 } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 
 const CustomButton = ({ type, clickHandler }) => {
-
+    // rendering button..
     const renderButton = (TYPE, clickHandler) => {
         switch (TYPE) {
             case "UPDATE":
@@ -53,7 +53,7 @@ const CustomButton = ({ type, clickHandler }) => {
 
             case "LOADING":
                 return (
-                    <LoadingButton 
+                    <LoadingButton
                         loading
                         variant="outlined"
                         style={{
