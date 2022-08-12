@@ -65,6 +65,7 @@ const ProfileOwn = (props) => {
                     createdAt={post.createdAt}
                     updatedAt={post.updatedAt}
                     postLikes={post.likes ? post.likes : 0}
+                    comments={post.comments}
                 />
         ));
     }

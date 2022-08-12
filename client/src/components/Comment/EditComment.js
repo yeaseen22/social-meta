@@ -11,6 +11,11 @@ const EditComment = ({ showCommentModal, setEditCommentModal, currentComment, se
 
     React.useEffect(() => {
         setComment(currentComment);
+
+        // clean-up function..
+        return () => {
+            setComment({});
+        };
     }, [currentComment]);
 
     // ThemeMode..
@@ -46,7 +51,7 @@ const EditComment = ({ showCommentModal, setEditCommentModal, currentComment, se
 
     // Update Comment..
     const updateAction = async (comment) => {
-        await props.dispatch(updateComment(comment));
+        await props.dispatch(updateComment({_id: comment._id, comment: comment.comment}));
         setIsLoading(true);
         setExpandedCommentArea(false);
 

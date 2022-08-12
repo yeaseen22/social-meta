@@ -16,6 +16,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
     const [commentsUI, setCommentsUI] = useState([]);
     const [user, setUser] = useState({});
     const [showEditCommentModal, setEditCommentModal] = useState(false);
+    const [selectedComment, setSelectedComment] = React.useState({});
 
     useEffect(() => {
         setCommentsUI(comments);
@@ -34,7 +35,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
 
     // Read Comments..
     const renderComments = (comments) => {
-        if (!comments.length) {
+        if (!comments) {
             return <HashSpinner color="blue" size={50} />;
         }
 
@@ -68,6 +69,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
                                     style={{ fontSize: '20px' }}
                                     onClick={() => {
                                         setEditCommentModal(true);
+                                        setSelectedComment(comment);
                                     }}
                                 />
     
@@ -75,7 +77,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
                                 <EditCommentModal
                                     showCommentModal={showEditCommentModal}
                                     setEditCommentModal={setEditCommentModal}
-                                    currentComment={comment}
+                                    currentComment={selectedComment}
                                     setExpandedCommentArea={setExpandedCommentArea}
                                 />
                             </div>
@@ -92,6 +94,8 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
                 </Paper>
             );
         });
+
+    //   return <HashSpinner color="blue" size={50} />;
     };
 
     // console.log('ViewComments -- ', props);
@@ -101,7 +105,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
         <div style={{ padding: 15 }} className="App">
             <h2>Comments</h2>
             {/* ---- Rendering the Comments ---- */}
-            {renderComments(comments)}
+            {renderComments(commentsUI)}
         </div>
     );
 };

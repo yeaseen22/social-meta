@@ -70,7 +70,10 @@ exports.readAllPosts = function (_req, res) {
 exports.currentUserPosts = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
 
-    Post.find({ ownerId: currentLoggedInUserId }).sort([['createdAt', -1]]).exec((err, docs) => {
+    Post.find({ ownerId: currentLoggedInUserId })
+        .populate('comments')
+        .sort([['createdAt', -1]])
+        .exec((err, docs) => {
         if (err) return res.status(400).send(err);
         res.status(200).send(docs);
     });
@@ -80,7 +83,7 @@ exports.currentUserPosts = function (req, res) {
 exports.specificUserPosts = function (req, res) {
     const userId = req.query.userId;
 
-    Post.find({ ownerId: userId }).exec((err, docs) => {
+    Post.find({ ownerId: userId }).populate('comments').exec((err, docs) => {
         if (err) return res.status(400).send(err);
         res.status(200).send(docs);
     });

@@ -370,6 +370,9 @@ const PostCard = (props) => {
 
     // Rendering comments..
     const renderComments = (comments) => {
+
+        console.log(comments);
+
         if (!comments.length) {
             return (
                 <HashSpinner color={'blue'} size={50} />
