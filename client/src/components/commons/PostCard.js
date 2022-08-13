@@ -37,6 +37,7 @@ import Uploader from "../widgets/Uploader";
 import ViewComments from '../Comment/ViewComments';
 import MakeComments from '../Comment/MakeComments';
 import { HashSpinner } from '../widgets/SpinnersLoading';
+import NotFound from '../widgets/NotFound';
 
 
 // path for initialPath for image as post image..
@@ -374,7 +375,7 @@ const PostCard = (props) => {
 
         if (!comments.length) {
             return (
-                <HashSpinner color={'blue'} size={50} />
+                <NotFound msg={'No Comments'} color={'gray'} size={50} />
             );
         }
 

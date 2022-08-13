@@ -16,7 +16,6 @@ exports.showAllUsers = function(req, res){
                 title: user.title,
                 profilePhoto: user.profilePhoto
             });
-            
         });
 
         // Sends all of the users..

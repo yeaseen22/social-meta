@@ -3,8 +3,8 @@ import { Avatar, Grid, Paper } from "@material-ui/core";
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteComment } from '../../redux/actions/CommentAction';
-import { HashSpinner } from '../widgets/SpinnersLoading';
-import { Edit as EditIcon, Delete as DeleteIcon, ConstructionOutlined } from '@mui/icons-material';
+import NotFound from '../widgets/NotFound';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import "../../css/ViewComments.css";
 import EditCommentModal from './EditComment';
 
@@ -40,7 +40,7 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
     // Read Comments..
     const renderComments = (comments) => {
         if (!comments) {
-            return <HashSpinner color="blue" size={50} />;
+            return <NotFound msg={'No Comments'} color={'grey'} size={50} />;
         }
 
         return comments.map(comment => {
@@ -107,8 +107,6 @@ const ViewComments = ({ setExpandedCommentArea, comments, ...props }) => {
                 </Paper>
             );
         });
-
-    //   return <HashSpinner color="blue" size={50} />;
     };
 
     // console.log('ViewComments -- ', props);
