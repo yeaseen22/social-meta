@@ -2,7 +2,8 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     cors = require('cors'),
-    mongoose = require('mongoose')
+    mongoose = require('mongoose'),
+    morgan = require('morgan')
     // config = require('./config').get(process.env.NODE_ENV),
     require('dotenv').config(),
     apiRouter = require('../routes/apiRouter');
@@ -34,6 +35,7 @@ module.exports.init = () => {
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.use(cors());
+    app.use(morgan());
 
     // add a router..
     app.use('/api', apiRouter);
