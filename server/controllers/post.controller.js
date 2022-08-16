@@ -43,16 +43,27 @@ exports.getLikes = function (req, res) {
 exports.readPost = function(req, res) {
     const postId = req.query.postId;
 
-    // find Post by PostId..
-    Post.find({_id: postId}, (err, post) => {
-        if (err) return res.json({success: false, err});
-        if (!post) return res.json({success: false, message: 'Post not found!'});
+    // find Post by PostId.
+    Post.find({_id: postId})
+        .populate("user", "firstname lastname profilePhoto title themeMode colorMode email")
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
+        .exec((err, post) => {
+            if (err) return res.json({success: false, err});
+            if (!post) return res.json({success: false, message: 'Post not found!'});
 
-        res.status(200).json({
-            success: true,
-            post
+            res.status(200).json({
+                success: true,
+                post
+            });
         });
-    });
 };
 
 // Read all posts..
@@ -112,6 +123,7 @@ exports.createPost = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
     // post.set('ownerId', currentLoggedInUserId);
     post.ownerId = currentLoggedInUserId;
+    post.user = currentLoggedInUserId;
 
     // if there is new post image update file to make it up..
     // and if no new update image file so don't need update extra..

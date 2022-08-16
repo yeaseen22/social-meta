@@ -30,7 +30,7 @@ exports.createComment = function(req, res){
     // postId for comment object..
     comment.post = postId;
 
-    // Let's save the DB operations..
+    // Let's save the DB operations.
     comment.save(async function(error, docs){
         if (error) return res.json({ success: false, error });
 
@@ -41,7 +41,7 @@ exports.createComment = function(req, res){
             }
         });
 
-        res.status(200).json({
+        await res.status(200).json({
             success: true,
             docs
         });

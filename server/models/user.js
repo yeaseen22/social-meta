@@ -48,7 +48,7 @@ userSchema.pre('save', function (next) {
     }
 });
 
-// Schema Method to compare login pass to register pass..
+// Schema Method to compare login pass to register pass.
 userSchema.methods.comparePassword = function(candidatePassword, cb){
     var user = this;
 

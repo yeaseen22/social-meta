@@ -7,7 +7,7 @@ import NotFound from '../widgets/NotFound';
 
 const Post = (props) => {
     const { postId } = useParams();
-    // Hook of react useEffect..
+    // Hook of react useEffect.
     React.useEffect(() => {
         props.dispatch(readPost(postId));
     }, []);
@@ -17,13 +17,15 @@ const Post = (props) => {
     if (props.Post) {
         if (props.Post.readPost){
             if (props.Post.readPost.post) {
-                const { body, image, updatedAt, createdAt } = props.Post.readPost.post[0];
+                const { body, image, updatedAt, createdAt, user, comments } = props.Post.readPost.post[0];
 
                 // Returning statement..
                 return (
                     <PostUI
                         body={body}
                         image={image}
+                        user={user}
+                        comments={comments}
                         updatedAt={updatedAt}
                         createdAt={createdAt}
                     />
