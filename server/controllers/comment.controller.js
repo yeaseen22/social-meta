@@ -17,7 +17,7 @@ exports.readComment = function(req, res){
 };
 
 // Make Comment...
-exports.createComment = function(req, res){
+exports.createComment = async function(req, res){
     const comment = new Comment(req.body);
     const postId = req.body.postId;
 
@@ -30,18 +30,18 @@ exports.createComment = function(req, res){
     // postId for comment object..
     comment.post = postId;
 
+    // Pushing comments into Post DB with ref.
+    await Post.updateOne({ _id: postId }, {
+        $push: {
+            comments: comment._id
+        }
+    }, {new: true});
+
     // Let's save the DB operations.
-    comment.save(async function(error, docs){
+    comment.save(function(error, docs){
         if (error) return res.json({ success: false, error });
 
-        // Pushing comments into Post DB with ref..
-        await Post.updateOne({ _id: postId }, {
-            $push: {
-                comments: comment._id
-            }
-        });
-
-        await res.status(200).json({
+        res.status(200).json({
             success: true,
             docs
         });
@@ -72,6 +72,7 @@ exports.deleteComment = function(req, res){
 
     Comment.findByIdAndDelete(id, function(error){
         if (error) return res.status(400).json({ deleted: false, error });
+
         res.status(200).json({
             deleted: true
         });

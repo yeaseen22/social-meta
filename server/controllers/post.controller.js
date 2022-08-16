@@ -67,8 +67,8 @@ exports.readPost = function(req, res) {
 };
 
 // Read all posts..
-exports.readAllPosts = function (_req, res) {
-    Post.find({})
+exports.readAllPosts = async function (_req, res) {
+     await Post.find({})
         .populate({
             path: 'comments',
             options: {sort: {createdAt: -1}},
