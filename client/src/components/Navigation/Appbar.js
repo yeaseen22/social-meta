@@ -290,9 +290,16 @@ const Appbar = (props) => {
             {/*-------- MailIcon -------*/}
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                    </Badge>
+                    <NavLink
+                        to={'/messenger'}
+                        style={({ isActive }) => ({
+                            color: !isActive ? "white" : "black"
+                        })}
+                    >
+                       <Badge badgeContent={4} color="error">
+                            <MailIcon />
+                       </Badge>
+                    </NavLink>
                 </IconButton>
                 <p>Messages</p>
             </MenuItem>
@@ -386,9 +393,16 @@ const Appbar = (props) => {
 
                             {/*------- MailIcon -------*/}
                             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="error">
-                                    <MailIcon />
-                                </Badge>
+                                <NavLink
+                                    to={'/messenger'}
+                                    style={({isActive}) => ({
+                                        color: !isActive ? "white" : "black"
+                                    })}
+                                >
+                                    <Badge badgeContent={4} color="error">
+                                        <MailIcon />
+                                    </Badge>
+                                </NavLink>
                             </IconButton>
 
                             {/*------- NotificationIcon -------*/}

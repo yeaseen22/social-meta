@@ -9,6 +9,7 @@ import Login from '../components/Auth/login';
 import Register from '../components/Auth/register';
 import ProfileOthers from '../components/Profile/ProfileOthers';
 import Post from '../components/Post';
+import Messenger from '../components/Messenger'
 
 // Router..
 const Router = () => {
@@ -46,6 +47,11 @@ const Router = () => {
                 {/*---- Specefic Post to See ----*/}
                 <Route path={'/post/:postId'} exact element={ <PrivateRoute restrictionLoading={false} /> }>
                     <Route path={'/post/:postId'} exact element={ <Post /> } />
+                </Route>
+
+                {/* ---- Messenger Page ---- */}
+                <Route path={'/messenger'} exact element={ <PrivateRoute restrictionLoading={true} /> } >
+                    <Route path={'/messenger'} exact element={ <Messenger/> } />
                 </Route>
             </Routes>
         </Layout>
