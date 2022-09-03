@@ -74,8 +74,8 @@ export function loginUser(data){
 }
 
 // Sign Up User..
-export async function register(data){
-    const request = await axios.post('/api/register', data)
+export function register(data){
+    const request = axios.post('/api/register', data)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to post user register -> ', err.message));
 
@@ -93,6 +93,18 @@ export function profileUpload(data){
 
     return {
         type: "PROFILE_UPLOAD",
+        payload: request
+    };
+}
+
+// Show All Users..
+export function showAllUsers(){
+    const request = axios.get('/api/read_all_users')
+        .then(response => response.data.users)
+        .catch(err => console.log('Get ERR! when try to fetch all users data.', err.message));
+
+    return {
+        type: "ALL_USERS",
         payload: request
     };
 }

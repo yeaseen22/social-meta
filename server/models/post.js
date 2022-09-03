@@ -7,7 +7,14 @@ const postSchema = mongoose.Schema({
     body: { type: String, required: false, maxLength: 2000 },
     ownerId: { type: String, required: false },
     likes: { type: Number, required: false, defaultValue: 0 },
-    isLiked: { type: Boolean, required: false, defaultValue: false }
+    isLiked: { type: Boolean, required: false, defaultValue: false },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ],
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
     timestamps: true
 });

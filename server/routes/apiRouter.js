@@ -2,15 +2,27 @@ const express = require('express'),
     router = express.Router(),
     userController = require('../controllers/user.controller'),
     postController = require('../controllers/post.controller'),
+    commentController = require('../controllers/comment.controller'),
     auth = require('../middleware/auth'),
     emailChecker = require('../middleware/emailCheck'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
 
+/**
+ * Conversation Route..
+ */
+
+
 /**----
  * ---- GET REQUESTS ---- ..
  * ----**/
+
+// Read Comment..
+router.get('/read_comment', commentController.readComment);
+
+// Get All Users..
+router.get('/read_all_users', userController.showAllUsers);
 
 // Get Likes from Post...
 router.get('/get_post_likes', postController.getLikes);
@@ -50,6 +62,12 @@ router.get('/logout', auth, userController.logout);
  * ---- POST REQUESTS ---- ..
  * ----**/
 
+// Make Comment..
+router.post('/make_comment', auth, commentController.createComment);
+
+// Update Comment..
+router.post('/update_comment', auth, commentController.updateComment);
+
 // Make Like a Post..
 router.post('/post_like', auth, postController.likePost);
 
@@ -77,6 +95,10 @@ router.post('/post_update', postUpload.single("file"), postController.updatePost
 /**----
  * ----- DELETE REQUESTS ---- ..
  * ----**/
+
+// Delete Comment..
+router.delete('/comment_delete', commentController.deleteComment);
+
 // Delete Post..
 router.delete('/post_delete', postController.deletePost);
 

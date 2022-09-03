@@ -43,21 +43,43 @@ exports.getLikes = function (req, res) {
 exports.readPost = function(req, res) {
     const postId = req.query.postId;
 
-    // find Post by PostId..
-    Post.find({_id: postId}, (err, post) => {
-        if (err) return res.json({success: false, err});
-        if (!post) return res.json({success: false, message: 'Post not found!'});
+    // find Post by PostId.
+    Post.find({_id: postId})
+        .populate("user", "firstname lastname profilePhoto title themeMode colorMode email")
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
+        .exec((err, post) => {
+            if (err) return res.json({success: false, err});
+            if (!post) return res.json({success: false, message: 'Post not found!'});
 
-        res.status(200).json({
-            success: true,
-            post
+            res.status(200).json({
+                success: true,
+                post
+            });
         });
-    });
 };
 
 // Read all posts..
-exports.readAllPosts = function (req, res) {
-    Post.find().sort([['createdAt', -1]]).exec((err, post) => {
+exports.readAllPosts = async function (_req, res) {
+     await Post.find({})
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
+        .sort([['createdAt', -1]])
+        .exec((err, post) => {
         if (err) return res.send(err);
         res.status(200).send(post);
     });
@@ -67,7 +89,18 @@ exports.readAllPosts = function (req, res) {
 exports.currentUserPosts = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
 
-    Post.find({ ownerId: currentLoggedInUserId }).sort([['createdAt', -1]]).exec((err, docs) => {
+    Post.find({ ownerId: currentLoggedInUserId })
+        .populate({
+            path: 'comments',
+            options: {sort: {createdAt: -1}},
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'firstname lastname profilePhoto title themeMode colorMode email'
+            }
+        })
+        .sort([['createdAt', -1]])
+        .exec((err, docs) => {
         if (err) return res.status(400).send(err);
         res.status(200).send(docs);
     });
@@ -77,7 +110,7 @@ exports.currentUserPosts = function (req, res) {
 exports.specificUserPosts = function (req, res) {
     const userId = req.query.userId;
 
-    Post.find({ ownerId: userId }).exec((err, docs) => {
+    Post.find({ ownerId: userId }).populate('comments').exec((err, docs) => {
         if (err) return res.status(400).send(err);
         res.status(200).send(docs);
     });
@@ -90,6 +123,7 @@ exports.createPost = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
     // post.set('ownerId', currentLoggedInUserId);
     post.ownerId = currentLoggedInUserId;
+    post.user = currentLoggedInUserId;
 
     // if there is new post image update file to make it up..
     // and if no new update image file so don't need update extra..

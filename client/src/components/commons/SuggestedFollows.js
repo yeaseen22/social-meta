@@ -47,7 +47,7 @@ const SuggestedFollows = (props) => {
        };
    }, [props.Settings]);
 
-   console.log('Props here -- ', props);
+   // console.log('Props here -- ', props);
 
 
     const connectToggleClicked = () => {

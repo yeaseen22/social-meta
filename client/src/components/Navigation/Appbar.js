@@ -34,6 +34,7 @@ import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/UserActions';
 import * as PropTypes from "prop-types";
 import Settings from '../Settings';
+import SearchModal from './SearchEngineModal/SearchModal';
 
 
 // ByDefault profile photo path..
@@ -131,6 +132,9 @@ ScrollTop.propTypes = {
 
 // Appbar component..
 const Appbar = (props) => {
+    // Search Modal open Hook..
+    const [searchModalOpen, setSearchModalOpen] = React.useState(false);
+
     // useNavigate Hook from react-router-dom..
     const navigate = useNavigate();
     const [AppbarBG, setAppbarBG] = React.useState('royalblue');
@@ -180,6 +184,15 @@ const Appbar = (props) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    // Handle Search Modal Open & Close..
+    const handleSearchClose = () => {
+        setSearchModalOpen(false);
+    };
+
+    const handleSearchOpen = () => {
+        setSearchModalOpen(true);
+    };
+
     // Logout function..
     const logoutFunc = () => {
         // makes User logout..
@@ -227,14 +240,14 @@ const Appbar = (props) => {
             {/*---- Profile navigate from here ----*/}
             <NavLink
                 to={`/profile`}
-                style={isActive => ({
-                    color: isActive ? "green" : "black"
-                })}>
+                style={{
+                    color: "black",
+                    textDecoration: 'none',
+                }}>
                 <MenuItem onClick={handleMenuClose}>
                     <ListItemIcon>
                         <AccountCircleIcon fontSize="small" />
                     </ListItemIcon>
-
                     Profile
                 </MenuItem>
             </NavLink>
@@ -277,9 +290,16 @@ const Appbar = (props) => {
             {/*-------- MailIcon -------*/}
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                    </Badge>
+                    <NavLink
+                        to={'/messenger'}
+                        style={({ isActive }) => ({
+                            color: !isActive ? "white" : "black"
+                        })}
+                    >
+                       <Badge badgeContent={4} color="error">
+                            <MailIcon />
+                       </Badge>
+                    </NavLink>
                 </IconButton>
                 <p>Messages</p>
             </MenuItem>
@@ -350,18 +370,21 @@ const Appbar = (props) => {
                             <StyledInputBase
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
+                                onClick={handleSearchOpen}
+                                disabled={true}
                             />
+                            <SearchModal open={searchModalOpen} handleClose={handleSearchClose} />
                         </Search>
 
                         <Box sx={{ flexGrow: 1 }} />
 
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                             {/*------- HomeIcon -------*/}
-                            <IconButton size="large" color="inherit">
+                            <IconButton size="large">
                                 <NavLink
                                     to={'/'}
-                                    style={isActive => ({
-                                        color: isActive ? "black" : "white"
+                                    style={({isActive}) => ({
+                                        color: !isActive ? "white" : "black"
                                     })}
                                 >
                                     <HomeIcon />
@@ -370,9 +393,16 @@ const Appbar = (props) => {
 
                             {/*------- MailIcon -------*/}
                             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="error">
-                                    <MailIcon />
-                                </Badge>
+                                <NavLink
+                                    to={'/messenger'}
+                                    style={({isActive}) => ({
+                                        color: !isActive ? "white" : "black"
+                                    })}
+                                >
+                                    <Badge badgeContent={4} color="error">
+                                        <MailIcon />
+                                    </Badge>
+                                </NavLink>
                             </IconButton>
 
                             {/*------- NotificationIcon -------*/}

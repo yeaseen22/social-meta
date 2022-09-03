@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
-    Share as ShareIcon,
     ExpandMore as ExpandMoreIcon,
     MoreVert as MoreVertIcon,
     Edit as EditIcon,
@@ -25,15 +24,20 @@ import {
     Person as PersonIcon,
     Report as ReportIcon,
     Send as SendIcon,
-    Cancel as CancelIcon
+    Comment as CommentIcon,
+    Feed as FeedIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { deletePost, updatePost, likedPost } from '../../redux/actions/PostActions';
 import { connect } from 'react-redux';
 import { LoadingButton } from "@mui/lab";
+import CustomButton from '../widgets/Button';
 import Uploader from "../widgets/Uploader";
-import Comments from './Comments';
+import ViewComments from '../Comment/ViewComments';
+import MakeComments from '../Comment/MakeComments';
+import { HashSpinner } from '../widgets/SpinnersLoading';
+import NotFound from '../widgets/NotFound';
 
 
 // path for initialPath for image as post image..
@@ -125,15 +129,10 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
     // Post Submit Button Or Loading after submit..
     const postSubmitButton = (isLoading) => (
         !isLoading ?
-            <Button
-                variant="contained"
-                fullWidth={true}
-                color="secondary"
-                endIcon={<SendIcon />}
-                onClick={(e) => handleUpdate(e, postData, setPostData)}
-            >
-                Update
-            </Button>
+            <CustomButton
+                type="UPDATE"
+                clickHandler={(e) => handleUpdate(e, postData, setPostData)}
+            />
             :
             <LoadingButton
                 loading
@@ -188,15 +187,10 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
                     </div>
 
                     <div style={{ marginTop: '0.5rem' }}>
-                        <Button
-                            variant="contained"
-                            fullWidth={true}
-                            color="error"
-                            endIcon={<CancelIcon />}
-                            onClick={() => setEditModal(false)}
-                        >
-                            cancel
-                        </Button>
+                        <CustomButton
+                            type="CANCEL"
+                            clickHandler={() => setEditModal(false)}
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -205,10 +199,19 @@ const EditModal = ({ themeMode, editModal, setEditModal, currentUserInfo, select
 };
 
 
-
 // Main PostCard's Component..
 const PostCard = (props) => {
-    const { ownerId, postId, postBody, postImage, createdAt, updatedAt, postLikes } = props;
+    const {
+        ownerId,
+        postId,
+        postBody,
+        postImage,
+        createdAt,
+        updatedAt,
+        postLikes,
+        comments
+    } = props;
+
     const [expanded, setExpanded] = React.useState(false);
     const [userByOwner, setUserByOwner] = React.useState(null);
     const [editModal, setEditModal] = React.useState(false);
@@ -224,9 +227,10 @@ const PostCard = (props) => {
         textColor: 'black',
     });
     const [isLiked, setIsLiked] = React.useState(false);
+    const [commentModal, setCommentModal] = React.useState(false);
 
-    // console.log(props.allPosts);
-
+    // console.log('CHECKING PROPS ---- ', props);
+    // console.log('See all comments -- ', comments);
     // React Router navigation..
     const navigate = useNavigate();
 
@@ -365,6 +369,24 @@ const PostCard = (props) => {
         ) : null
     );
 
+    // Rendering comments..
+    const renderComments = (comments) => {
+        // console.log(comments);
+
+        if (!comments.length) {
+            return (
+                <NotFound msg={'No Comments'} color={'gray'} size={50} />
+            );
+        }
+
+        return (
+            <ViewComments
+                setExpandedCommentArea={setExpanded}
+                comments={comments}
+            />
+        );
+    };
+
     // To rendering Post Menu as Profile Or Home View..
     const renderMenuBaseOnComponentType = (type, themeMode) => {
 
@@ -385,32 +407,64 @@ const PostCard = (props) => {
                     >
                         {/*---- Show with condition is to Others profile or Own profile ----*/}
                         {props.login.id !== ownerId ? (
-                            <Link to={`/profile-others/${ownerId}`}>
-                                <MenuItem onClick={handleOptionClose}>
-                                    <ListItemIcon>
-                                        <PersonIcon />
-                                    </ListItemIcon>
-                                    View Profile
-                                </MenuItem>
-                            </Link>
-                        ) : (
-                            <Link to={`/profile`}>
-                                <MenuItem onClick={handleOptionClose}>
-                                    <ListItemIcon>
-                                        <PersonIcon />
-                                    </ListItemIcon>
-                                    Profile
-                                </MenuItem>
-                            </Link>
-                        )}
+                            <div>
+                                <Link
+                                    to={`/profile-others/${ownerId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
+                                    <MenuItem onClick={handleOptionClose}>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        View Profile
+                                    </MenuItem>
+                                </Link>
 
-                        {props.login.id !== ownerId && (
-                            <MenuItem onClick={handleOptionClose}>
-                                <ListItemIcon>
-                                    <ReportIcon />
-                                </ListItemIcon>
-                                Report this post
-                            </MenuItem>
+                                <Link
+                                    to={`/post/${props.postId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <FeedIcon />
+                                        </ListItemIcon>
+                                        View Post
+                                    </MenuItem>
+                                </Link>
+
+                                <MenuItem onClick={handleOptionClose}>
+                                    <ListItemIcon>
+                                        <ReportIcon />
+                                    </ListItemIcon>
+                                    Report this post
+                                </MenuItem>
+                            </div>
+                        ) : (
+                            <div>
+                                <Link
+                                    to={`/profile`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
+                                    <MenuItem onClick={handleOptionClose}>
+                                        <ListItemIcon>
+                                            <PersonIcon />
+                                        </ListItemIcon>
+                                        Profile
+                                    </MenuItem>
+                                </Link>
+
+                                <Link
+                                    to={`/post/${props.postId}`}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
+                                    <MenuItem>
+                                        <ListItemIcon>
+                                            <FeedIcon />
+                                        </ListItemIcon>
+                                        View Post
+                                    </MenuItem>
+                                </Link>
+                            </div>
                         )}
                     </Menu>
                 );
@@ -426,6 +480,18 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
+                        <Link
+                            to={`/post/${props.postId}`}
+                            style={{ textDecoration: 'none', color: 'black' }}
+                        >
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FeedIcon />
+                                </ListItemIcon>
+                                View Post
+                            </MenuItem>
+                        </Link>
+
                         <MenuItem onClick={(e) => setEditModal(true)}>
                             <ListItemIcon>
                                 <EditIcon />
@@ -463,6 +529,19 @@ const PostCard = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
+
+                        <Link
+                            to={`/post/${props.postId}`}
+                            style={{ textDecoration: 'none', color: 'black' }}
+                        >
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FeedIcon />
+                                </ListItemIcon>
+                                View Post
+                            </MenuItem>
+                        </Link>
+
                         <MenuItem onClick={handleOptionClose}>
                             <ListItemIcon>
                                 <ReportIcon />
@@ -479,14 +558,16 @@ const PostCard = (props) => {
 
     // showing Post Likes...
     const showPostLikes = (liked, likes) => {
-        // increments showing..
-        if (liked) {
-            return ++likes - 1;
-        }
+        likes = likes + 1;
 
         // decrements showing..
         if (!liked) {
             return --likes;
+        }
+
+        // increments showing..
+        if (liked) {
+            return ++likes - 1;
         }
     };
 
@@ -571,9 +652,24 @@ const PostCard = (props) => {
                     {showPostLikes(isLiked, postLikes)}
                 </span>
 
-                <IconButton aria-label="share">
-                    <ShareIcon style={{ color: themeMode.cardFontColor }} />
+                {/*---- CommentIcon to make Comment ----*/}
+                <IconButton
+                    aria-label="comment"
+                    onClick={() => setCommentModal(true)}
+                >
+                    <CommentIcon style={{ color: themeMode.cardFontColor }} />
                 </IconButton>
+
+                {/* Showing the MakeComments Modal */}
+                <MakeComments
+                    showModal={commentModal}
+                    setCommentModal={setCommentModal}
+                    ownerId={ownerId}
+                    postId={postId}
+                    setExpandedCommentArea={setExpanded}
+                />
+
+                {/* ExpandMore icon to see all comments */}
                 <ExpandMore
                     expand={expanded}
                     onClick={handleExpandClick}
@@ -587,7 +683,7 @@ const PostCard = (props) => {
             {/*---- Collapse Area Section ----*/}
             {/*---- It will be the future Comments section ----*/}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <Comments />
+                {renderComments(comments)}
             </Collapse>
         </Card>
     );

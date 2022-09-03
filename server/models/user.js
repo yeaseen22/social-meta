@@ -20,6 +20,9 @@ const userSchema = mongoose.Schema({
     themeMode: { type: String, required: false, default: 'lightMode' },
     colorMode: { type: String, required: false, default: 'royalblue' },
     token: { type: String },
+    // posts: [
+    //     { type: mongoose.Schema.Types.ObjectId, ref: 'Post' }
+    // ]
 }, {
     timestamps: true
 });
@@ -45,7 +48,7 @@ userSchema.pre('save', function (next) {
     }
 });
 
-// Schema Method to compare login pass to register pass..
+// Schema Method to compare login pass to register pass.
 userSchema.methods.comparePassword = function(candidatePassword, cb){
     var user = this;
 
