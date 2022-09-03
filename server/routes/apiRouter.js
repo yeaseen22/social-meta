@@ -8,11 +8,25 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+const conversationController = require('../controllers/conversation.controller');
+const messageController = require('../controllers/message.controller');
 
 /**
  * Conversation Route..
  */
+router.post('/conversation_create', conversationController.createConversation);
 
+router.get('/conversation/:userId', conversationController.getConversationByUserId);
+
+/**
+ * Messages Route..
+ */
+
+// Add..
+router.post('/message_create', messageController.createMessage);
+
+// Read..
+router.get('/message/:conversationId', messageController.getMessageByConversationId);
 
 /**----
  * ---- GET REQUESTS ---- ..
