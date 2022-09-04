@@ -5,6 +5,7 @@ import ChatOnline from './ChatOnline';
 import "../../css/messenger/messenger.css";
 import { connect } from 'react-redux';
 // import {} from '../../redux/actions/';
+import { io } from 'socket.io-client';
 
 import axios from 'axios';
 
@@ -15,6 +16,27 @@ const Messenger = (props) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const scrollRef = useRef();
+    const socket = useRef();
+
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:8900");
+    }, []);
+
+    useEffect(() => {
+        socket.current.emit("addUser", currentUser.id);
+        socket.current.on("getUsers", users => {
+            console.log(users);
+        });
+    }, []);
+
+
+    // useEffect(() => {
+    //     socket?.on("welcome", message => {
+    //         console.log(message);
+    //     });
+    // }, [socket]);
+
 
     /**
      * ---- useEffect HOOK ----
@@ -200,10 +222,10 @@ const Messenger = (props) => {
     /**
      * ---- Console ----
      */
-    console.log('Conversations -- ', conversations);
-    console.log('current Chat -- ', currentChat);
-    console.log('currrent User -- ', currentUser);
-    console.log('Messages -- ', messages);
+    // console.log('Conversations -- ', conversations);
+    // console.log('current Chat -- ', currentChat);
+    // console.log('currrent User -- ', currentUser);
+    // console.log('Messages -- ', messages);
 
     // Return Statement..
     return (
