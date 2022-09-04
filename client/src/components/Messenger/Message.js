@@ -3,9 +3,8 @@ import "../../css/messenger/message.css";
 import { format } from 'timeago.js';
 
 const Message = ({ message, own }) => {
-
-    console.log('MSGS -- ', message);
-    console.log('OWN -->> ', own);
+    // console.log('MSGS -- ', message);
+    // console.log('OWN -->> ', own);
 
     if (message === undefined){
         return null;

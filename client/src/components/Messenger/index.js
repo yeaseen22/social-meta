@@ -15,20 +15,49 @@ const Messenger = (props) => {
     const [currentChat, setCurrentChat] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    const [arrivalMessage, setArrivalMessage] = useState(null);
     const scrollRef = useRef();
     const socket = useRef();
 
 
+    /**
+     * ---- useEffect HOOK ----
+     * Make Socket Connection with first load.
+     */
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
+
+        socket.current.on("getMessage", data => {
+            setArrivalMessage({
+                sender: data.senderId,
+                text: data.text,
+                creatadAt: Date.now(),
+            });
+        });
     }, []);
 
+
+    /**
+     * ---- useEffect HOOK ----
+     * Setting the ArrivalMessage with currentChat's members including.
+     */
+    useEffect(() => {
+        arrivalMessage &&
+            currentChat?.members.includes(arrivalMessage.sender) &&
+            setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage, currentChat]);
+
+
+    /**
+     * ---- useEffect HOOK ----
+     * To Send users to Socket.IO for online user socket have to receive.
+     */
     useEffect(() => {
         socket.current.emit("addUser", currentUser.id);
         socket.current.on("getUsers", users => {
             console.log(users);
         });
-    }, []);
+    }, [currentUser]);
 
 
     // useEffect(() => {
@@ -64,7 +93,7 @@ const Messenger = (props) => {
     useEffect(() => {
         if (currentUser){
             getMessages(currentChat._id);
-            console.log('Current Chat == ', currentChat._id);
+            // console.log('Current Chat == ', currentChat._id);
         }
 
         // make cleanup..
@@ -76,7 +105,7 @@ const Messenger = (props) => {
     /**
      * ---- useEffect HOOK ----
      * To control useRef Hook for last conversations text showing.
-     * It should be scroll to last message which I was send.
+     * It should be scrolled to last message which I was sent.
      */
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -98,8 +127,7 @@ const Messenger = (props) => {
     const getMessages = async (id) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/message/${id}`);
-
-            console.log('The RESPONSE -- ', response);
+            // console.log('The RESPONSE -- ', response);
             setMessages(response.data);
 
         } catch(error){
@@ -115,6 +143,15 @@ const Messenger = (props) => {
             text: newMessage,
             conversationId: currentChat._id
         };
+
+        const receiverId = currentChat.members.find(member => member !== currentUser.id);
+
+        // sending message to socket.
+        socket.current.emit("sendMessage", {
+            senderId: currentUser.id,
+            receiverId,
+            text: newMessage
+        });
 
         try {
             const response = await axios.post("http://localhost:8080/api/message_create", message);
