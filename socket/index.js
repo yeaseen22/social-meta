@@ -4,6 +4,10 @@ const io = require('socket.io')(8900, {
     }
 });
 
+/**
+ * --- USERS array ----
+ * @type {*[]}
+ */
 let users = [];
 
 /**
@@ -12,10 +16,25 @@ let users = [];
  * @param socketId
  */
 const addUser = (userId, socketId) => {
+    console.log('Add User -- ', userId, socketId);
     !users.some((user) => user.userId === userId) &&
         users.push({ userId, socketId });
 };
 
+/**
+ * ---- Get User ----
+ * @param userId
+ * @returns {*}
+ */
+const getUser = (userId) => {
+    console.log('getUser function scope USER -- ', users);
+    return users.find(user => user.userId === userId);
+};
+
+/**
+ * ---- Remove User ----
+ * @param socketId
+ */
 const removeUser = (socketId) => {
     users = users.filter(user => user.socketId !== socketId);
 };
@@ -33,12 +52,21 @@ io.on("connection", (socket) => {
     });
 
     // send and get message.
-
+    // Taking data from client and work done here.
+    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+        const user = getUser(receiverId);
+        console.log('RECEIVER -- ', receiverId);
+        console.log('USER -- ', user);
+        io.to(user?.socketId).emit("getMessage", {
+            senderId,
+            text
+        });
+    });
 
     // When disconnect..
     socket.on("disconnect", () => {
         console.log("A User Disconnected!");
         removeUser(socket.id);
-        io.emit("getUsers", users);
+        // io.emit("getUsers", users);
     });
 });
