@@ -26,8 +26,6 @@ const Message = ({ message, own }) => {
             </div>
         );
     }
-
-
 };
 
 export default Message;

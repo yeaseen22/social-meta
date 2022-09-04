@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Conversation from './Conversation';
 import Message from './Message';
 import ChatOnline from './ChatOnline';
@@ -13,6 +13,8 @@ const Messenger = (props) => {
     const [currentUser, setCurrentUser] = useState({});
     const [currentChat, setCurrentChat] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const scrollRef = useRef();
 
     /**
      * ---- useEffect HOOK ----
@@ -49,6 +51,15 @@ const Messenger = (props) => {
         };
     }, [currentChat]);
 
+    /**
+     * ---- useEffect HOOK ----
+     * To control useRef Hook for last conversations text showing.
+     * It should be scroll to last message which I was send.
+     */
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
 
     // To getting conversation..
     const getConversations = async (loginUser) => {
@@ -72,6 +83,26 @@ const Messenger = (props) => {
         } catch(error){
             console.log(error);
         }
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const message = {
+            sender: currentUser.id,
+            text: newMessage,
+            conversationId: currentChat._id
+        };
+
+        try {
+            const response = await axios.post("http://localhost:8080/api/message_create", message);
+            setMessages([...messages, response.data]);
+            setNewMessage("");
+
+        } catch(error) {
+            console.log(error);
+        }
+
     };
 
 
@@ -113,7 +144,7 @@ const Messenger = (props) => {
             return <span>Loading...</span>;
         }else{
             return messages.map(message => (
-                <div key={message._id}>
+                <div key={message._id} ref={scrollRef}>
                     <Message
                         message={message}
                         own={message.sender === currentUser.id}
@@ -141,18 +172,6 @@ const Messenger = (props) => {
                 <>
                     {/*---- Top ChatBox ----*/}
                     <div className="chatBoxTop">
-                        <Message />
-                        <Message own={true} />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
-                        <Message />
                         {renderMessage(messages)}
                     </div>
 
@@ -161,9 +180,16 @@ const Messenger = (props) => {
                             <textarea
                                 className="chatMessageInput"
                                 placeholder="Write your message.."
+                                onChange={event => setNewMessage(event.target.value)}
+                                value={newMessage}
                             >
                             </textarea>
-                        <button className="chatSubmitButton">Send</button>
+                        <button
+                            className="chatSubmitButton"
+                            onClick={handleSubmit}
+                        >
+                            Send
+                        </button>
                     </div>
                 </>
             );
