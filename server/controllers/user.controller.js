@@ -81,7 +81,9 @@ exports.profileById = function(req, res){
               coverPhoto: user.coverPhoto,
               email: user.email,
               bio: user.bio,
-              birthdate: user.birthdate
+              birthdate: user.birthdate,
+              followings: user.followings,
+              followers: user.followers
           }
       });
   });
