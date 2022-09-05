@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "../../css/messenger/chatOnline.css";
 
-const ChatOnline = () => {
+/**
+ * ---- ChatOnline Component ----
+ * @param onlineUsers
+ * @param currentUserId
+ * @param setCurrentChat
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const ChatOnline = ({ onlineUsers, currentUserId, setCurrentChat }) => {
+    const [friends, setFriends] = useState([]);
+    const [onlineFriends, setOnlineFriends] = useState([]);
+
     return (
         <div className="chatOnline">
             <div className="chatOnlineFriend">

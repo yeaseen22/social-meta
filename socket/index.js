@@ -27,7 +27,7 @@ const addUser = (userId, socketId) => {
  * @returns {*}
  */
 const getUser = (userId) => {
-    console.log('getUser function scope USER -- ', users);
+    // console.log('getUser function scope USER -- ', users);
     return users.find(user => user.userId === userId);
 };
 
@@ -55,8 +55,8 @@ io.on("connection", (socket) => {
     // Taking data from client and work done here.
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
         const user = getUser(receiverId);
-        console.log('RECEIVER -- ', receiverId);
-        console.log('USER -- ', user);
+        // console.log('RECEIVER -- ', receiverId);
+        // console.log('USER -- ', user);
         io.to(user?.socketId).emit("getMessage", {
             senderId,
             text

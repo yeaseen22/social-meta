@@ -9,6 +9,13 @@ import { io } from 'socket.io-client';
 
 import axios from 'axios';
 
+
+/**
+ * ----- Main Messenger Root Index Component ----
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Messenger = (props) => {
     const [conversations, setConversations] = useState([]);
     const [currentUser, setCurrentUser] = useState({});
@@ -16,9 +23,9 @@ const Messenger = (props) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const scrollRef = useRef();
     const socket = useRef();
-
 
     /**
      * ---- useEffect HOOK ----
@@ -112,7 +119,11 @@ const Messenger = (props) => {
     }, [messages]);
 
 
-    // To getting conversation..
+    /**
+     * ---- To Getting The Conversations ----
+     * @param loginUser
+     * @returns {Promise<void>}
+     */
     const getConversations = async (loginUser) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/conversation/${loginUser.id}`);
@@ -123,7 +134,11 @@ const Messenger = (props) => {
         }
     };
 
-    // To getting messages..
+    /**
+     * ---- To Getting Messages ----
+     * @param id
+     * @returns {Promise<void>}
+     */
     const getMessages = async (id) => {
         try {
             const response = await axios.get(`http://localhost:8080/api/message/${id}`);
@@ -135,6 +150,11 @@ const Messenger = (props) => {
         }
     };
 
+    /**
+     * ---- To Handle Submit Buttons Functionalities ----
+     * @param event
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -285,9 +305,11 @@ const Messenger = (props) => {
             {/*---- Chat Online ----*/}
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                    <ChatOnline />
-                    <ChatOnline />
-                    <ChatOnline />
+                    <ChatOnline
+                        onlineUsers={onlineUsers}
+                        currentUserId={currentUser.id}
+                        setCurrentChat={setCurrentChat}
+                    />
                 </div>
             </div>
         </div>
