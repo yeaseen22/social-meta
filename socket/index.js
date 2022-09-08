@@ -1,6 +1,7 @@
 const io = require('socket.io')(8900, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: ["http://localhost:3000", "http://localhost:8080"],
+        // origin: "*"
     }
 });
 
@@ -16,9 +17,11 @@ let users = [];
  * @param socketId
  */
 const addUser = (userId, socketId) => {
-    console.log('Add User -- ', userId, socketId);
-    !users.some((user) => user.userId === userId) &&
+    if (userId !== null && socketId !== null){
+        console.log('Add User -- ', userId, socketId);
+        !users.some((user) => user.userId === userId) &&
         users.push({ userId, socketId });
+    }
 };
 
 /**
@@ -27,7 +30,7 @@ const addUser = (userId, socketId) => {
  * @returns {*}
  */
 const getUser = (userId) => {
-    // console.log('getUser function scope USER -- ', users);
+    console.log('getUser function scope USER -- ', users);
     return users.find(user => user.userId === userId);
 };
 
@@ -55,9 +58,13 @@ io.on("connection", (socket) => {
     // Taking data from client and work done here.
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
         const user = getUser(receiverId);
-        // console.log('RECEIVER -- ', receiverId);
-        // console.log('USER -- ', user);
-        io.to(user?.socketId).emit("getMessage", {
+        if (!user) return new Error("User not Found!");
+
+        console.log('RECEIVER -- ', receiverId);
+        console.log('USER -- ', user);
+        console.log('TEXT -- ', text);
+
+        io.to(user.socketId).emit("getMessage", {
             senderId,
             text
         });
@@ -67,6 +74,11 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("A User Disconnected!");
         removeUser(socket.id);
-        // io.emit("getUsers", users);
+        io.emit("getUsers", users);
     });
+});
+
+// When makes Disconnected.
+io.on("disconnect", (socket) => {
+    console.log("User is Disconnected!");
 });

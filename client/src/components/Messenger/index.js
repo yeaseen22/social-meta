@@ -24,7 +24,9 @@ const Messenger = (props) => {
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
+
     const scrollRef = useRef();
+    // Implement Socket.
     const socket = useRef();
 
     /**
@@ -33,15 +35,27 @@ const Messenger = (props) => {
      */
     useEffect(() => {
         socket.current = io("ws://localhost:8900");
+    }, []);
+
+
+    /**
+     * ---- useEffect HOOK ----
+     * Get data from (senderId, text) from Socket.IO
+     */
+    useEffect(() => {
+        console.log('getMessage of socket.IO-client -- useEffect');
 
         socket.current.on("getMessage", data => {
+
+            console.log('The Message from Socket -- ', data);
+
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
-                creatadAt: Date.now(),
+                creatadAt: Date.now()
             });
         });
-    }, []);
+    }, [currentChat]);
 
 
     /**
@@ -49,6 +63,8 @@ const Messenger = (props) => {
      * Setting the ArrivalMessage with currentChat's members including.
      */
     useEffect(() => {
+        console.log('setMessage of socket.IO-client -- useEffect');
+
         arrivalMessage &&
             currentChat?.members.includes(arrivalMessage.sender) &&
             setMessages((prev) => [...prev, arrivalMessage]);
@@ -57,12 +73,18 @@ const Messenger = (props) => {
 
     /**
      * ---- useEffect HOOK ----
+     *
      * To Send users to Socket.IO for online user socket have to receive.
      */
     useEffect(() => {
         socket.current.emit("addUser", currentUser.id);
         socket.current.on("getUsers", users => {
-            console.log(users);
+            // Setting the OnlineUsers.
+            // And get users from followings of currentUser.
+            // console.log('ONLINE USERS -- ', currentUser.followings.filter(F => users.some(U => U?.userId === F)));
+            setOnlineUsers(
+                currentUser.followings.filter(F => users.some(U => U?.userId === F))
+            );
         });
     }, [currentUser]);
 
@@ -165,6 +187,11 @@ const Messenger = (props) => {
         };
 
         const receiverId = currentChat.members.find(member => member !== currentUser.id);
+
+        // See Receiver and Sender ID.
+        console.log('ReceiverId & SenderId', receiverId, currentUser.id);
+        // Message which want to send.
+        console.log('MESSAGE == ', newMessage);
 
         // sending message to socket.
         socket.current.emit("sendMessage", {
@@ -307,7 +334,7 @@ const Messenger = (props) => {
                 <div className="chatOnlineWrapper">
                     <ChatOnline
                         onlineUsers={onlineUsers}
-                        currentUserId={currentUser.id}
+                        currentUserId={currentUser?.id}
                         setCurrentChat={setCurrentChat}
                     />
                 </div>

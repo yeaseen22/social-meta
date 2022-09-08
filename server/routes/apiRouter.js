@@ -8,6 +8,8 @@ const express = require('express'),
     profileUpload = require('../middleware/profileUpload'),
     postUpload = require('../middleware/postUpload');
 
+// temporary User Model here..
+const User = require('../models/user');
 const conversationController = require('../controllers/conversation.controller');
 const messageController = require('../controllers/message.controller');
 
@@ -15,18 +17,40 @@ const messageController = require('../controllers/message.controller');
  * Conversation Route..
  */
 router.post('/conversation_create', conversationController.createConversation);
-
 router.get('/conversation/:userId', conversationController.getConversationByUserId);
 
 /**
  * Messages Route..
  */
-
 // Add..
 router.post('/message_create', messageController.createMessage);
-
 // Read..
 router.get('/message/:conversationId', messageController.getMessageByConversationId);
+
+/**
+ * ==== The Testing API router and controller ====
+ */
+router.get('/friends/:userId', async function(req, res){
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        const friends = await Promise.all(
+            user.followings.map((friendId) => {
+                return User.findById(friendId);
+            })
+        );
+
+        let friendList = [];
+        friends.map(friend => {
+            const { _id, firstname, lastname, profilePhoto } = friend;
+            friendList.push({ _id, firstname, lastname, profilePhoto });
+        });
+        res.status(200).json(friendList);
+
+    } catch(error){
+        res.status(500).json(error);
+    }
+});
 
 /**----
  * ---- GET REQUESTS ---- ..

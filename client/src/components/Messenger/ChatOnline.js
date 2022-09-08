@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../../css/messenger/chatOnline.css";
+import axios from 'axios';
 
 /**
  * ---- ChatOnline Component ----
@@ -13,6 +14,46 @@ const ChatOnline = ({ onlineUsers, currentUserId, setCurrentChat }) => {
     const [friends, setFriends] = useState([]);
     const [onlineFriends, setOnlineFriends] = useState([]);
 
+    /**
+     * ----==== useEffect Hook for GetFriends ====----
+     */
+    useEffect(() => {
+        const getFriends = async () => {
+            try {
+                if (currentUserId){
+                    const response = await axios.get(`http://localhost:8080/api/friends/${currentUserId}`);
+                    setFriends(response.data);
+                }
+
+            } catch(error){
+                console.log(error);
+            }
+        };
+        // calling this getFriends function..
+        getFriends();
+
+        // cleanup function..
+        return () => {
+            setFriends([]);
+        };
+    }, [currentUserId]);
+
+    /**
+     * ----==== useEffect Hook for Get OnlineFriends ====----
+     */
+    useEffect(() => {
+        setOnlineFriends(friends.filter(F => onlineUsers.includes(F._id)));
+    }, [friends, onlineUsers]);
+
+    // log to seeing
+    console.log('Friends == ', friends);
+    console.log('OnlineFriends == ', onlineFriends);
+
+    // const renderOnlineFriends = () => {
+    //
+    // };
+
+    // Retruning statement..
     return (
         <div className="chatOnline">
             <div className="chatOnlineFriend">
