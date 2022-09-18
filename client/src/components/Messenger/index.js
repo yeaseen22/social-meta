@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Conversation from './Conversation';
 import Message from './Message';
-import ChatOnline from './ChatOnline';
+// import ChatOnline from './ChatOnline';
 import "../../css/messenger/messenger.css";
 import { connect } from 'react-redux';
 // import {} from '../../redux/actions/';
@@ -14,11 +14,11 @@ import axios from 'axios';
  * ----- Main Messenger Root Index Component ----
  * @param props
  * @returns {JSX.Element}
- * @constructor
+ * @constructor 
  */
 const Messenger = (props) => {
     const [conversations, setConversations] = useState([]);
-    const [currentUser, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState(props.User.login ?? {});
     const [currentChat, setCurrentChat] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
@@ -34,20 +34,35 @@ const Messenger = (props) => {
      * Make Socket Connection with first load.
      */
     useEffect(() => {
+        console.log('1st Effect');
+        if (props.User) {
+            if (props.User.login) {
+                setCurrentUser(props.User.login);
+                getConversations(props.User.login);
+            }
+        }
+
+        // Linking Socket Client To Server..
         socket.current = io("ws://localhost:8900");
+
+        // make cleanup..
+        return () => {
+            setCurrentUser({});
+            setConversations([]);
+        };
     }, []);
 
 
-    /**
-     * ---- useEffect HOOK ----
-     * Get data from (senderId, text) from Socket.IO
-     */
     useEffect(() => {
-        console.log('getMessage of socket.IO-client -- useEffect');
+        console.log('SOCKET ==== STARTING');
+
+        // socket.current.on("demo-message", data => {
+        //     console.log('The Data from demo == ', data);
+        // })
 
         socket.current.on("getMessage", data => {
 
-            console.log('The Message from Socket -- ', data);
+            console.log('Message from Socket -- ', data);
 
             setArrivalMessage({
                 sender: data.senderId,
@@ -55,7 +70,7 @@ const Messenger = (props) => {
                 creatadAt: Date.now()
             });
         });
-    }, [currentChat]);
+    }, [socket]);
 
 
     /**
@@ -63,64 +78,40 @@ const Messenger = (props) => {
      * Setting the ArrivalMessage with currentChat's members including.
      */
     useEffect(() => {
-        console.log('setMessage of socket.IO-client -- useEffect');
+        console.log('---- arrivalMessage changes Effect Hook ----');
+        console.log('ARRIVAL MESSAGE -- ', arrivalMessage);
+        console.log('CURRENT CHAT -- ', currentChat);
 
-        arrivalMessage &&
-            currentChat?.members.includes(arrivalMessage.sender) &&
-            setMessages((prev) => [...prev, arrivalMessage]);
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && setMessages([...messages, arrivalMessage]);
     }, [arrivalMessage, currentChat]);
 
 
     /**
      * ---- useEffect HOOK ----
-     *
      * To Send users to Socket.IO for online user socket have to receive.
      */
     useEffect(() => {
-        socket.current.emit("addUser", currentUser.id);
-        socket.current.on("getUsers", users => {
-            // Setting the OnlineUsers.
-            // And get users from followings of currentUser.
-            // console.log('ONLINE USERS -- ', currentUser.followings.filter(F => users.some(U => U?.userId === F)));
-            setOnlineUsers(
-                currentUser.followings.filter(F => users.some(U => U?.userId === F))
-            );
-        });
-    }, [currentUser]);
+        if (currentUser.id) {
+            // console.log('CURRENT USER -- ', currentUser);
 
-
-    // useEffect(() => {
-    //     socket?.on("welcome", message => {
-    //         console.log(message);
-    //     });
-    // }, [socket]);
-
-
-    /**
-     * ---- useEffect HOOK ----
-     * To getting conversations data with loggedIn user.
-     */
-    useEffect(() => {
-        if (props.User){
-            if (props.User.login){
-                setCurrentUser(props.User.login);
-                getConversations(props.User.login);
-            }
+            socket.current.emit("addUser", currentUser.id);
+            socket.current.on("getUsers", users => {
+                // Setting the OnlineUsers.
+                // And get users from followings of currentUser.
+                // console.log('ONLINE USERS -- ', currentUser.followings.filter(F => users.some(U => U?.userId === F)));
+                setOnlineUsers(
+                    currentUser.followings.filter(F => users.some(U => U?.userId === F))
+                );
+            });
         }
-
-        // make cleanup..
-        return () => {
-            setCurrentUser({});
-            setConversations([]);
-        };
-    }, [props.User.login]);
+    }, [currentUser]);
 
     /**
      * ---- useEffect HOOK ----
      * To getting messages with current chat's ID.
      */
     useEffect(() => {
-        if (currentUser){
+        if (currentUser.id) {
             getMessages(currentChat._id);
             // console.log('Current Chat == ', currentChat._id);
         }
@@ -167,7 +158,7 @@ const Messenger = (props) => {
             // console.log('The RESPONSE -- ', response);
             setMessages(response.data);
 
-        } catch(error){
+        } catch (error) {
             console.log(error);
         }
     };
@@ -180,35 +171,37 @@ const Messenger = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const message = {
-            sender: currentUser.id,
-            text: newMessage,
-            conversationId: currentChat._id
-        };
+        if (currentUser.id) {
+            const message = {
+                sender: currentUser.id,
+                text: newMessage,
+                conversationId: currentChat._id
+            };
 
-        const receiverId = currentChat.members.find(member => member !== currentUser.id);
+            const receiverId = currentChat.members.find(member => member !== currentUser.id);
 
-        // See Receiver and Sender ID.
-        console.log('ReceiverId & SenderId', receiverId, currentUser.id);
-        // Message which want to send.
-        console.log('MESSAGE == ', newMessage);
+            // See Receiver and Sender ID.
+            console.log('ReceiverId & SenderId', receiverId, currentUser.id);
+            // Message which want to send.
+            // console.log('MESSAGE == ', newMessage);
 
-        // sending message to socket.
-        socket.current.emit("sendMessage", {
-            senderId: currentUser.id,
-            receiverId,
-            text: newMessage
-        });
+            // sending message to socket.
+            socket.current.emit("sendMessage", {
+                senderId: currentUser.id,
+                receiverId,
+                text: newMessage
+            });
 
-        try {
-            const response = await axios.post("http://localhost:8080/api/message_create", message);
-            setMessages([...messages, response.data]);
-            setNewMessage("");
 
-        } catch(error) {
-            console.log(error);
+            try {
+                const response = await axios.post("http://localhost:8080/api/message_create", message);
+                setMessages([...messages, response.data]);
+                setNewMessage("");
+
+            } catch (error) {
+                console.log(error);
+            }
         }
-
     };
 
 
@@ -219,13 +212,13 @@ const Messenger = (props) => {
      * @returns {JSX.Element|*}
      */
     const renderConversations = (conversations) => {
-        if (!conversations.length){
+        if (!conversations.length) {
             return (
                 <div>
                     <h3>Loading..</h3>
                 </div>
             );
-        }else{
+        } else {
             return conversations.map((conv) => {
                 return (
                     <div key={conv._id} onClick={() => setCurrentChat(conv)}>
@@ -248,7 +241,7 @@ const Messenger = (props) => {
     const renderMessage = (messages) => {
         if (messages.length < 1) {
             return <span>Loading...</span>;
-        }else{
+        } else {
             return messages.map(message => (
                 <div key={message._id} ref={scrollRef}>
                     <Message
@@ -267,13 +260,13 @@ const Messenger = (props) => {
      * @returns {JSX.Element}
      */
     const renderCurrentChat = (currentChat) => {
-        if (currentChat.length < 1){
+        if (currentChat.length < 1) {
             return (
                 <div>
                     <h3 className="noConversationText">Open conversation to start a chat.</h3>
                 </div>
             );
-        }else{
+        } else {
             return (
                 <>
                     {/*---- Top ChatBox ----*/}
@@ -283,13 +276,13 @@ const Messenger = (props) => {
 
                     {/*---- Bottom ChatBox ----*/}
                     <div className="chatBoxBottom">
-                            <textarea
-                                className="chatMessageInput"
-                                placeholder="Write your message.."
-                                onChange={event => setNewMessage(event.target.value)}
-                                value={newMessage}
-                            >
-                            </textarea>
+                        <textarea
+                            className="chatMessageInput"
+                            placeholder="Write your message.."
+                            onChange={event => setNewMessage(event.target.value)}
+                            value={newMessage}
+                        >
+                        </textarea>
                         <button
                             className="chatSubmitButton"
                             onClick={handleSubmit}
@@ -310,6 +303,7 @@ const Messenger = (props) => {
     // console.log('current Chat -- ', currentChat);
     // console.log('currrent User -- ', currentUser);
     // console.log('Messages -- ', messages);
+    // console.log('Arrival Message -- ', arrivalMessage);
 
     // Return Statement..
     return (
@@ -332,11 +326,11 @@ const Messenger = (props) => {
             {/*---- Chat Online ----*/}
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                    <ChatOnline
+                    {/* <ChatOnline
                         onlineUsers={onlineUsers}
                         currentUserId={currentUser?.id}
                         setCurrentChat={setCurrentChat}
-                    />
+                    /> */}
                 </div>
             </div>
         </div>
