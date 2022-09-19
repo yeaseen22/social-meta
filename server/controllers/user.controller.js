@@ -1,29 +1,22 @@
 const User = require('../models/user');
+const { showUsersService } = require('../services/user');
+const error = require('../utils/error');
 
 // Show all Users..
-exports.showAllUsers = function(req, res){
-    User.find({}, function(err, users){
-        if (err) return res.status(400).json({ success: false, err });
+const showUsersController = async function(_req, res, next){
+    try {
+        const users = await showUsersService();
+        // if (!users) return res.status(404).json({ success: false });
+        if (!users) return error(false, 404);
 
-        // Bring new users into the array to security purpose..
-        let newUsers = [];
-        users.forEach((user) => {
-            newUsers.push({
-                _id: user._id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-                title: user.title,
-                profilePhoto: user.profilePhoto
-            });
-        });
-
-        // Sends all of the users..
         res.status(200).json({
             success: true,
-            users: newUsers
+            users
         });
-    });
+
+    } catch(error){
+        next(error);
+    }
 };
 
 // user colorMode update..
@@ -109,12 +102,6 @@ exports.postOwner = function(req, res){
     });
 };
 
-// forgot password..
-exports.forgotPassword = function(req, res){
-    res.send('this is forgot password here !');
-    res.end();
-};
-
 // user profile..
 exports.profile = function(req, res){
     res.status(200).json({
@@ -178,46 +165,7 @@ exports.uploadProfilePic = function(req, res){
     });
 };
 
-// Login User..
-exports.login = function (req, res){
-    const loginEmail = req.body.email;
-    const loginPassword = req.body.password;
 
-    User.findOne({ email: loginEmail }, function (err, user) {
-        if (err) return res.json({ isAuth: false, message: 'Auth failed! wrong email!' });
-        if (!user) return res.json({ isAuth: false, message: 'User not found!' });
-
-        // compare password with registered user..
-        user.comparePassword(loginPassword, function (err, isMatch) {
-            if (!isMatch) return res.json({
-                isAuth: false,
-                message: 'Auth failed! wrong password!'
-            });
-            if (err) return res.send(err);
-
-            // ganarate token when user login with fine..
-            user.ganarateToken(function (err, user) {
-                if (err) throw res.status(400).send(err);
-                res.cookie('auth', user.token).json({
-                    isAuth: true,
-                    id: user._id,
-                    email: user.email
-                });
-            });
-        });
-    });
-};
-
-// Register User..
-exports.register = function (req, res){
-    const user = new User(req.body);
-
-    user.save(function (error, docs) {
-        if (error) return res.json({ success: false, error });
-        res.status(200).json({
-            success: true,
-            message: 'User created successfully.',
-            user: docs
-        });
-    });
+module.exports = {
+    showUsersController
 };

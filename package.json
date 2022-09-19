@@ -8,8 +8,10 @@
     "start-node": "node /server/server.js",
     "server": "nodemon start-node",
     "client": "npm run start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client-install": "npm install --prefix client"
+    "client-install": "npm install --prefix client",
+    "socket": "npm run start --prefix socket",
+    "socket-install": "npm install --prefix socket",
+    "dev": "concurrently \"npm run socket\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -28,7 +30,6 @@
   },
   "devDependencies": {
     "concurrently": "^6.3.0",
-    "nodemon": "^2.0.15",
-    "yarn": "^1.22.17"
+    "nodemon": "^2.0.15"
   }
 }

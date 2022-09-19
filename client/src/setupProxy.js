@@ -6,4 +6,10 @@ module.exports = function(app){
         secure: false,
         changeOrigin: true
     }));
+
+    // app.use(createProxyMiddleware("ws://localhost:8900/*", {
+    //     target: "ws://localhost:8900",
+    //     secure: false,
+    //     changeOrigin: true
+    // }));
 };

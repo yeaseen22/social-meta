@@ -4,9 +4,20 @@ import { Avatar } from '@mui/material';
 import { connect } from 'react-redux';
 import { userInfoById } from '../../redux/actions/UserActions';
 
+/**
+ * ---- Conversation Component ----
+ * @param conversation
+ * @param currentUser
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 const Conversation = ({ conversation, currentUser, ...props }) => {
     const [user, setUser] = useState(null);
 
+    /**
+     * ---- useEffect Hook ----
+     */
     useEffect(() => {
         // finding the others conversations besides currentUser..
         const friendId = conversation.members.find(member => member !== currentUser.id);
@@ -32,6 +43,11 @@ const Conversation = ({ conversation, currentUser, ...props }) => {
         };
     }, [currentUser, conversation]);
 
+    /**
+     * ---- To Rendering User ----
+     * @param USER
+     * @returns {JSX.Element}
+     */
     const renderUser = (USER) => {
         if (!USER){
             return (
@@ -57,7 +73,11 @@ const Conversation = ({ conversation, currentUser, ...props }) => {
     return renderUser(user);
 };
 
-// MapStateToProps..
+/**
+ * ---- MapStateToProps ( makes the redux store's states into visible at component's props ) ----
+ * @param state
+ * @returns {{User}}
+ */
 const mapStateToProps = (state) => {
     return {
         User: state.User

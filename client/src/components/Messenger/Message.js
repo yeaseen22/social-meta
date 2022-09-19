@@ -2,6 +2,13 @@ import React from 'react';
 import "../../css/messenger/message.css";
 import { format } from 'timeago.js';
 
+/**
+ * ---- Dynamic Messages Component ----
+ * @param message
+ * @param own
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 const Message = ({ message, own }) => {
     // console.log('MSGS -- ', message);
     // console.log('OWN -->> ', own);

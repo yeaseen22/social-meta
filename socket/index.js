@@ -1,6 +1,7 @@
 const io = require('socket.io')(8900, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: ["http://localhost:3000", "http://localhost:8080"],
+        // origin: "*"
     }
 });
 
@@ -44,6 +45,7 @@ io.on("connection", (socket) => {
     // When Connect...
     console.log("A User Connected!!!");
     // io.emit("welcome", "hello this is socket server!");
+    // io.emit("welcome socket", "Hello this is the welcome socket here!");
 
     // Take userId and socketId from user..
     socket.on("addUser", (userId) => {
@@ -54,19 +56,33 @@ io.on("connection", (socket) => {
     // send and get message.
     // Taking data from client and work done here.
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-        const user = getUser(receiverId);
-        console.log('RECEIVER -- ', receiverId);
-        console.log('USER -- ', user);
-        io.to(user?.socketId).emit("getMessage", {
-            senderId,
-            text
-        });
+        (async () => {
+            const user = await getUser(receiverId);
+
+            if (user) {
+                const socketId = user.socketId;
+
+                console.log(`Sender is : ${senderId} \n Receiver is : ${receiverId}`);
+                console.log('Send to User SocketID -- ', socketId);
+                console.log('TEXT -- ', text);
+
+                // io.emit("getMessage", {
+                //     senderId,
+                //     text
+                // });
+
+                io.to(socketId).emit("getMessage", {
+                    senderId,
+                    text
+                });
+            }
+        })();
     });
 
     // When disconnect..
     socket.on("disconnect", () => {
         console.log("A User Disconnected!");
         removeUser(socket.id);
-        // io.emit("getUsers", users);
+        io.emit("getUsers", users);
     });
 });
