@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, InputWrapper, InputField } from '../styles/AddPost';
-import { StyleSheet } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
 import { Entypo, AntDesign } from '@expo/vector-icons';
 
