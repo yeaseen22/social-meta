@@ -4,8 +4,7 @@ import {
     Avatar,
     Title,
     Caption,
-    Text,
-    TouchableRipple
+    Text
 } from 'react-native-paper';
 import { Entypo, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 

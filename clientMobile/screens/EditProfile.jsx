@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
     View,
     Text,
@@ -7,162 +7,187 @@ import {
     TextInput,
     StyleSheet
 } from 'react-native';
-import { 
-    Entypo, 
-    FontAwesome, 
-    Ionicons, 
+import {
+    Entypo,
+    FontAwesome,
+    Ionicons,
     Feather,
     MaterialCommunityIcons
 } from '@expo/vector-icons';
-import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
+// import Animated from 'react-native-reanimated';
+import BottomSheet from '../components/widgets/BottomSheet';
 
 
 // Edit Profile Component..
 const EditProfile = () => {
+    const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+    const bottomSheetRef = useRef(null);
 
-    renderInner = () => (
-        <Text>Hello</Text>
-    );
+    // To Open Bottom Sheet..
+    // const handleSnapPress = React.useCallback((index) => {
+    //     bottomSheetRef.current?.snapToIndex(index);
+    //     setIsBottomSheetOpen(0);
+    // }, []);
 
-    renderHeader = () => (
-        <View style={styles.header}>
-            <View style={styles.panelHeader}>
-                <View style={styles.panelHandle}></View>
-            </View>
-        </View>
-    );
+    // Alternative Way to Open Bottom Sheet..
+    const handleBottomSheetOpen = () => {
+        bottomSheetRef.current?.expand();
+        setIsBottomSheetOpen(true);
+    };
 
-    bs = React.createRef(null);
-    fall = new Animated.Value(1);
+    const handleBottomSheetClose = () => {
+        bottomSheetRef.current?.close();
+        setIsBottomSheetOpen(false);
+    };
+
+    // console.log('IsBottomSheetOpen -- ', isBottomSheetOpen);
+    // console.log('BottomSheetRef -- ', bottomSheetRef);
 
     return (
         <View style={styles.container}>
+            <View style={{ opacity: !isBottomSheetOpen ? 1 : 0.25 }}>
+                <View style={{ margin: 20 }}>
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => handleBottomSheetOpen()}>
+                            <View style={{
+                                height: 100,
+                                width: 100,
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                                <ImageBackground
+                                    source={require('../assets/images/asadanik.jpg')}
+                                    style={{ height: 100, width: 100 }}
+                                    imageStyle={{ borderRadius: 15 }}
+                                >
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}>
+                                        <Entypo
+                                            name="camera"
+                                            size={24}
+                                            color="white"
+                                            style={{
+                                                opacity: 0.7,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderWidth: 1,
+                                                borderColor: 'white',
+                                                borderRadius: 10
+                                            }}
+                                        />
+                                    </View>
+                                </ImageBackground>
+                            </View>
+                        </TouchableOpacity>
 
-            <BottomSheet 
-                ref={this.bs}
-                shapPoints={[330, 0]}
-                renderContents={this.renderInner}
-                renderHeader={this.renderHeader}
-                initialSnap={1}
-                callbackNode={this.fall}
-                enabledGestureInteraction={true}
-            />
+                        <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>
+                            Asad Anik
+                        </Text>
+                    </View>
 
-            <View style={{ margin: 20 }}>
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => this.bs.current.snapTo(0)}>
-                        <View style={{
-                            height: 100,
-                            width: 100,
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}>
-                            <ImageBackground
-                                source={require('../assets/images/asadanik.jpg')}
-                                style={{ height: 100, width: 100 }}
-                                imageStyle={{ borderRadius: 15 }}
-                            >
-                                <View style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                    <Entypo
-                                        name="camera"
-                                        size={24}
-                                        color="white"
-                                        style={{
-                                            opacity: 0.7,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderWidth: 1,
-                                            borderColor: 'white',
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </View>
-                            </ImageBackground>
-                        </View>
+                    {/* ---- First Name ---- */}
+                    <View style={styles.action}>
+                        <FontAwesome name="user-o" size={20} color="black" />
+                        <TextInput
+                            placeholder="First Name"
+                            placeholderTextColor="#666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* ---- Last Name ---- */}
+                    <View style={styles.action}>
+                        <FontAwesome name="user-o" size={20} color="black" />
+                        <TextInput
+                            placeholder="Last Name"
+                            placeholderTextColor="#666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* ---- Email ----- */}
+                    <View style={styles.action}>
+                        <MaterialCommunityIcons name="email-multiple-outline" size={20} color="black" />
+                        <TextInput
+                            placeholder="Email"
+                            placeholderTextColor="#666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* ---- Number ---- */}
+                    <View style={styles.action}>
+                        <Feather name="phone" size={20} color="black" />
+                        <TextInput
+                            placeholder="Number"
+                            placeholderTextColor="#666"
+                            keyboardType='number-pad'
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* ---- Country ---- */}
+                    <View style={styles.action}>
+                        <Ionicons name="earth-outline" size={24} color="black" />
+                        <TextInput
+                            placeholder="Country"
+                            placeholderTextColor="#666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    {/* ---- City ---- */}
+                    <View style={styles.action}>
+                        <Ionicons name="location-outline" size={24} color="black" />
+                        <TextInput
+                            placeholder="City"
+                            placeholderTextColor="#666"
+                            autoCorrect={false}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    <TouchableOpacity style={styles.commandButton} onPress={() => alert('Update Profile!')}>
+                        <Text style={styles.panelButtonTitle}>Update</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* ---- The Bottom Sheet here ---- */}
+            <BottomSheet
+                bottomSheetRef={bottomSheetRef}
+                setIsOpen={setIsBottomSheetOpen}
+                // handleSnapPress={handleSnapPress}
+            >
+                <View style={{ padding: 20 }}>
+                    <Text style={styles.panelTitle}>Upload Photo</Text>
+                    <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+
+                    <TouchableOpacity style={styles.panelButton}>
+                        <Text style={styles.panelButtonTitle}>Take Photo</Text>
                     </TouchableOpacity>
 
-                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>
-                        Asad Anik
-                    </Text>
-                </View>
-                
-                {/* ---- First Name ---- */}
-                <View style={styles.action}>
-                    <FontAwesome name="user-o" size={20} color="black" />
-                    <TextInput
-                        placeholder="First Name"
-                        placeholderTextColor="#666"
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
-                
-                {/* ---- Last Name ---- */}
-                <View style={styles.action}>
-                    <FontAwesome name="user-o" size={20} color="black" />
-                    <TextInput
-                        placeholder="Last Name"
-                        placeholderTextColor="#666"
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
-                
-                {/* ---- Email ----- */}
-                <View style={styles.action}>
-                <MaterialCommunityIcons name="email-multiple-outline" size={20} color="black" />
-                    <TextInput
-                        placeholder="Email"
-                        placeholderTextColor="#666"
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
-                
-                {/* ---- Number ---- */}
-                <View style={styles.action}>
-                    <Feather name="phone" size={20} color="black" />
-                    <TextInput
-                        placeholder="Number"
-                        placeholderTextColor="#666"
-                        keyboardType='number-pad'
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
-                
-                {/* ---- Country ---- */}
-                <View style={styles.action}>
-                <Ionicons name="earth-outline" size={24} color="black" />
-                    <TextInput
-                        placeholder="Country"
-                        placeholderTextColor="#666"
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
-                
-                {/* ---- City ---- */}
-                <View style={styles.action}>
-                <Ionicons name="location-outline" size={24} color="black" />
-                    <TextInput
-                        placeholder="City"
-                        placeholderTextColor="#666"
-                        autoCorrect={false}
-                        style={styles.textInput}
-                    />
-                </View>
+                    <TouchableOpacity style={[styles.panelButton, {backgroundColor: 'royalblue'}]}>
+                        <Text style={styles.panelButtonTitle}>Choose From Libray</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.commandButton} onPress={() => alert('Update Profile!')}>
-                        <Text style={styles.panelButtonTitle}>Update</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity 
+                        style={[styles.panelButton, {backgroundColor: 'red'}]} 
+                        onPress={() => handleBottomSheetClose()}
+                    >
+                        <Text style={styles.panelButtonTitle}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            </BottomSheet>
         </View>
     );
 };
@@ -207,10 +232,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     panelTitle: {
+        textAlign: 'center',
         fontSize: 27,
         height: 35,
     },
     panelSubtitle: {
+        textAlign: 'center',
         fontSize: 14,
         color: 'gray',
         height: 30,
