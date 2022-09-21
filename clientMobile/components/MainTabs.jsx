@@ -23,67 +23,86 @@ const MainTabs = () => {
       initialRouteName="HomeDrawer"
       activeColor="white"
     >
-        <Tab.Screen
-          name="HomeDrawer"
-          component={HomeDrawer}
-          options={{
-            tabBarLabel: 'Home',
-            tabBarColor: 'royalblue',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="ios-home" size={24} color={color} />
-            )
-          }}
-        />
+      <Tab.Screen
+        name="HomeDrawer"
+        component={HomeDrawer}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="ios-home" size={24} color={color} />
+          )
+        }}
+      />
 
-        <Tab.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{
-            tabBarLabel: 'Search',
-            tabBarColor: 'gray',
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="search1" size={24} color={color} />
-            )
-          }}
-        />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          tabBarLabel: 'Search',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="search1" size={24} color={color} />
+          )
+        }}
+      />
 
-        <Tab.Screen
-          name="Post"
-          component={PostScreen}
-          options={{
-            tabBarLabel: 'Create Post',
-            tabBarColor: 'red',
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="pluscircle" size={24} color={color} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="Chat"
-          component={ChatScreen}
-          options={{
-            tabBarLabel: 'Chat',
-            tabBarColor: 'green',
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="wechat" size={24} color={color} />
-            )
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            tabBarLabel: 'Profile',
-            tabBarColor: 'orange',
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="profile" size={24} color={color} />
-            )
-          }}
-        />
+      <Tab.Screen
+        name="Post"
+        component={PostScreen}
+        options={{
+          tabBarLabel: 'Create Post',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="pluscircle" size={24} color={color} />
+          )
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="wechat" size={24} color={color} />
+          )
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="profile" size={24} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
 
+
+// Profile Stack Navigator Screen..
+// const ProfileStackScreen = ({ navigation }) => (
+//   <ProfileStack.Navigator screenOptions={{
+//     headerStyle: {
+//       backgroundColor: 'royalblue'
+//     },
+//     headerTintColor: 'white',
+//     headerTintStyle: {
+//       fontWeight: 'bold',
+//     }
+//   }}>
+//     <ProfileStack.Screen
+//       name="Profile"
+//       component={ProfileScreen}
+//       options={{
+//         title: '',
+//         headerRight: () => (
+//           <MaterialCommunityIcons name="account-edit" size={24} color="white" />
+//         )
+//       }}
+//     />
+//   </ProfileStack.Navigator>
+// );
 
 // // Home Stack Navigator Screen..
 // const HomeStackScreen = ({ navigation }) => (
@@ -112,27 +131,6 @@ const MainTabs = () => {
 //       }}
 //     />
 //   </HomeStack.Navigator>
-// );
-
-// // Profile Stack Navigator Screen..
-// const ProfileStackScreen = ({ navigation }) => (
-//   <ProfileStack.Navigator screenOptions={{
-//     headerStyle: {
-//       backgroundColor: 'green'
-//     },
-//     headerTintColor: 'white',
-//     headerTintStyle: {
-//       fontWeight: 'bold'
-//     }
-//   }}>
-//     <ProfileStack.Screen 
-//       name="Profile2"
-//       component={ProfileScreen}
-//       options={{
-//         title: 'My Profile'
-//       }}
-//     />
-//   </ProfileStack.Navigator>
 // );
 
 // // Post Stack Navigator Screen..

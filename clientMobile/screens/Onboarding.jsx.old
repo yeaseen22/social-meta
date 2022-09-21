@@ -1,0 +1,98 @@
+import { View, Image, Button, StyleSheet } from 'react-native';
+import Onboarding from 'react-native-onboarding-swiper';
+
+// Dots..
+const Dots = ({selected}) => {
+    let backgroundColor;
+    backgroundColor = selected ? 'black' : 'white';
+
+    return (
+        <View
+            style={{
+                width: 5,
+                height: 5,
+                marginHorizontal: 3,
+                backgroundColor,
+                // borderRadius: '100%'
+            }}
+        />
+    );
+};
+
+// Skip Button...
+const Skip = ({ ...props }) => (
+    <Button
+        title="Skip"
+        color="white"
+        {...props}
+    />
+);
+
+// Next Button...
+const Next = ({...props }) => {
+
+    return (
+        <Button
+            title="Next"
+            color="white"
+            {...props}
+        />
+    );
+};
+
+// Done Button..
+const Done = ({ ...props }) => (
+    <Button
+        title="Get Started"
+        color="white"
+        {...props}
+    />
+);
+
+
+// Main Onboarding Screen..
+const OnboardingScreen = ({ navigation }) => {
+    return (
+        <Onboarding
+            SkipButtonComponent={Skip}
+            NextButtonComponent={Next}
+            DoneButtonComponent={Done}
+            DotComponent={Dots}
+            
+            onSkip={() => navigation.replace("Login")}
+            onDone={() => navigation.replace("Login")}
+
+            pages={[
+                {
+                    backgroundColor: 'royalblue',
+                    image: <Image source={require('../assets/images/post1.jpg')} style={styles.imageStyle} />,
+                    title: 'Welcome',
+                    subtitle: 'This is Social Meta',
+                },
+                {
+                    backgroundColor: 'orange',
+                    image: <Image source={require('../assets/images/post2.jpg')} style={styles.imageStyle} />,
+                    title: 'Stay Happy',
+                    subtitle: 'Share Moments & Feelings to Other',
+                },
+                {
+                    backgroundColor: 'purple',
+                    image: <Image source={require('../assets/images/post3.jpg')} style={styles.imageStyle} />,
+                    title: 'Secure Messaging !',
+                    subtitle: 'Make Chats with Friends without any Risk and Doubt',
+                },
+            ]}
+        />
+    );
+};
+
+const styles = StyleSheet.create({
+    imageStyle: {
+        height: 500, 
+        width: '100%',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    }
+});
+
+export default OnboardingScreen;

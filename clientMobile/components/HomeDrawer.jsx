@@ -29,7 +29,7 @@ const HomeDrawer = () => {
                 name="Home"
                 component={HomeScreen}
                 options={{
-                    title: 'Social Meta'
+                    title: 'Social Meta',
                 }}
             />
             <Drawer.Screen
