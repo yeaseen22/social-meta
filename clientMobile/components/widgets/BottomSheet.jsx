@@ -3,6 +3,7 @@ import { BottomSheetView } from '@gorhom/bottom-sheet';
 
 const BottomSheet = (props) => {
     const { bottomSheetRef, setIsOpen, snapPoint } = props;
+    // It should be the % of Height for this SnapPoint..
     const snapPoints = [snapPoint];
 
     return (
