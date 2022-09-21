@@ -2,8 +2,8 @@ import BottomPanel from '@gorhom/bottom-sheet';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 
 const BottomSheet = (props) => {
-    const { bottomSheetRef, setIsOpen } = props;
-    const snapPoints = ["50%"];
+    const { bottomSheetRef, setIsOpen, snapPoint } = props;
+    const snapPoints = [snapPoint];
 
     return (
         <BottomPanel

@@ -2,13 +2,10 @@ import React, { useState, useRef } from 'react';
 import {
     View,
     Text,
-    TouchableOpacity,
-    ImageBackground,
     TextInput,
     StyleSheet
 } from 'react-native';
 import {
-    Entypo,
     FontAwesome,
     Ionicons,
     Feather,
@@ -16,6 +13,8 @@ import {
 } from '@expo/vector-icons';
 // import Animated from 'react-native-reanimated';
 import BottomSheet from '../components/widgets/BottomSheet';
+import { Button } from '../components/widgets/Button';
+import ImagePicker from '../components/widgets/ImagePicker';
 
 
 // Edit Profile Component..
@@ -48,41 +47,12 @@ const EditProfile = () => {
             <View style={{ opacity: !isBottomSheetOpen ? 1 : 0.25 }}>
                 <View style={{ margin: 20 }}>
                     <View style={{ alignItems: 'center' }}>
-                        <TouchableOpacity onPress={() => handleBottomSheetOpen()}>
-                            <View style={{
-                                height: 100,
-                                width: 100,
-                                borderRadius: 15,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}>
-                                <ImageBackground
-                                    source={require('../assets/images/asadanik.jpg')}
-                                    style={{ height: 100, width: 100 }}
-                                    imageStyle={{ borderRadius: 15 }}
-                                >
-                                    <View style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }}>
-                                        <Entypo
-                                            name="camera"
-                                            size={24}
-                                            color="white"
-                                            style={{
-                                                opacity: 0.7,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                borderWidth: 1,
-                                                borderColor: 'white',
-                                                borderRadius: 10
-                                            }}
-                                        />
-                                    </View>
-                                </ImageBackground>
-                            </View>
-                        </TouchableOpacity>
+                        <ImagePicker
+                            image={require('../assets/images/asadanik.jpg')}
+                            height={100}
+                            width={100}
+                            onPress={() => handleBottomSheetOpen()}
+                        />
 
                         <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>
                             Asad Anik
@@ -156,9 +126,16 @@ const EditProfile = () => {
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.commandButton} onPress={() => alert('Update Profile!')}>
-                        <Text style={styles.panelButtonTitle}>Update</Text>
-                    </TouchableOpacity>
+                    <Button
+                        title="Update"
+                        color1st="yellow"
+                        color2nd="orange"
+                        size={20}
+                        height={50}
+                        width="100%"
+                        textColor="black"
+                        onPress={() => alert('Upload!')}
+                    />
                 </View>
             </View>
 
@@ -166,26 +143,51 @@ const EditProfile = () => {
             <BottomSheet
                 bottomSheetRef={bottomSheetRef}
                 setIsOpen={setIsBottomSheetOpen}
-                // handleSnapPress={handleSnapPress}
+                snapPoint="50%"
+            // handleSnapPress={handleSnapPress}
             >
                 <View style={{ padding: 20 }}>
                     <Text style={styles.panelTitle}>Upload Photo</Text>
                     <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
 
-                    <TouchableOpacity style={styles.panelButton}>
-                        <Text style={styles.panelButtonTitle}>Take Photo</Text>
-                    </TouchableOpacity>
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Take Photo"
+                            color1st="yellow"
+                            color2nd="orange"
+                            size={20}
+                            height={50}
+                            width="100%"
+                            textColor="black"
+                            onPress={() => alert('Take Photo!')}
+                        />
+                    </View>
 
-                    <TouchableOpacity style={[styles.panelButton, {backgroundColor: 'royalblue'}]}>
-                        <Text style={styles.panelButtonTitle}>Choose From Libray</Text>
-                    </TouchableOpacity>
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Upload Profile"
+                            color1st="royalblue"
+                            color2nd="blue"
+                            size={20}
+                            height={50}
+                            width="100%"
+                            textColor="white"
+                            onPress={() => alert('Upload Photo!')}
+                        />
+                    </View>
 
-                    <TouchableOpacity 
-                        style={[styles.panelButton, {backgroundColor: 'red'}]} 
-                        onPress={() => handleBottomSheetClose()}
-                    >
-                        <Text style={styles.panelButtonTitle}>Cancel</Text>
-                    </TouchableOpacity>
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Cancel"
+                            color1st="brown"
+                            color2nd="red"
+                            size={20}
+                            height={50}
+                            width="100%"
+                            textColor="white"
+                            onPress={() => handleBottomSheetClose()}
+                        />
+                    </View>
                 </View>
             </BottomSheet>
         </View>
@@ -199,13 +201,7 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         // justifyContent: 'center',
     },
-    commandButton: {
-        padding: 15,
-        borderRadius: 10,
-        backgroundColor: '#ff6347',
-        alignItems: 'center',
-        marginTop: 10,
-    },
+
     panel: {
         padding: 20,
         backgroundColor: '#fff',
@@ -242,18 +238,6 @@ const styles = StyleSheet.create({
         color: 'gray',
         height: 30,
         marginBottom: 10,
-    },
-    panelButton: {
-        padding: 13,
-        borderRadius: 10,
-        backgroundColor: '#ff6347',
-        alignItems: 'center',
-        marginVertical: 7,
-    },
-    panelButtonTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: 'white',
     },
     action: {
         flexDirection: 'row',

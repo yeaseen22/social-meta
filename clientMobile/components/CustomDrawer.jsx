@@ -64,7 +64,7 @@ const CustomDrawer = (props) => {
 
             {/* ---- LogOut ---- */}
             <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem label="Sign Out" onPress={() => {alert('Pressed to Logout!')}} />    
+                <DrawerItem label="Sign Out" onPress={() => props.navigation.navigate("Login")} />    
             </Drawer.Section>
         </View>
     );
