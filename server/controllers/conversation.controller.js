@@ -1,5 +1,10 @@
 const Conversation = require('../models/Conversation');
 
+/**
+ * ---- Create Conversation ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 const createConversation = async (req, res) => {
     const { senderId, receiverId } = req.body;
 
@@ -16,6 +21,11 @@ const createConversation = async (req, res) => {
     }
 };
 
+/**
+ * ---- Get Conversation By User ID ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getConversationByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -30,6 +40,7 @@ const getConversationByUserId = async (req, res) => {
         res.status(500).json(error);
     }
 };
+
 
 module.exports = {
     createConversation,

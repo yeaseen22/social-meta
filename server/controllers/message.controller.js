@@ -1,5 +1,10 @@
 const Message = require('../models/Message');
 
+/**
+ * ---- Create Message ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 const createMessage = async (req, res) => {
     const newMessage = new Message(req.body);
 
@@ -12,6 +17,12 @@ const createMessage = async (req, res) => {
     }
 };
 
+
+/**
+ * ---- Get Message by Conversation ID ---- 
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getMessageByConversationId = async (req, res) => {
     try {
         const { conversationId } = req.params;
@@ -26,6 +37,7 @@ const getMessageByConversationId = async (req, res) => {
         res.status(500).json(error);
     }
 };
+
 
 module.exports = {
     createMessage,

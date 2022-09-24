@@ -1,6 +1,11 @@
 const Post = require('../models/post');
 
-// Update Post Like...
+
+/**
+ * ---- Update Post Like ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.likePost = function (req, res) {
     const postId = req.query.postId;
     const likes = req.query.likes;
@@ -24,7 +29,12 @@ exports.likePost = function (req, res) {
         });
 };
 
-// Get Post Like...
+
+/**
+ * ---- Get Post Like ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.getLikes = function (req, res) {
     const postId = req.query.postId;
 
@@ -39,7 +49,12 @@ exports.getLikes = function (req, res) {
     });
 };
 
-// Read Post..
+
+/**
+ * ---- Read Post ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.readPost = function(req, res) {
     const postId = req.query.postId;
 
@@ -66,7 +81,12 @@ exports.readPost = function(req, res) {
         });
 };
 
-// Read all posts..
+
+/**
+ * ---- Read all posts ----
+ * @param {*} _req 
+ * @param {*} res 
+ */
 exports.readAllPosts = async function (_req, res) {
      await Post.find({})
         .populate({
@@ -85,7 +105,12 @@ exports.readAllPosts = async function (_req, res) {
     });
 };
 
-// Current User Posts..
+
+/**
+ * ---- Posts by OwnerId (Current User's Post) ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.currentUserPosts = function (req, res) {
     const currentLoggedInUserId = String(req.user._id);
 
@@ -106,7 +131,12 @@ exports.currentUserPosts = function (req, res) {
     });
 };
 
-// Showing specific User Posts..
+
+/**
+ * ---- Showing specific User Posts ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.specificUserPosts = function (req, res) {
     const userId = req.query.userId;
 
@@ -116,7 +146,12 @@ exports.specificUserPosts = function (req, res) {
     });
 };
 
-// Create new Post..
+
+/**
+ * ---- Create new Post ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.createPost = function (req, res) {
     const post = new Post(req.body);
 
@@ -140,7 +175,12 @@ exports.createPost = function (req, res) {
     });
 };
 
-// Update Post..
+
+/**
+ * ---- Update Post ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.updatePost = function (req, res) {
     const id = req.body._id;
     const post = new Post(req.body);
@@ -164,7 +204,12 @@ exports.updatePost = function (req, res) {
     });
 };
 
-// Delete Post..
+
+/**
+ * ---- Delete Post ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.deletePost = function (req, res) {
     const id = req.query.id;
 

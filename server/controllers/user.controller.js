@@ -1,30 +1,46 @@
 const User = require('../models/user');
-const { showUsersService } = require('../services/user');
-const error = require('../utils/error');
 
-// Show all Users..
-const showUsersController = async function(_req, res, next){
-    try {
-        const users = await showUsersService();
-        // if (!users) return res.status(404).json({ success: false });
-        if (!users) return error(false, 404);
+/**
+ * ---- Show All Users ----
+ * @param {*} _req 
+ * @param {*} res 
+ * @param {*} _next 
+ */
+const showUsersController = function (_req, res, _next) {
+    User.find({}, function (err, users) {
+        if (err) return res.status(400).json({ success: false, err });
 
+        // Bring new users into the array to security purpose..
+        let newUsers = [];
+        users.forEach((user) => {
+            newUsers.push({
+                _id: user._id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                title: user.title,
+                profilePhoto: user.profilePhoto
+            });
+        });
+
+        // Sends all of the users..
         res.status(200).json({
             success: true,
             users
         });
-
-    } catch(error){
-        next(error);
-    }
+    });
 };
 
-// user colorMode update..
-exports.updateColorMode = function(req, res){
+/**
+ * ---- Update Application's Color Mode ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const updateColorMode = function (req, res) {
     const userId = req.user._id;
     const colorMode = req.query.colorMode;
 
-    User.findByIdAndUpdate({_id: userId}, {colorMode: colorMode}, {new: true})
+    User.findByIdAndUpdate({ _id: userId }, { colorMode: colorMode }, { new: true })
         .then(docs => {
             res.status(200).json({
                 isUpdate: true,
@@ -37,12 +53,17 @@ exports.updateColorMode = function(req, res){
         }));
 };
 
-// user themeMode update..
-exports.updateThemeMode = function(req, res){
+
+/**
+ * ---- User's theme mode update -----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const updateThemeMode = function (req, res) {
     const userId = req.user._id;
     const themeMode = req.query.themeMode;
 
-    User.findByIdAndUpdate({_id: userId}, {themeMode: themeMode}, {new: true})
+    User.findByIdAndUpdate({ _id: userId }, { themeMode: themeMode }, { new: true })
         .then(docs => {
             res.status(200).json({
                 isUpdate: true,
@@ -53,42 +74,51 @@ exports.updateThemeMode = function(req, res){
             isUpdate: false,
             error
         }));
+}
+
+
+/**
+ * ----- Find Profile By id ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const profileById = function (req, res) {
+    const userId = req.query.userId;
+
+    User.findById({ _id: userId }, (err, user) => {
+        if (err) return res.json({ isUserFound: false, err });
+        if (!user) return res.json({ isUserFound: false, message: "User not found!" });
+
+        res.status(200).json({
+            isUserFound: true,
+            userById: {
+                userId: user._id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                title: user.title,
+                profilePhoto: user.profilePhoto,
+                coverPhoto: user.coverPhoto,
+                email: user.email,
+                bio: user.bio,
+                birthdate: user.birthdate,
+                followings: user.followings,
+                followers: user.followers
+            }
+        });
+    });
 };
 
-// Profile By Id..
-exports.profileById = function(req, res){
-  const userId = req.query.userId;
-
-  User.findById({_id: userId}, (err, user) => {
-      if (err) return res.json({isUserFound: false, err});
-      if (!user) return res.json({isUserFound: false, message: "User not found!"});
-
-      res.status(200).json({
-          isUserFound: true,
-          userById: {
-              userId: user._id,
-              firstname: user.firstname,
-              lastname: user.lastname,
-              title: user.title,
-              profilePhoto: user.profilePhoto,
-              coverPhoto: user.coverPhoto,
-              email: user.email,
-              bio: user.bio,
-              birthdate: user.birthdate,
-              followings: user.followings,
-              followers: user.followers
-          }
-      });
-  });
-};
-
-// post Owner..
-exports.postOwner = function(req, res){
+/**
+ * ---- Find User By OwnerId ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const postOwner = function (req, res) {
     const ownerId = req.query.ownerId;
 
-    User.findById({_id: ownerId}, (error, user) => {
+    User.findById({ _id: ownerId }, (error, user) => {
         if (error) return res.send(error);
-        if (!user) return res.json({isUserFound: false, message: "User not found!"});
+        if (!user) return res.json({ isUserFound: false, message: "User not found!" });
 
         res.status(200).json({
             isUserFound: true,
@@ -102,8 +132,13 @@ exports.postOwner = function(req, res){
     });
 };
 
-// user profile..
-exports.profile = function(req, res){
+
+/**
+ * ---- User's Profile ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const profile = function (req, res) {
     res.status(200).json({
         isAuth: true,
         id: req.user._id,
@@ -120,8 +155,13 @@ exports.profile = function(req, res){
     });
 };
 
-// Profile (Auth)..
-exports.profileAuth = function(req, res){
+
+/**
+ * ---- Profile (Auth) ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const profileAuth = function (req, res) {
     res.status(200).json({
         isAuth: true,
         id: req.user._id,
@@ -136,19 +176,13 @@ exports.profileAuth = function(req, res){
     });
 };
 
-// Logout User..
-exports.logout = function(req, res){
-    req.user.deleteToken(function (err) {
-        if (err) return res.status(400).send(err);
-        res.status(200).json({
-            isAuth: false,
-            msg: 'Logged-Out, session deleted!'
-        });
-    });
-};
 
-// Uploading profile pic and update mongo users data..
-exports.uploadProfilePic = function(req, res){
+/**
+ * ---- Uploading profile pic and update mongo users data ----
+ * @param {*} req 
+ * @param {*} res 
+ */
+const uploadProfilePic = function (req, res) {
     const userId = req.body.id;
     const fileName = req.file.originalname;
 
@@ -167,5 +201,12 @@ exports.uploadProfilePic = function(req, res){
 
 
 module.exports = {
-    showUsersController
+    showUsersController,
+    updateColorMode,
+    updateThemeMode,
+    profileById,
+    postOwner,
+    profile,
+    profileAuth,
+    uploadProfilePic
 };

@@ -9,7 +9,9 @@ const router = require("express").Router(),
 // Middlewares..
 const authenticate = require('../middleware/auth');
 
-
+/**
+ * ---- Routes For API Version 01 -----
+ */
 router.use('/api/v1/auth', authRoutes);
 router.use('/api/v1/users', authenticate, usersRoutes);
 router.use('/api/v1/posts', authenticate, postsRoutes);

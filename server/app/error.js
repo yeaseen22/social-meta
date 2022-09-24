@@ -19,12 +19,10 @@ const notFoundMiddleware = (_req, _res, next) => {
  */
 const errorHandlerMiddleware = (error, _req, res) => {
     // console.log('Global handler -- ', error);
-    if (error.status){
-        return res.status(error.status).json({
-            message: error.message
-        });
-    }
-    return res.status(500).json({ message: 'Something went wrong!' });
+    // set status and message here..
+    const status = error.status ? error.status : 500;
+    const message = error.message ? error.message : "Something went wrong!";
+    return res.status(status).json({ message });
 };
 
 module.exports = {

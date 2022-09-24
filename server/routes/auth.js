@@ -1,15 +1,26 @@
 const router = require('express').Router();
 const emailChecker = require('../middleware/emailCheck');
-const { loginController, registerController, forgotPasswordController } = require('../controllers/auth');
+const { login, register, forgotPassword, logout } = require('../controllers/auth.controller');
 
 
-// Login User..
-router.post('/login', loginController);
+/**
+ * ---- Login User ----
+ */
+router.post('/login', login);
 
-// Register User..
-router.post('/register', emailChecker, registerController);
+/**
+ * ---- Register User ----
+ */
+router.post('/register', emailChecker, register);
 
-// Forgot Password..
-router.get('/forgot_password', forgotPasswordController);
+/**
+ * ---- Forgot Passsord ----
+ */
+router.get('/forgot_password', forgotPassword);
+
+/**
+ * ---- Get Logout User ----
+ */
+ router.get('/logout', logout);
 
 module.exports = router;
