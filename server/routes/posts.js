@@ -1,32 +1,70 @@
 const router = require('express').Router();
 const postUpload = require('../middleware/postUpload');
 const postController = require('../controllers/post.controller');
+const { 
+    getLikes, 
+    readPost, 
+    readAllPosts, 
+    currentUserPosts, 
+    specificUserPosts,
+    likePost,
+    createPost,
+    updatePost,
+    deletePost
+} = postController;
 
-// Get Likes from Post...
-router.get('/get_post_likes', postController.getLikes);
 
-// Read Post..
-router.get('/post_read', postController.readPost);
+/**
+ * ---- Get Likes from Post ----
+ */
+router.get('/get_post_likes', getLikes);
 
-// Get all Posts..
-router.get('/read_all_posts', postController.readAllPosts);
 
-// Current User Posts..
-router.get('/current_user_posts', postController.currentUserPosts);
+/**
+ * ---- Read Post ----
+ */
+router.get('/post_read', readPost);
 
-// Showing specific User Posts..
-router.get('/user_posts', postController.specificUserPosts);
 
-// Make Like a Post..
-router.post('/post_like', postController.likePost);
+/**
+ * ---- Get all Posts ----
+ */
+router.get('/read_all_posts', readAllPosts);
 
-// Create new Post..
-router.post('/post_create', postUpload.single("file"), postController.createPost);
 
-// Update Post..
-router.post('/post_update', postUpload.single("file"), postController.updatePost);
+/**
+ * ----- Current User Posts -----
+ */
+router.get('/current_user_posts', currentUserPosts);
 
-// Delete Post..
-router.delete('/post_delete', postController.deletePost);
+
+/**
+ * ---- Showing specific User Posts ----
+ */
+router.get('/user_posts', specificUserPosts);
+
+
+/**
+ * ---- Make Like a Post ----
+ */
+router.post('/post_like', likePost);
+
+
+/**
+ * ----- Create new Post ----
+ */
+router.post('/post_create', postUpload.single("file"), createPost);
+
+/**
+ * ----- Update Post ----
+ */
+router.post('/post_update', postUpload.single("file"), updatePost);
+
+
+/**
+ * ---- Delete Post ----
+ */
+router.delete('/post_delete', deletePost);
+
 
 module.exports = router;

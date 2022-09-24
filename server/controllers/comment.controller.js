@@ -1,7 +1,12 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 
-// Read Comment...
+
+/**
+ * ---- Read Comments ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.readComment = function(req, res){
     // const postId = req.params.postId;
     const postId = req.query.postId;
@@ -16,7 +21,12 @@ exports.readComment = function(req, res){
         });
 };
 
-// Make Comment...
+
+/**
+ * ---- Create Comment ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.createComment = async function(req, res){
     const comment = new Comment(req.body);
     const postId = req.body.postId;
@@ -48,7 +58,12 @@ exports.createComment = async function(req, res){
     });
 };
 
-// Update Comment..
+
+/**
+ * ---- Update Comment ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.updateComment = function(req, res){
     const id = req.body._id;
     const comment = new Comment(req.body);
@@ -66,7 +81,12 @@ exports.updateComment = function(req, res){
     });
 };
 
-// Delete Comment..
+
+/**
+ * ---- Delete Comment ----
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.deleteComment = function(req, res){
     const id = req.query.id;
 

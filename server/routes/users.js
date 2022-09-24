@@ -1,7 +1,15 @@
 const router = require('express').Router();
-const userController = require('../controllers/user.controller');
 const profileUpload = require('../middleware/profileUpload');
-const { showUsersController } = require('../controllers/user.controller');
+const { 
+    showUsersController,
+    updateColorMode,
+    updateThemeMode,
+    profileById,
+    postOwner,
+    profile,
+    profileAuth,
+    uploadProfilePic
+} = require('../controllers/user.controller');
 
 // temporary User Model here..
 const User = require('../models/user');
@@ -36,29 +44,40 @@ const User = require('../models/user');
  */
 router.get('/read_all_users', showUsersController);
 
-// // User Profile by id..
-// router.get('/profile_by_id', userController.profileById);
+/**
+ * ---- Get Profile By Id ----
+ */
+router.get('/profile_by_id', profileById);
 
-// // Get User by OwnerId..
-// router.get('/find_user', userController.postOwner);
+/**
+ * ----- Get user of owner ----
+ */
+router.get('/find_user', postOwner);
 
-// // User Profile..
-// router.get('/profile', userController.profile);
+/**
+ * ---- Get profile ----
+ */
+router.get('/profile', profile);
 
-// // Profile (Auth)..
-// router.get('/auth', userController.profileAuth);
+/**
+ * ---- Get Profile (Auth) -----
+ */
+router.get('/auth', profileAuth);
 
-// // Logout User..
-// router.get('/logout', userController.logout);
+/**
+ * ---- Update Color Mode ----
+ */
+router.post('/user_colorMode_update', updateColorMode);
 
-// // User's colorMode update..
-// router.post('/user_colorMode_update', userController.updateColorMode);
+/**
+ * ---- User's themeMode update ----
+ */
+router.post('/user_themeMode_updateName', updateThemeMode);
 
-// // User's themeMode update..
-// router.post('/user_themeMode_updateName', userController.updateThemeMode);
-
-// // Uploading profile pic and update mongo users data..
-// router.post('/profile_upload', profileUpload.single("file"), userController.uploadProfilePic);
+/**
+ * ---- Uploading profile pic and update mongo users data ----
+ */
+router.post('/profile_upload', profileUpload.single("file"), uploadProfilePic);
 
 
 module.exports = router;
