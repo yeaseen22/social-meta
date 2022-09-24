@@ -25,7 +25,7 @@ export function likedPost(isLiked, postId, data) {
 
             console.log('AFTER -- ', likeCounter);
 
-            const request = axios.post(`/api/post_like?postId=${postId}&likes=${likeCounter}`, data)
+            const request = axios.post(`/api//post_like?postId=${postId}&likes=${likeCounter}`, data)
                 .then(response => response.data)
                 .catch(error => console.log('ERR! when try to make like into Post by post req. ', error.message));
 

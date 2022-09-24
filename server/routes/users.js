@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const profileUpload = require('../middleware/profileUpload');
-const { 
+const {
     showUsersController,
     updateColorMode,
     updateThemeMode,
@@ -10,6 +10,7 @@ const {
     profileAuth,
     uploadProfilePic
 } = require('../controllers/user.controller');
+const { logout } = require('../controllers/auth.controller');
 
 // temporary User Model here..
 const User = require('../models/user');
@@ -17,7 +18,7 @@ const User = require('../models/user');
 /**
  * ==== The Testing API router and controller ====
  */
- router.get('/friends/:userId', async function(req, res){
+router.get('/friends/:userId', async function (req, res) {
     try {
         const { userId } = req.params;
         const user = await User.findById(userId);
@@ -34,7 +35,7 @@ const User = require('../models/user');
         });
         res.status(200).json(friendList);
 
-    } catch(error){
+    } catch (error) {
         res.status(500).json(error);
     }
 });
@@ -78,6 +79,11 @@ router.post('/user_themeMode_updateName', updateThemeMode);
  * ---- Uploading profile pic and update mongo users data ----
  */
 router.post('/profile_upload', profileUpload.single("file"), uploadProfilePic);
+
+/**
+ * ---- Get Logout User ----
+ */
+router.get('/logout', logout);
 
 
 module.exports = router;

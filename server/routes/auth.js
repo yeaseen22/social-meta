@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const emailChecker = require('../middleware/emailCheck');
-const { login, register, forgotPassword, logout } = require('../controllers/auth.controller');
+const { login, register, forgotPassword } = require('../controllers/auth.controller');
 
 
 /**
@@ -17,10 +17,5 @@ router.post('/register', emailChecker, register);
  * ---- Forgot Passsord ----
  */
 router.get('/forgot_password', forgotPassword);
-
-/**
- * ---- Get Logout User ----
- */
- router.get('/logout', logout);
 
 module.exports = router;
