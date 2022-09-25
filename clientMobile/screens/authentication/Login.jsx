@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
     View,
@@ -10,9 +10,10 @@ import {
     TextInput
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
+import { checkHealth, login } from '../../API';
+
 
 const Login = ({ navigation }) => {
     const [data, setData] = React.useState({
@@ -21,6 +22,11 @@ const Login = ({ navigation }) => {
         check_textInputChange: false,
         secureTextEntry: true
     });
+
+    useEffect(() => {
+        console.log('I am useEffect');
+        checkHealth();
+    }, []);
 
     const textInputChange = (value, type) => {
         // Email text on change..
@@ -44,6 +50,17 @@ const Login = ({ navigation }) => {
             setData({
                 ...data,
                 password: value
+            });
+        }
+    };
+
+    const handleLoginClick = () => {
+        const { email, password } = data;
+
+        if (email !== '' && password !== '') {
+            login({
+                email,
+                password
             });
         }
     };
@@ -80,6 +97,7 @@ const Login = ({ navigation }) => {
                     <TextInput
                         placeholder="Your Email"
                         style={styles.textInput}
+                        autoCapitalize="none"
                         onChangeText={(value) => textInputChange(value, "EMAIL")}
                     />
 
@@ -114,10 +132,10 @@ const Login = ({ navigation }) => {
                         textColor="black"
                         width="100%"
                         height={50}
-                        onPress={() => navigation.navigate("Home")}
+                        onPress={handleLoginClick}
                     />
 
-                    <View style={{marginTop: 20}}>
+                    <View style={{ marginTop: 20 }}>
                         <OutlineButton
                             title="Sign Up"
                             color="orange"
