@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
     View,
@@ -10,41 +10,138 @@ import {
     TextInput
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
+import { checkHealth, login } from '../../API';
 
+
+// Login Component..
 const Login = ({ navigation }) => {
-    const [data, setData] = React.useState({
+    const [data, setData] = useState({
         email: '',
         password: '',
         check_textInputChange: false,
-        secureTextEntry: true
+        secureTextEntry: true,
+        isValidUser: true,
+        isValidPassword: true,
+        errorMsg: ''
     });
+
+    useEffect(() => {
+        console.log('I am useEffect');
+        checkHealth();
+    }, []);
+
+    // Displaynig Error Message Dynamically..
+    const displayErrorMessage = (msg) => (
+        <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{msg}</Text>
+        </Animatable.View>
+    );
+
+    // Handle Valid Email here...
+    const handleValidEmail = (event) => {
+        // Similar to Web like -- (event.target.value).
+        const value = event.nativeEvent.text;
+        const realValue = value.trim(); // Trim for not to take any space or else just the real value.
+        const emailTest = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(realValue);
+
+        if (!emailTest) {
+            setData({
+                ...data,
+                check_textInputChange: false,
+                isValidUser: false,
+                errorMsg: 'This is not valid Email Address!'
+            });
+        }
+    };
 
     const textInputChange = (value, type) => {
         // Email text on change..
         if (type === 'EMAIL') {
-            if (value.length !== 0) {
+            if (value.length === 0) {
                 setData({
                     ...data,
                     email: value,
-                    check_textInputChange: true
+                    check_textInputChange: false,
+                    isValidUser: true,
+                    errorMsg: ''
                 });
             } else {
-                setData({
-                    ...data,
-                    email: value,
-                    check_textInputChange: false
-                });
+                if (value.trim().length > 4) {
+                    setData({
+                        ...data,
+                        email: value,
+                        check_textInputChange: true,
+                        isValidUser: true,
+                        errorMsg: ''
+                    });
+                } else {
+                    setData({
+                        ...data,
+                        email: value,
+                        check_textInputChange: false,
+                        isValidUser: false,
+                        errorMsg: 'At least required upper then 4 digit!'
+                    });
+                }
             }
         }
+
         // Password on change text..
         if (type === 'PASSWORD') {
-            setData({
-                ...data,
-                password: value
-            });
+            if (value.length === 0) {
+                setData({
+                    ...data,
+                    password: value,
+                    isValidPassword: true,
+                    errorMsg: ''
+                });
+            } else {
+                if (value.length < 7) {
+                    setData({
+                        ...data,
+                        password: value,
+                        isValidPassword: false,
+                        errorMsg: 'Password Should be at least 8 characters!'
+                    });
+                } else {
+                    setData({
+                        ...data,
+                        password: value,
+                        isValidPassword: true,
+                        errorMsg: ''
+                    });
+                }
+            }
+        }
+    };
+
+    // Handle Login Click Submit..
+    const handleLoginClick = () => {
+        const { email, password, isValidUser, isValidPassword } = data;
+
+        if (email !== '' && password !== '') {
+            if (isValidUser && isValidPassword) {
+                const request = login({ email, password });
+                request.then((response) => {
+                    const { data } = response;
+
+                    if (!data.isAuth) {
+                        alert(data.message);
+                    }
+                    if (data.isAuth) {
+                        // Redirecting to Home Page..
+                        navigation.navigate("MainTabs");
+                    }
+                })
+                .catch(error => console.log("ERR! from login -- ", error.message));
+
+            } else {
+                alert("Please Make Sure Your Information is Correct.");
+            }
+        }else{
+            alert("Fields Are Empty!");
         }
     };
 
@@ -80,13 +177,17 @@ const Login = ({ navigation }) => {
                     <TextInput
                         placeholder="Your Email"
                         style={styles.textInput}
+                        autoCapitalize="none"
                         onChangeText={(value) => textInputChange(value, "EMAIL")}
+                        onEndEditing={(event) => handleValidEmail(event)}
                     />
 
                     <Animatable.View animation="bounceIn">
                         {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />}
                     </Animatable.View>
                 </View>
+                {/* ------ Showing the User Error Message ---- */}
+                {!data.isValidUser && displayErrorMessage(data.errorMsg)}
 
                 {/* ---- Password ---- */}
                 <Text style={[styles.text_footer, { marginTop: 30 }]}>Password</Text>
@@ -104,6 +205,8 @@ const Login = ({ navigation }) => {
                         {data.secureTextEntry ? <Feather name="eye-off" size={20} color="grey" /> : <Feather name="eye" size={20} color="grey" />}
                     </TouchableOpacity>
                 </View>
+                {/* ----- Showing Password Error Message -----  */}
+                {!data.isValidPassword && displayErrorMessage(data.errorMsg)}
 
                 <View style={{ marginTop: 30 }}>
                     <Button
@@ -114,10 +217,10 @@ const Login = ({ navigation }) => {
                         textColor="black"
                         width="100%"
                         height={50}
-                        onPress={() => navigation.navigate("Home")}
+                        onPress={handleLoginClick}
                     />
 
-                    <View style={{marginTop: 20}}>
+                    <View style={{ marginTop: 20 }}>
                         <OutlineButton
                             title="Sign Up"
                             color="orange"
@@ -187,6 +290,12 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontweight: 'bold',
+    },
+    errorMsg: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontSize: 13,
+        marginTop: 5,
     }
 });
 
