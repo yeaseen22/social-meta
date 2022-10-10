@@ -16,50 +16,73 @@ import { Button, OutlineButton } from '../../components/widgets/Button';
 const Register = ({ navigation }) => {
     const [data, setData] = React.useState({
         firstName: '',
-        lastName: '',
-        profilePhoto: '',
-        bio: '',
-        title: '',
-        email: '',
-        password: '',
-        retypePassword: '',
-        birthDate: '',
-        check_textInputChange: false,
-        secureTextEntry: true
+        lastName: ''
+    });
+    const [error, setError] = React.useState({
+        firstNameErrorMsg: '',
+        lastNameErrorMsg: '',
+        isValidFirstName: true,
+        isValidLastName: true,
     });
 
-    const textInputChange = (value, type) => {
-        // Email text on change..
-        if (type === 'EMAIL') {
-            if (value.length !== 0) {
-                setData({
-                    ...data,
-                    email: value,
-                    check_textInputChange: true
+    // Displaynig Error Message Dynamically..
+    const displayErrorMessage = (msg) => (
+        <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>{msg}</Text>
+        </Animatable.View>
+    );
+
+    // End Of Editing Input Fields..
+    const handleEndEditing = (event, type) => {
+        const value = event.nativeEvent.text;
+
+        if (type === 'FNAME') {
+            if (value.trim().length) {
+                if (value.length <= 2 && value.length > 0) {
+                    setError({
+                        ...error,
+                        firstNameErrorMsg: 'Name should be at least 3 characters.',
+                        isValidFirstName: false,
+                    });
+
+                } else {
+                    setError({
+                        ...error,
+                        isValidFirstName: true,
+                    });
+                }
+            }
+        }
+    };
+
+    // Text Change Input Fields..
+    const handleOnChange = (value, type) => {
+        if (type === 'LNAME') {
+            if (value === data.firstName) {
+                setError({
+                    ...error,
+                    lastNameErrorMsg: 'Last Name & First Name Can\'t Be Same',
+                    isValidLastName: false,
                 });
             } else {
                 setData({
                     ...data,
-                    email: value,
-                    check_textInputChange: false
+                    lastName: value
+                });
+                setError({
+                    ...error,
+                    isValidLastName: true,
                 });
             }
         }
-        // Password on change text..
-        if (type === 'PASSWORD') {
-            setData({
-                ...data,
-                password: value
-            });
-        }
     };
 
-    // Secure Text Entry Updating Function..
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
-        });
+    const handleOnNextPress = () => {
+        if (data.firstName && data.lastName) {
+            if (error.isValidFirstName && error.isValidLastName) {
+                navigation.navigate("Register2", data);
+            }
+        }
     };
 
     return (
@@ -71,7 +94,7 @@ const Register = ({ navigation }) => {
 
             {/* ---- Header ---- */}
             <View style={styles.header}>
-                <Text style={styles.text_header}>Sign Up</Text>
+                <Text style={styles.text_header}>Say Us Your Name</Text>
             </View>
 
             {/* ---- Footer ---- */}
@@ -79,112 +102,47 @@ const Register = ({ navigation }) => {
                 style={styles.footer}
                 animation="fadeInUpBig"
             >
-                {/* ---- Email ---- */}
-                <Text style={styles.text_footer}>Email</Text>
+                {/* ---- FirstName ---- */}
+                <Text style={styles.text_footer}>First Name</Text>
                 <View style={styles.action}>
                     <FontAwesome name="user-o" size={20} color="#05375a" />
                     <TextInput
-                        placeholder="Your Email"
+                        placeholder="Asad"
                         style={styles.textInput}
-                        onChangeText={(value) => textInputChange(value, "EMAIL")}
+                        onChangeText={(value) => setData({ ...data, firstName: value })}
+                        onEndEditing={(event) => handleEndEditing(event, "FNAME")}
+                        autoCorrect={false}
                     />
-
-                    <Animatable.View animation="bounceIn">
-                        {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />}
-                    </Animatable.View>
                 </View>
+                {/* ------ Showing the User Error Message ---- */}
+                {!error.isValidFirstName && displayErrorMessage(error.firstNameErrorMsg)}
 
-                {/* ---- Password ---- */}
-                <Text style={[styles.text_footer, { marginTop: 20 }]}>Password</Text>
-                <View style={styles.action}>
-                    <Feather name="lock" size={20} color="#05375a" />
-                    <TextInput
-                        placeholder="Your Password"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(value) => textInputChange(value, "PASSWORD")}
-                    />
-
-                    <TouchableOpacity onPress={updateSecureTextEntry}>
-                        {data.secureTextEntry ? <Feather name="eye-off" size={20} color="grey" /> : <Feather name="eye" size={20} color="grey" />}
-                    </TouchableOpacity>
-                </View>
-
-                {/* ---- Retype Password ---- */}
-                <Text style={[styles.text_footer, { marginTop: 20 }]}>Retype Password</Text>
-                <View style={styles.action}>
-                    <Feather name="lock" size={20} color="#05375a" />
-                    <TextInput
-                        placeholder="Again Type Password"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(value) => textInputChange(value, "PASSWORD")}
-                    />
-
-                    <TouchableOpacity onPress={updateSecureTextEntry}>
-                        {data.secureTextEntry ? <Feather name="eye-off" size={20} color="grey" /> : <Feather name="eye" size={20} color="grey" />}
-                    </TouchableOpacity>
-                </View>
-
-                {/* ---- Bio ---- */}
-                <Text style={[styles.text_footer, { marginTop: 20 }]}>Bio</Text>
-                <View style={styles.action}>
-                    <MaterialCommunityIcons name="bio" size={20} color="#05375a" />
-                    <TextInput
-                        placeholder="Your Email"
-                        style={styles.textInput}
-                        onChangeText={(value) => textInputChange(value, "EMAIL")}
-                    />
-
-                    <Animatable.View animation="bounceIn">
-                        {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />}
-                    </Animatable.View>
-                </View>
-
-                {/* ---- Title ---- */}
-                <Text style={[styles.text_footer, { marginTop: 20 }]}>Title</Text>
-                <View style={styles.action}>
-                    <MaterialCommunityIcons name="subtitles-outline" size={20} color="#05375a" />
-                    <TextInput
-                        placeholder="Your Email"
-                        style={styles.textInput}
-                        onChangeText={(value) => textInputChange(value, "EMAIL")}
-                    />
-
-                    <Animatable.View animation="bounceIn">
-                        {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />}
-                    </Animatable.View>
-                </View>
-
-                {/* ---- Birth Date ---- */}
-                <Text style={[styles.text_footer, { marginTop: 20 }]}>Birth Date</Text>
+                {/* ---- LastName ---- */}
+                <Text style={[styles.text_footer, { marginTop: 20 }]}>Last Name</Text>
                 <View style={styles.action}>
                     <FontAwesome name="user-o" size={20} color="#05375a" />
                     <TextInput
-                        placeholder="Birth Date"
+                        placeholder="Anik"
                         style={styles.textInput}
-                        onChangeText={(value) => textInputChange(value, "EMAIL")}
+                        onChangeText={(value) => handleOnChange(value, "LNAME")}
+                        autoCorrect={false}
                     />
-
-                    <Animatable.View animation="bounceIn">
-                        {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />}
-                    </Animatable.View>
                 </View>
+                {/* ------ Showing the User Error Message ---- */}
+                {!error.isValidLastName && displayErrorMessage(error.lastNameErrorMsg)}
 
 
                 {/* ---- Buttons ---- */}
                 <View style={{ marginTop: 30 }}>
                     <Button
-                        title="Regsiter"
-                        color1st="orange"
-                        color2nd="red"
+                        title="Next"
+                        color1st="royalblue"
+                        color2nd="blue"
                         size={18}
                         textColor="white"
                         width="100%"
                         height={50}
-                        onPress={() => navigation.navigate("UploadProfile")}
+                        onPress={handleOnNextPress}
                     />
 
                     <View style={{ marginTop: 20 }}>
@@ -212,13 +170,13 @@ const styles = StyleSheet.create({
         // backgroundColor: 'royalblue',
     },
     header: {
-        flex: 1,
+        flex: 3,
         justifyContent: 'center',
         alignItems: 'center',
         color: 'black'
     },
     footer: {
-        flex: 4,
+        flex: 2,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -226,9 +184,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     text_header: {
-        color: '#fff',
+        color: '#05375a',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 30,
+        backgroundColor: 'white',
+        padding: 5,
+        opacity: 0.7
     },
     text_footer: {
         color: '#05375a',
@@ -257,6 +218,12 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontweight: 'bold',
+    },
+    errorMsg: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontSize: 13,
+        marginTop: 5,
     }
 });
 
