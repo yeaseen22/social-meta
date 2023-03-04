@@ -50,8 +50,10 @@ const SuggestedFollows = (props) => {
    // console.log('Props here -- ', props);
 
 
-    const connectToggleClicked = () => {
-        setFollowToggle(!followToggle ? true : false);
+    const connectToggleClicked = (ID) => {
+        if (ID === 1){
+            setFollowToggle(!followToggle ? true : false);
+        }
     };
 
     const buttonPosition = {
@@ -79,7 +81,7 @@ const SuggestedFollows = (props) => {
                                        variant="outlined"
                                        color={!followToggle ? "primary" : "secondary"}
                                        startIcon={!followToggle ? <AddCircleIcon /> : <RemoveCircleIcon />}
-                                       onClick={connectToggleClicked}
+                                       onClick={() => connectToggleClicked(1)}
                                        style={buttonPosition}
                                    >
                                        {!followToggle ? "Follow" : "Unfollow"}
@@ -108,7 +110,7 @@ const SuggestedFollows = (props) => {
                                        variant="outlined"
                                        color={!followToggle ? "primary" : "secondary"}
                                        startIcon={!followToggle ? <AddCircleIcon /> : <RemoveCircleIcon />}
-                                       onClick={connectToggleClicked}
+                                       onClick={() => connectToggleClicked(2)}
                                        style={buttonPosition}
                                    >
                                        {!followToggle ? "Follow" : "Unfollow"}
@@ -137,7 +139,7 @@ const SuggestedFollows = (props) => {
                                        variant="outlined"
                                        color={!followToggle ? "primary" : "secondary"}
                                        startIcon={!followToggle ? <AddCircleIcon /> : <RemoveCircleIcon />}
-                                       onClick={connectToggleClicked}
+                                       onClick={() => connectToggleClicked(3)}
                                        style={buttonPosition}
                                    >
                                        {!followToggle ? "Follow" : "Unfollow"}

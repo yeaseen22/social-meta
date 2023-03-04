@@ -1,4 +1,8 @@
 import axios from 'axios';
+import httpConfig from '../../utils/httpConfig';
+
+// USER API ENDPOINT..
+const USER_API_ENDPOINT = `${process.env.REACT_APP_BACKEND_API}/user`;
 
 /** ---------------- Settings AppColor here ------------------ **/
 // App Color's ...
@@ -7,7 +11,7 @@ export async function appColorBlack() {
         backgroundColor: 'black',
     };  
 
-    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_colorMode_update?colorMode=${appColor.backgroundColor}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked Black ColorMode Action -- ', err.message));
 
@@ -22,7 +26,7 @@ export async function appColorRoyalblue() {
         backgroundColor: 'royalblue',
     };
 
-    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_colorMode_update?colorMode=${appColor.backgroundColor}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked Royalblue ColorMode Action -- ', err.message));
 
@@ -37,7 +41,7 @@ export async function appColorGreen() {
         backgroundColor: 'green',
     };
 
-    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_colorMode_update?colorMode=${appColor.backgroundColor}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked Green ColorMode Action -- ', err.message));
 
@@ -52,7 +56,7 @@ export async function appColorRed() {
         backgroundColor: 'red'
     };
 
-    await axios.post(`/api/user_colorMode_update?colorMode=${appColor.backgroundColor}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_colorMode_update?colorMode=${appColor.backgroundColor}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked Red ColorMode Action -- ', err.message));
 
@@ -81,7 +85,7 @@ export async function themeModeHighContrast() {
     };
 
     // make change to backend & DB...
-    await axios.post(`/api/user_themeMode_updateName?themeMode=${themeModeName}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_themeMode_updateName?themeMode=${themeModeName}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked lightMode Action -- ', err.message));
 
@@ -108,7 +112,7 @@ export async function themeModeLight() {
     };
 
     // make change to backend & DB...
-    await axios.post(`/api/user_themeMode_updateName?themeMode=${themeModeName}`)
+    await axios.post(`${USER_API_ENDPOINT}/user_themeMode_updateName?themeMode=${themeModeName}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked lightMode Action -- ', err.message));
 
@@ -135,7 +139,7 @@ export async function themeModeDark() {
     };
 
     // make change to backend & DB...
-    const req = await axios.post(`/api/user_themeMode_updateName?themeMode=${themeModeName}`)
+    const req = await axios.post(`${USER_API_ENDPOINT}/user_themeMode_updateName?themeMode=${themeModeName}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR!! error when try to maked lightMode Action -- ', err.message));
 

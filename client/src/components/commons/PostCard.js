@@ -13,7 +13,7 @@ import {
     Menu,
     MenuItem,
     ListItemIcon,
-    Modal, Button
+    Modal,
 } from '@mui/material';
 import {
     Favorite as FavoriteIcon,
@@ -36,9 +36,14 @@ import CustomButton from '../widgets/Button';
 import Uploader from "../widgets/Uploader";
 import ViewComments from '../Comment/ViewComments';
 import MakeComments from '../Comment/MakeComments';
-import { HashSpinner } from '../widgets/SpinnersLoading';
 import NotFound from '../widgets/NotFound';
+import dateFormat from '../../utils/dateFormat';
 
+// HTTP CONFIG..
+import httpConfig from '../../utils/httpConfig';
+
+// USER API_ENDPOINT..
+const USER_API_ENDPOINT = `${process.env.REACT_APP_BACKEND_API}/user`;
 
 // path for initialPath for image as post image..
 const initialPostImgPath = "/postUpload";
@@ -235,7 +240,7 @@ const PostCard = (props) => {
     const navigate = useNavigate();
 
     const fetchUserByOwnerId = async (id) => {
-        await axios.get(`/api/find_user?ownerId=${id}`)
+        await axios.get(`${USER_API_ENDPOINT}/find_user?ownerId=${id}`, httpConfig)
             .then(response => {
                 setUserByOwner(response.data);
             })
@@ -632,10 +637,10 @@ const PostCard = (props) => {
                     }}
                 />
                 <Typography variant="body2" color={themeMode.cardSubFontColor}>
-                    Created at: {createdAt}
+                    Created at: {dateFormat(createdAt)}
                 </Typography>
                 <Typography variant="body2" color={themeMode.cardSubFontColor}>
-                    Updated at: {updatedAt}
+                    Updated at: {dateFormat(updatedAt)}
                 </Typography>
             </CardContent>
 

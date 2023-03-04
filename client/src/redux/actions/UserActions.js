@@ -1,4 +1,5 @@
 import axios from 'axios';
+import httpConfig from '../../utils/httpConfig';
 
 // initial themeMode setting..
 const initialThemeModeSetting = {
@@ -13,9 +14,15 @@ const initialThemeModeSetting = {
     }
 };
 
+// USER API ENDPOINT..
+const USER_API_ENDPOINT = `${process.env.REACT_APP_BACKEND_API}/user`;
+
+// AUTH API ENDPOINT..
+const AUTH_API_ENDPOINT = `${process.env.REACT_APP_BACKEND_API}/auth`;
+
 // Own Profile..
 export function ownProfileInfo(){
-    const request = axios.get('/api/profile')
+    const request = axios.get(`${USER_API_ENDPOINT}/profile`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to get own profile info -> ', err.message));
 
@@ -27,7 +34,7 @@ export function ownProfileInfo(){
 
 // Others Profile User By Id..
 export function userInfoById(id) {
-    const request = axios.get(`/api/profile_by_id?userId=${id}`)
+    const request = axios.get(`${USER_API_ENDPOINT}/profile_by_id?userId=${id}`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to get profileById -> ', err.message));
 
@@ -39,7 +46,7 @@ export function userInfoById(id) {
 
 // Auth of User..
 export function auth() {
-    const request = axios.get('/api/auth')
+    const request = axios.get(`${USER_API_ENDPOINT}/auth`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to get auth -> ', err.message));
 
@@ -51,7 +58,7 @@ export function auth() {
 
 // Logout User..
 export function logout(){
-    const request = axios.get('/api/logout')
+    const request = axios.get(`${USER_API_ENDPOINT}/logout`, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to make logout -> ', err.message));
 
@@ -63,7 +70,7 @@ export function logout(){
 
 // Login User..
 export function loginUser(data){
-    const request = axios.post('/api/login', data)
+    const request = axios.post(`${AUTH_API_ENDPOINT}/login`, data, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to post user login -> ', err.message));
 
@@ -75,7 +82,7 @@ export function loginUser(data){
 
 // Sign Up User..
 export function register(data){
-    const request = axios.post('/api/register', data)
+    const request = axios.post(`${AUTH_API_ENDPOINT}/register`, data, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to post user register -> ', err.message));
 
@@ -87,7 +94,7 @@ export function register(data){
 
 // profile pictures upload..
 export function profileUpload(data){
-    const request = axios.post('/api/profile_upload', data)
+    const request = axios.post(`${USER_API_ENDPOINT}/profile_upload`, data, httpConfig)
         .then(response => response.data)
         .catch(err => console.log('ERR! when try to post user profile upload -> ', err.message));
 
@@ -99,7 +106,7 @@ export function profileUpload(data){
 
 // Show All Users..
 export function showAllUsers(){
-    const request = axios.get('/api/read_all_users')
+    const request = axios.get(`${USER_API_ENDPOINT}/read_all_users`, httpConfig)
         .then(response => response.data.users)
         .catch(err => console.log('Get ERR! when try to fetch all users data.', err.message));
 

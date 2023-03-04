@@ -13,17 +13,17 @@ const authenticate = require('../middleware/auth');
  * ---- Routes For API Version 01 -----
  * Now moved API Rutes from /api/v1/ to /api/
  */
-// router.use('/api/v1/auth', authRoutes);
-// router.use('/api/v1/users', authenticate, usersRoutes);
-// router.use('/api/v1/posts', authenticate, postsRoutes);
-// router.use('/api/v1/comments', authenticate, commentsRoutes);
+router.use('/api/v1/auth', authRoutes);
+router.use('/api/v1/user', authenticate, usersRoutes);
+router.use('/api/v1/post', authenticate, postsRoutes);
+router.use('/api/v1/comment', authenticate, commentsRoutes);
 // router.use('/api/v1/conversations', authenticate, conversationsRoutes);
 // router.use('/api/v1/messages', authenticate, messagesRoutes);
 
-router.use('/api', authRoutes);
-router.use('/api', authenticate, usersRoutes);
-router.use('/api', authenticate, postsRoutes);
-router.use('/api', authenticate, commentsRoutes);
+// router.use('/api', authRoutes);
+// router.use('/api', authenticate, usersRoutes);
+// router.use('/api', authenticate, postsRoutes);
+// router.use('/api', authenticate, commentsRoutes);
 router.use('/api', authenticate, conversationsRoutes);
 router.use('/api', authenticate, messagesRoutes);
 
