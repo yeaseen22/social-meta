@@ -1,5 +1,5 @@
-# social-meta
-React, Node (Express) &amp; MongoDB Application. 
+# Social Meta (Software)
+React (Web), React-Native (Android/iOS), Node-JS (Backend - Express) &amp; MongoDB Application. 
 
 ## Getting Started
 This repository aims to assist you in beginning work on a MERN stack application with a solid file structure as a foundation. To get started make a copy of this template repo for your project teams.
