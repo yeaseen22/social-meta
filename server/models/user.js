@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
     token: { type: String },
     followings: { type: Array },
     followers: { type: Array }
-}, {
+}, {    
     timestamps: true
 });
 
