@@ -252,7 +252,8 @@ const PostHead = (props) => {
                             className={StylesModule.postInput}
                             type="text"
                             placeholder="Create your post now.."
-                            disabled={true}
+                            disabled={false}
+                            readOnly={true}
                             style={{ background: themeMode.backgroundColor }}
                         />
                     </div>
