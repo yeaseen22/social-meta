@@ -10,7 +10,8 @@ const {
     likePost,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    
 } = postController;
 
 

@@ -371,7 +371,8 @@ const Appbar = (props) => {
                                 placeholder="Search…"
                                 inputProps={{ 'aria-label': 'search' }}
                                 onClick={handleSearchOpen}
-                                disabled={true}
+                                disabled={false}
+                                readOnly={true}
                             />
                             <SearchModal open={searchModalOpen} handleClose={handleSearchClose} />
                         </Search>

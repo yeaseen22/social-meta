@@ -172,9 +172,8 @@ exports.createPost = function (req, res) {
             success: true,
             docs
         });
-    });
+    });  
 };
-
 
 /**
  * ---- Update Post ----
