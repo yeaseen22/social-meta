@@ -3,6 +3,8 @@ import { Paper } from '@mui/material';
 import StylesModule from '../../css/birthdate.module.css';
 import CakeIcon from '@mui/icons-material/Cake';
 import { connect } from 'react-redux';
+import formatDate from '../../utils/dateFormat';
+
 
 // Component of Birthdate..
 const Birthdate = (props) => {
@@ -13,6 +15,8 @@ const Birthdate = (props) => {
         textColor: 'black'
     });
     const [appColor, setAppColor] = React.useState('royalblue');
+    const birthdate = "2000-01-13T13:55:41Z"; 
+
 
     // useEffect.. Hook..
     React.useEffect(() => {
@@ -78,7 +82,9 @@ const Birthdate = (props) => {
                 <span>Birthdate</span>
             </h3>
 
-            <p style={birthdateText}>Thu Jan 13 2000 19:55:41 GMT+0600 (+06)</p>
+            <p style={{ fontSize: "25px", color: "#555" }}>
+                Born on {formatDate(birthdate)}
+            </p>
         </Paper>
     );
 };
