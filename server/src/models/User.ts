@@ -21,9 +21,10 @@ const userSchema = new Schema({
     token: { type: String },
     followings: { type: Array },
     followers: { type: Array }
-}, {    
+}, {
     timestamps: true
 });
+
 // Schema Middleware to hashing password..
 userSchema.pre('save', function (next: any) {
     const user = this;
@@ -45,52 +46,40 @@ userSchema.pre('save', function (next: any) {
     }
 });
 
-// Schema Method to compare login pass to register pass.
-userSchema.methods.comparePassword = function(candidatePassword: string, cb: (err: Error | null, isMatch: boolean) => void){
-    const user = this;
-
-    bcrypt.compare(candidatePassword, user.password, (err: Error | undefined, isMatch: boolean) => {
-        if (err) return cb(err, false);
-        cb(null, isMatch);
-    });
-};
-
-// Schema Method to genarate token for cookie when user loggin..
-userSchema.methods.generateToken = function(cb: (err: Error | null, user: any | null) => void){
-    const user = this;
-    const token = JWT.sign(user._id.toHexString(), String(process.env.SECRET));
-    user.token = token;
-
-    user.save((err: Error | undefined, user: any) => {
-        if (err) return cb(err, null);
-        cb(null, user);
-    });
-};
-
-// Find user by his loggedin token..
-userSchema.statics.findByToken = function(token: string, cb: (err: Error | null, user: any | null) => void){
-    const user = this;
-
-    JWT.verify(token, String(process.env.SECRET), { algorithms: ['HS256'] }, (err: any, decodedToken: any) => {
-        if (err) return cb(err, null);
-
-        user.findOne({_id: decodedToken, token: token}, (err: Error | undefined, user: any) => {
-            if (err) return cb(err, null);
-            cb(null, user);
+// Compare password method using Promise
+userSchema.methods.comparePassword = function (candidatePassword: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(candidatePassword, this.password, (err: Error | undefined, isMatch: boolean) => {
+            if (err) return reject(err);
+            resolve(isMatch);
         });
     });
 };
 
-// Delete token with method..
-userSchema.methods.deleteToken = function(cb: (err: Error | null) => void){
-    const user = this;
+// Generate token method using Promise
+userSchema.methods.generateToken = function (): Promise<string> {
+    const token = JWT.sign(this._id.toHexString(), String(process.env.SECRET));
+    this.token = token;
+    return this.save().then(() => token);
+};
 
-    user.updateOne({$unset: {token: 1}}, (err: Error | undefined) => {
-        if (err) return cb(err);
-        cb(null);
+// Find by token static method using Promise
+userSchema.statics.findByToken = function (token: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        JWT.verify(token, String(process.env.SECRET), { algorithms: ['HS256'] }, (err: any, decodedToken: any) => {
+            if (err) return reject(err);
+
+            this.findOne({ _id: decodedToken, token: token })
+                .then((user: any) => resolve(user))
+                .catch((err: any) => reject(err));
+        });
     });
 };
 
+// Delete token method using Promise
+userSchema.methods.deleteToken = function (): Promise<void> {
+    return this.updateOne({ $unset: { token: 1 } });
+};
 
 // user Model..
 const User = mongoose.model('User', userSchema);

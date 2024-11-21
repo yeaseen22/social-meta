@@ -29,16 +29,15 @@ interface UploadApiResponse {
  * @param folder - Folder name in Cloudinary
  * @returns - Cloudinary upload result
  */
-const uploadToCloudinary = async (
-  filePath: string,
-  folder: string
-): Promise<UploadApiResponse> => {
+const uploadToCloudinary = async (filePath: string, folder: string): Promise<UploadApiResponse> => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
       folder: folder,
       resource_type: "auto", // Automatically detect file type
     });
+
     return result as unknown as UploadApiResponse;
+
   } catch (error: any) {
     throw new Error("Cloudinary upload failed: " + error.message);
   }
