@@ -1,4 +1,4 @@
-import cloudinary from "../../config/cloudninary";
+import { cloudinary } from "../../../config";
 
 // Define UploadApiResponse manually (if not available from the library)
 interface UploadApiResponse {

@@ -2,9 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
 import { StatusCodes } from 'http-status-codes';
 
-function validateData(schema: z.ZodObject<any, any>) {
+/**
+ * VALIDATION MIDDLEWARE
+ * @param schema 
+ * @returns 
+ */
+function validationReq(schema: z.ZodObject<any, any>) {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
+            schema.parse(req.body);
+            next();
          
         } catch (error) {
             if (error instanceof ZodError) {
@@ -19,9 +26,11 @@ function validateData(schema: z.ZodObject<any, any>) {
 
             } else {
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                    
+                    error: 'Internal Server Error'
                 });
             }
         }
     };
 }
+
+export default validationReq;
