@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 export const Container = (styled as any).View`
     flex: 1;
-    /* justify-content: center; */
     align-items: center;
     background-color: #fff;
-    padding: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 40px;
 `;
 
 export const Card = (styled as any).View`

@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 export const Container = (styled as any).View`
-    margin-top: 80px;
+    flex: 1;
+    padding-top: 80px;
     align-items: center;
     justify-content: center;
+    background-color: white;
 `;
 
 export const InputWrapper = (styled as any).View`

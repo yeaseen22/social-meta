@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity, View, ActivityIndicator, Text } from 'react-native';
+import { TouchableOpacity, View, ActivityIndicator, Text, useColorScheme } from 'react-native';
 import { Container, InputWrapper, TextInput, InnerContainer, LoadingContainer } from '@/styles/SearchStyles';
 import { Feather, Ionicons } from '@expo/vector-icons';
 // import BottomSheet from '@/components/widgets/BottomSheet';
@@ -8,6 +8,7 @@ import { Button } from '@/components/widgets/Button';
 
 
 const Search = () => {
+    const colorScheme = useColorScheme();
     const [searchType, setSearchType] = useState("USER");
     const [isLoading, setIsLoading] = useState(false);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -34,20 +35,20 @@ const Search = () => {
     const textInputChange = (value: string) => {
         if (value.length > 1) {
             setIsLoading(true);
-        }else{
+        } else {
             setIsLoading(false);
         }
     };
 
     // Render Content Or Loading..
     const renderContentOrLoading = (loading: boolean) => {
-        if (!loading){
+        if (!loading) {
             return (
                 <View>
                     <Text>Hello</Text>
                 </View>
             );
-        }else{
+        } else {
             return (
                 <LoadingContainer>
                     <ActivityIndicator size="large" color="royalblue" />
@@ -61,7 +62,7 @@ const Search = () => {
 
     return (
         <Container>
-            <StatusBar style="dark" />
+           <StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
 
             {/* ---- Search Engine Part ---- */}
             <InputWrapper>

@@ -12,8 +12,10 @@ const MAPPING = {
   'house.fill': 'home',
   'person.fill': 'user',
   'book.fill': 'book',
-  'search.fill': 'search',
-  'arrow.up': 'caretup'
+  'search.fill': 'search1',
+  'arrow.up': 'caretup',
+  'notification.fill': 'notification',
+  'message.fill': 'message1',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

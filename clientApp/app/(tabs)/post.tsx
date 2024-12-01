@@ -1,7 +1,9 @@
 import React from 'react';
-import { Container, InputWrapper, InputField } from '@/styles/AddPost';
+import { PostContainer, InputWrapper, InputField } from '@/styles/AddPost';
 import { FloatingAction } from "react-native-floating-action";
 import { Entypo, AntDesign } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Actions for this button here..
 const actions = [
@@ -27,10 +29,13 @@ const actions = [
 
 // Add Post Component..
 const Post = () => {
+    const colorScheme = useColorScheme();
     let floatingAction = null;
 
     return (
-        <Container>
+        <PostContainer>
+            <StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
+            
             <InputWrapper>
                 <InputField
                     placeholder="What's on your mind?"
@@ -43,7 +48,7 @@ const Post = () => {
                 ref={(ref) => { floatingAction = ref; }}
                 actions={actions}
             />
-        </Container>
+        </PostContainer>
     );
 };
 

@@ -1,7 +1,9 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import PostCard from '@/components/widgets/PostCard';
 import { Container } from '@/styles/FeedStyles';
+import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 // Some fake Data..
 // region Fake Data
@@ -54,11 +56,16 @@ const postData = [
 
 // region Home Component
 const HomeTabScreen = ({ navigation }: any) => {
+    const colorScheme = useColorScheme();
+
     return (
-        <Container> 
-            <FlatList 
+        <Container>
+            <StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
+
+            <FlatList
+                refreshControl={<RefreshControl refreshing={false} />}
                 data={postData}
-                renderItem={({item}) => <PostCard item={item} />}
+                renderItem={({ item }) => <PostCard item={item} />}
                 keyExtractor={item => item.id}
                 showsVerticalScrollIndicator={false}
             />

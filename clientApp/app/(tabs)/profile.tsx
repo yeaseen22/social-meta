@@ -1,7 +1,9 @@
 import React from 'react';
-import { ScrollView, FlatList, SafeAreaView } from 'react-native';
+import { ScrollView, FlatList, View, RefreshControl } from 'react-native';
 import ProfileHeader from '@/components/widgets/ProfileHeader';
 import PostCard from '@/components/widgets/PostCard';
+import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 const postData = [
     {
@@ -40,21 +42,35 @@ const postData = [
 ];
 
 const ProfileTabScreen = (props: any) => {
+    const colorScheme = useColorScheme();
+
     return (
-        <ScrollView style={{marginTop: 40}} showsVerticalScrollIndicator={false}>
-            <ProfileHeader {...props} type="OWN" />
+        <View style={{ flex: 1, paddingTop: 40 }}>
+            <StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
+            
+            <ScrollView 
+                style={{ backgroundColor: 'white' }} 
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={false}
+                        onRefresh={() => {}}
+                    />
+                }
+            >
+                <ProfileHeader {...props} type="OWN" />
 
-            <FlatList
-                data={postData}
-                renderItem={({ item }) => <PostCard item={item} />}
-                keyExtractor={item => item.id}
-                // showsVerticalScrollIndicator={false}
-                scrollEnabled={false}
-                style={{padding: 10}}
-            />
+                <FlatList
+                    data={postData}
+                    renderItem={({ item }) => <PostCard item={item} />}
+                    keyExtractor={item => item.id}
+                    // showsVerticalScrollIndicator={false}
+                    scrollEnabled={false}
+                    style={{ padding: 10 }}
+                />
 
-        </ScrollView>
-
+            </ScrollView>
+        </View>
     );
 };
 

@@ -6,6 +6,13 @@ export const Container = (styled as any).View`
     justify-content: center;
 `;
 
+export const PostContainer = (styled as any).View`
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+`;
+
 export const InputWrapper = (styled as any).View`
     flex: 1;
     justify-content: center;
