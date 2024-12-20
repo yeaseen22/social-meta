@@ -3,7 +3,8 @@ import { ProfileScreen, PostScreen, ChatScreen, ExploreScreen, HomeScreen } from
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontistoIcons from 'react-native-vector-icons/Fontisto';
-import Drawer from './Drawer';
+import { HeaderShownContext, HeaderTitle } from '@react-navigation/elements';
+// import Drawer from './Drawer';
 
 const MainTabs = () => {
   const Tab = createMaterialBottomTabNavigator();
@@ -12,9 +13,6 @@ const MainTabs = () => {
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="black"
-      options={{
-        tabBarShowLabel: false,
-      }}
     >
       {/* <Tab.Screen
         name="HomeDrawer"
@@ -31,6 +29,8 @@ const MainTabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
+          tabBarLabel: 'Home',
+          headerShown: true,
           tabBarIcon: ({ color }: any) => (
             <AntDesignIcons name="home" size={24} color={color} />
           )

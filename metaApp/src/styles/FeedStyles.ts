@@ -17,7 +17,6 @@ export const Container = (styled as any).View`
     background-color: #fff;
     padding-left: 5px;
     padding-right: 5px;
-    margin-top: ${screenHeight * 0.06}px;
     max-height: ${Platform.OS === "ios" ? screenHeight - 120 : screenHeight - 50}px;
 `;
 

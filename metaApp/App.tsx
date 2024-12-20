@@ -26,26 +26,12 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Tabs"
-        screenOptions={{
-          headerShown: false,
-        }}>
+      // screenOptions={{
+      //   headerShown: true,
+      // }}
+      >
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: 'Home Screen',
-          }}
-        />
-        <Stack.Screen
-          name="Post"
-          component={PostScreen}
-          options={{
-            title: 'Home Screen',
-          }}
-        />
-
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -89,9 +75,6 @@ const App = () => {
         <Stack.Screen
           name="Tabs"
           component={Tabs}
-          options={{
-            headerShown: false,
-          }}
         />
 
         <Stack.Screen

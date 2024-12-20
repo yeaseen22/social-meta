@@ -10,7 +10,6 @@ export const Container = (styled as any).View`
     background-color: #fff;
     padding-left: 5px;
     padding-right: 5px;
-    margin-top: ${screenHeight * 0.06};
     max-height: ${screenHeight - 120};
 `;
 
