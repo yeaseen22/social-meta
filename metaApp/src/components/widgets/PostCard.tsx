@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Card,
     UserInfo,
@@ -15,10 +15,17 @@ import {
 } from '../../styles/FeedStyles';
 // import { Ionicons } from '@expo/vector-icons';
 import { Card as PaperCard } from 'react-native-paper';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 const PostCard = ({ item }: any) => {
+    const [isShouldRender, setIsShouldRender] = useState<boolean>(false);
+
+    // Init..
+    useEffect(() => {
+        setIsShouldRender(!isShouldRender);
+    }, []);
+
     // Image Or Divider Rendering Function..
     const renderImageOrDivider = (image: any) => {
         if (!image) {
@@ -33,7 +40,7 @@ const PostCard = ({ item }: any) => {
     };
 
     // liked or not liked post..
-    const likeIcon = item.liked ? 'heart' : 'heart-outline';
+    const likeIcon = item.liked ? 'heart' : 'hearto';
     const likeIconColor = item.liked ? 'red' : '#333';
 
     // Show likes or like in case and comments or comment in cases..
@@ -46,6 +53,16 @@ const PostCard = ({ item }: any) => {
     } else {
         likeText = 'Like';
     }
+
+    // Handle like post..
+    const handleLikePost = () => {
+        // Lets update that object..
+        item.liked = !item.liked;
+        item.likes = item.liked ? item.likes + 1 : item.likes - 1;
+        setIsShouldRender(!isShouldRender);
+        // Check the Update of likes and counts
+        // console.log('like counts - ', item.likes);
+    };
 
     // Case of Comment..
     if (item.comments == 1) {
@@ -77,8 +94,8 @@ const PostCard = ({ item }: any) => {
 
                 {/* ---- Likes & Comments Wrapper ---- */}
                 <InteractionWrapper>
-                    <Interaction active={item.liked}>
-                        {/* <Ionicons name={likeIcon} size={24} color={likeIconColor} /> */}
+                    <Interaction active={item.liked} onPress={handleLikePost}>
+                        <AntDesign name={likeIcon} size={24} color={likeIconColor} />
                         <InteractionText active={item.liked}>{likeText}</InteractionText>
                     </Interaction>
 
