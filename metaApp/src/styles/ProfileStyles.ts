@@ -6,6 +6,7 @@ const screenHeight = Dimensions.get('window').height;
 
 export const Container = (styled as any).View`
     flex: 1;
+    width: 100%;
     align-items: center;
     background-color: #fff;
     padding-left: 5px;
