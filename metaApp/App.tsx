@@ -1,6 +1,5 @@
-import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -15,6 +14,7 @@ import {
   UploadProfileScreen,
 } from './src/screens';
 import { Tabs } from './src/navigations';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -42,89 +42,83 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Tabs">
-        <Stack.Screen
-          name="Onboarding"
-          component={OnboardingScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Splash"
-          component={SplashScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
+    <GestureHandlerRootView>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Tabs">
+          <Stack.Screen
+            name="Onboarding"
+            component={OnboardingScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Splash"
+            component={SplashScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="Register2"
-          component={RegisterScreen2}
-          options={{
-            headerShown: false,
-          }}
-        />
+          <Stack.Screen
+            name="Register2"
+            component={RegisterScreen2}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="Register3"
-          component={RegisterScreen3}
-          options={{
-            headerShown: false,
-          }}
-        />
+          <Stack.Screen
+            name="Register3"
+            component={RegisterScreen3}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="UploadProfile"
-          component={UploadProfileScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
+          <Stack.Screen
+            name="UploadProfile"
+            component={UploadProfileScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="Tabs"
-          component={Tabs}
-          options={({ route }: any): any => ({
-            headerShown: true,
-            headerTitle: getHeaderTitle(route) || 'Home',
-          })}
-        />
+          <Stack.Screen
+            name="Tabs"
+            component={Tabs}
+            options={({ route }: any): any => ({
+              headerShown: true,
+              headerTitle: getHeaderTitle(route) || 'Home',
+            })}
+          />
 
-        <Stack.Screen
-          name="Messages"
-          component={MessageScreen}
-          options={{
-            headerShown: true,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="Messages"
+            component={MessageScreen}
+            options={{
+              headerShown: true,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default App;

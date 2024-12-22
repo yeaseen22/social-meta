@@ -1,4 +1,4 @@
-import React, {useRef, useCallback} from 'react';
+import React, { useRef, useCallback } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -19,12 +19,7 @@ import {
   MessageText,
   TextSection,
 } from '../../styles/MessageStyle';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetView, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 // import ChatTabScreen from './ChatScreen';
 
@@ -83,35 +78,30 @@ type MessagesScreenProps = {
   navigation: any; // Replace `any` with the correct type if you're using a type-safe navigation library like React Navigation
 };
 
-const ChatTabScreen: React.FC<MessagesScreenProps> = ({navigation}) => {
+const ChatTabScreen: React.FC<MessagesScreenProps> = ({ navigation }) => {
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  // callbacks
-  // const handleSheetChanges = useCallback((index: number) => {
-  //   console.log('handleSheetChanges', index);
-  // }, []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
   }, []);
 
   return (
     <>
-      <GestureHandlerRootView>
-        <Container>
+      <Container>
         <FlatList
           refreshControl={<RefreshControl refreshing={false} />}
           data={Messages}
           keyExtractor={item => item.id}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <Card
               onPress={() =>
-                navigation.navigate('Messages', {userName: item.userName})
+                navigation.navigate('Messages', { userName: item.userName })
               }
               onLongPress={handlePresentModalPress}>
               <UserInfo>
@@ -129,34 +119,35 @@ const ChatTabScreen: React.FC<MessagesScreenProps> = ({navigation}) => {
             </Card>
           )}
         />
-        </Container>
+      </Container>
 
-        <BottomSheetModalProvider>
+      <BottomSheetModalProvider>
         <BottomSheetModal
-            ref={bottomSheetModalRef}
-            onChange={handleSheetChanges}
-          >
-            <BottomSheetView style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
-            </BottomSheetView>
+          ref={bottomSheetModalRef}
+          onChange={handleSheetChanges}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            {/* Design your UI for the Bottom Sheet Modal here */}
+            <Text>Awesome 🎉</Text>
+
+            <Button
+              title="Close Bottom Sheet"
+              color={'red'}
+              onPress={() => bottomSheetModalRef.current?.dismiss()}
+            />
+          </BottomSheetView>
         </BottomSheetModal>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+      </BottomSheetModalProvider>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   padding: 24,
-  //   justifyContent: 'center',
-  //   backgroundColor: 'grey',
-  // },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
     minHeight: 400,
+    padding: 16,
   },
 });
 
