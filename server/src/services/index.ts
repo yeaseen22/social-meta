@@ -1,0 +1,1 @@
+export { default as LikeService } from './like.service';

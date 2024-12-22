@@ -1,38 +1,11 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { profileUpload } from '../middlewares';
+import express from 'express';
 import { UserController, AuthController } from '../controllers';
-import { User } from '../models';
 
 const router = express.Router();
 
 // Object instance for UserController Class..
 const userController = new UserController();
 const authController = new AuthController();
-
-/**
- * ---- Get Friends by User ID ----
- */
-router.get('/friends/:userId', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId);
-        const friends = await Promise.all(
-            (user?.followings || []).map((friendId: string) => {
-                return User.findById(friendId);
-            })
-        );
-
-        let friendList: { _id: string; firstname: string; lastname: string; profilePhoto: string }[] = [];
-        friends.forEach(friend => {
-            const { _id, firstname, lastname, profilePhoto } = friend as any;
-            friendList.push({ _id, firstname, lastname, profilePhoto });
-        });
-        res.status(200).json(friendList);
-
-    } catch (error) {
-        res.status(500).json(error);
-    }
-});
 
 /**
  * ---- Get All Users ----

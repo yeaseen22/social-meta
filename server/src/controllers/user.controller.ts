@@ -128,8 +128,8 @@ class UserController {
                     email: user.email,
                     bio: user.bio,
                     birthdate: user.birthdate,
-                    followings: user.followings,
-                    followers: user.followers,
+                    followings_count: user.followings_count,
+                    followers_count: user.followers_count,
                 },
             });
 

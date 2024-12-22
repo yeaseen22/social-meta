@@ -1,34 +1,42 @@
 import { Request, Response } from "express";
 import Post from "../models/Post";
 import { Types } from "mongoose";
+import { LikeService } from '../services';
 
 class PostController {
+  private readonly likeService: LikeService;
+
+  constructor() {
+    this.likeService = new LikeService();
+  }
+
   /**
    * LIKE POST CONTROLLER
    * @param req
    * @param res
    */
-  public async likePost(req: Request, res: Response) {
-    const postId = req.query.postId;
-    const likes = req.query.likes;
-    const post = new Post(req.body);
+  public async likePost(req: Request | any, res: Response | any): Promise<void> {
+    const { postId }: { postId: string; } = req.body;
+    const userIdObj: Types.ObjectId = (req as any).user._id || (req.body as { userId?: string }).userId;
+    const userId: string = userIdObj.toString();
 
-    // Adding like...
-    post.likes = likes ? parseInt(String(likes), 10) : 0;
+    console.log('UserId and PostId: ', userId, postId);
+
+    if (!userId || !postId) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid request",
+      });
+    }
 
     try {
-      const docs = await Post.findByIdAndUpdate({ _id: postId }, post, {
-        new: true,
-      });
-      res.status(200).json({
-        success: true,
-        likes: docs ? docs.likes : 0,
-      });
+      // await this.likeService.toggleLike(userId, postId)
+      const likeOrDislike = false;
+      if (!likeOrDislike) throw new Error('Failed to toggle like');
+      res.status(200).json(likeOrDislike);
+
     } catch (err) {
-      res.status(400).json({
-        success: false,
-        err,
-      });
+      res.status(400).json({ success: false, err });
     }
   }
 
@@ -48,7 +56,7 @@ class PostController {
 
       res.status(200).json({
         success: true,
-        likes: post.likes,
+        likes_count: post.likes_count,
       });
     } catch (err) {
       res.json({ success: false, error: err });
@@ -115,15 +123,15 @@ class PostController {
           select: "firstname lastname profilePhoto email title",
           match: { _id: { $exists: true } },
         })
-        .populate({
-          path: "comments",
-          populate: {
-            path: "user",
-            model: "User",
-            select: "firstname lastname profilePhoto email title",
-            match: { _id: { $exists: true } },
-          },
-        })
+        // .populate({
+        //   path: "comments",
+        //   populate: {
+        //     path: "user",
+        //     model: "User",
+        //     select: "firstname lastname profilePhoto email title",
+        //     match: { _id: { $exists: true } },
+        //   },
+        // })
         .sort([["createdAt", -1]])
         .skip(skip)
         .limit(limitNumber);
