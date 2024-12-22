@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useRef, useState, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -10,22 +10,44 @@ import {
   Platform,
 } from 'react-native';
 
-const MessagesScreen: React.FC = () => {
-  const [messages, setMessages] = useState<{ id: string; text: string; user: string }[]>([
-    { id: '1', text: 'Hello! How can I help you today?', user: 'bot' },
+interface Message {
+  id: string;
+  text: string;
+  user: 'me' | 'bot';
+}
+
+const MessagesScreen: React.FC<{navigation: any; route: any}> = ({
+  navigation,
+  route,
+}) => {
+  const [messages, setMessages] = useState<Message[]>([
+    {id: '1', text: 'Hello! How can I help you today?', user: 'bot'},
   ]);
   const [input, setInput] = useState('');
+  const flatListRef = useRef<FlatList>(null);
+
+  const userName = route?.params?.userName || 'John Doe';
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Chat with ' + userName,
+    });
+  }, [navigation, userName]);
 
   const handleSend = () => {
     if (input.trim() === '') return;
 
-    const newMessage = { id: Date.now().toString(), text: input, user: 'me' };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-    // Clear input and simulate a bot response
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      text: input,
+      user: 'me',
+    };
+    setMessages(prevMessages => [...prevMessages, newMessage]);
     setInput('');
+
+    // Simulate bot response
     setTimeout(() => {
-      setMessages((prevMessages) => [
+      setMessages(prevMessages => [
         ...prevMessages,
         {
           id: Date.now().toString(),
@@ -36,17 +58,17 @@ const MessagesScreen: React.FC = () => {
     }, 1000);
   };
 
-  const renderMessage = ({ item }: { item: { text: string; user: string } }) => {
+  const renderMessage = ({item}: {item: Message}) => {
     const isUser = item.user === 'me';
-
     return (
       <View
         style={[
           styles.messageContainer,
           isUser ? styles.userMessage : styles.botMessage,
-        ]}
-      >
-        <Text style={isUser ? styles.userText : styles.botText}>{item.text}</Text>
+        ]}>
+        <Text style={isUser ? styles.userText : styles.botText}>
+          {item.text}
+        </Text>
       </View>
     );
   };
@@ -54,14 +76,22 @@ const MessagesScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      {/* Messages List */}
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.chatContainer}
+        extraData={messages}
+        onContentSizeChange={() =>
+          flatListRef.current?.scrollToEnd({animated: true})
+        }
+        onLayout={() => flatListRef.current?.scrollToEnd({animated: true})}
       />
+
+      {/* Input Section */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -83,6 +113,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
+  },
+  header: {
+    padding: 15,
+    backgroundColor: '#0078fe',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   chatContainer: {
     padding: 10,
@@ -114,7 +154,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
-    paddingTop: 20,
   },
   input: {
     flex: 1,
