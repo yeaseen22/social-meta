@@ -1,5 +1,5 @@
-import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import React, { useRef, useCallback } from 'react';
+import { FlatList, RefreshControl, Alert, StyleSheet, Text } from 'react-native';
 import {
   Container,
   Card,
@@ -12,6 +12,8 @@ import {
   MessageText,
   TextSection,
 } from '../../styles/MessageStyle';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 // import ChatTabScreen from './ChatScreen';
 
 type Message = {
@@ -65,38 +67,71 @@ type MessagesScreenProps = {
 };
 
 const ChatTabScreen: React.FC<MessagesScreenProps> = ({ navigation }) => {
+
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+
+
   return (
-    <Container>
-      <FlatList
-        data={Messages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Card onPress={() => navigation.navigate('Messages', { userName: item.userName })}>
-            <UserInfo>
-              <UserImgWrapper>
-                <UserImg source={item.userImg} />
-              </UserImgWrapper>
-              <TextSection>
-                <UserInfoText>
-                  <UserName>{item.userName}</UserName>
-                  <PostTime>{item.messageTime}</PostTime>
-                </UserInfoText>
-                <MessageText>{item.messageText}</MessageText>
-              </TextSection>
-            </UserInfo>
-          </Card>
-        )}
-      />
-    </Container>
+    <GestureHandlerRootView style={styles.container}>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetView style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheet>
+
+
+      <Container>
+        <FlatList
+          refreshControl={<RefreshControl refreshing={false} />}
+          data={Messages}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Card
+              onPress={() => navigation.navigate('Messages', { userName: item.userName })}
+              onLongPress={() => Alert.alert('Long Press')}
+            >
+              <UserInfo>
+                <UserImgWrapper>
+                  <UserImg source={item.userImg} />
+                </UserImgWrapper>
+                <TextSection>
+                  <UserInfoText>
+                    <UserName>{item.userName}</UserName>
+                    <PostTime>{item.messageTime}</PostTime>
+                  </UserInfoText>
+                  <MessageText>{item.messageText}</MessageText>
+                </TextSection>
+              </UserInfo>
+            </Card>
+          )}
+        />
+      </Container>
+    </GestureHandlerRootView>
   );
 };
-
-export default ChatTabScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 36,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+
+export default ChatTabScreen;

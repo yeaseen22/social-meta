@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
-import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   ProfileScreen,
   PostScreen,
@@ -15,44 +15,17 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 const MainTabs = () => {
   const Tab = createMaterialBottomTabNavigator();
-  const navigation = useNavigation();
-  const route = useRoute();
 
-  console.log('Route Name:', navigation.getState());
-
-  useEffect(() => {
-    const state = navigation.getState();
-    const routeName = state?.routes[state.index]?.name || 'Home';
-  
-
-    switch (routeName) {
-      case 'Home':
-        navigation.setOptions({headerTitle: 'Home'});
-        break;
-      case 'Explore':
-        navigation.setOptions({headerTitle: 'Explore'});
-        break;
-      case 'Post':
-        navigation.setOptions({headerTitle: 'Create Post'});
-        break;
-      case 'Notification':
-        navigation.setOptions({headerTitle: 'Notifications'});
-        break;
-      case 'Profile':
-        navigation.setOptions({headerTitle: 'Your Profile'});
-        break;
-      default:
-        navigation.setOptions({headerTitle: 'App'});
-    }
-  }, [navigation,route]);
   return (
-    <Tab.Navigator initialRouteName="Home" activeColor="black">
+    <Tab.Navigator
+      initialRouteName="Home"
+      activeColor="black"
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <AntDesignIcons name="home" size={24} color={color} />
           ),
         }}
@@ -61,7 +34,7 @@ const MainTabs = () => {
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="explore" size={24} color={color} />
           ),
         }}
@@ -70,7 +43,7 @@ const MainTabs = () => {
         name="Post"
         component={PostScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="add" size={24} color={color} />
           ),
         }}
@@ -85,11 +58,11 @@ const MainTabs = () => {
         }}
       /> */}
 
-<Tab.Screen
-        name="ChatScreen"
+      <Tab.Screen
+        name="Chats"
         component={ChatScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <Entypo name="notification" size={24} color={color} />
           ),
         }}
@@ -98,7 +71,7 @@ const MainTabs = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="account-circle" size={24} color={color} />
           ),
         }}

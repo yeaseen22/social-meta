@@ -1,6 +1,8 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <RNReanimated/SchedulerModule.h> // Reanimated module
+
 
 @implementation AppDelegate
 
@@ -26,6 +28,12 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (RCTBridge *)initializeBridgeWithLaunchOptions:(NSDictionary *)launchOptions {
+    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+    [ReanimatedJSIModule registerForJsiRuntime:bridge.jsRuntime];
+    return bridge;
 }
 
 @end

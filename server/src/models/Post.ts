@@ -6,14 +6,8 @@ const postSchema = new Schema({
     image: { type: String, required: false },
     body: { type: String, required: false, maxLength: 2000 },
     ownerId: { type: String, required: false },
-    likes: { type: Number, required: false, default: 0 },
-    isLiked: { type: Boolean, required: false, default: false },
-    comments: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Comment'
-        }
-    ],
+    likes_count: { type: Number, required: false, default: 0 },
+    comments_count: { type: Number, required: false, default: 0 },
     user: { type: Schema.Types.ObjectId, ref: 'User' }
 }, {
     timestamps: true

@@ -18,8 +18,8 @@ const userSchema = new Schema({
     themeMode: { type: String, required: false, default: 'lightMode' },
     colorMode: { type: String, required: false, default: 'royalblue' },
     token: { type: String },
-    followings: { type: Array },
-    followers: { type: Array }
+    followings_count: { type: Number, required: false, default: 0 },
+    followers_count: { type: Number, required: false, default: 0 },
 }, {
     timestamps: true
 });

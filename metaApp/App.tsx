@@ -3,12 +3,11 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import {
-  HomeScreen,
   LoginScreen,
   MessageScreen,
   OnboardingScreen,
-  PostScreen,
   RegisterScreen,
   RegisterScreen2,
   RegisterScreen3,
@@ -22,16 +21,43 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   // const [isFirstLaunch, setIsFirstLaunch] = useState(false);
 
+  /**
+   * CUSTOM HEADERS TITLE FOR BOTTOM TABS
+   * @param route 
+   * @returns 
+   */
+  const getHeaderTitle = (route: any) => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+    const titleMap: { [key: string]: string } = {
+      Home: 'Home',
+      Chats: 'Chats',
+      Profile: 'Profile',
+      Explore: 'Explore',
+      Notification: 'Notifications',
+      Post: 'Create Post',
+      Messages: 'Messages',
+    };
+
+    return titleMap[routeName as keyof typeof titleMap] || routeName;
+  };
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Tabs"
-      // screenOptions={{
-      //   headerShown: true,
-      // }}
-      >
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Navigator initialRouteName="Tabs">
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -75,6 +101,10 @@ const App = () => {
         <Stack.Screen
           name="Tabs"
           component={Tabs}
+          options={({ route }: any): any => ({
+            headerShown: true,
+            headerTitle: getHeaderTitle(route) || 'Home',
+          })}
         />
 
         <Stack.Screen
@@ -82,9 +112,6 @@ const App = () => {
           component={MessageScreen}
           options={{
             headerShown: true,
-            //   tabBarIcon: ({ color }) => (
-            //     <AntDesign name="wechat" size={24} color={color} />
-            //   )
           }}
         />
       </Stack.Navigator>
