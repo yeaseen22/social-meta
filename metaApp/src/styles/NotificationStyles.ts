@@ -15,7 +15,7 @@ const cardHeight = screenHeight * 0.8;
 export const Container = (styled as any).View`
     flex: 1;
     background-color: #fff;
-    margin-top: ${screenHeight * 0.06}px;
+    margin-top: 10px;
     max-height: ${Platform.OS === "ios" ? screenHeight - 80 : screenHeight - 5}px;
 `;
 

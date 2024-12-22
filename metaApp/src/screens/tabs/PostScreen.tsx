@@ -4,28 +4,38 @@ import { FloatingAction } from "react-native-floating-action";
 // import { Entypo, AntDesign } from '@expo/vector-icons';
 // import { StatusBar } from 'expo-status-bar';
 // import { useColorScheme } from '@/hooks/useColorScheme';
+import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+
+
+
 
 // Actions for this button here..
 const actions = [
     {
         text: "Image",
-        // icon: <Entypo name="folder-images" size={24} color="white" />,
-        name: "bt_accessibility",
+        icon: <Entypo name="image" size={24} color="white" />,
+        name: "bt_image",
         position: 2
     },
     {
         text: "Video",
-        // icon: <Entypo name="folder-video" size={24} color="white" />,
+        icon: <MaterialIcons name="videocam" size={24} color="white" />,
         name: "bt_video",
         position: 1
     },
     {
         text: "File",
-        // icon: <AntDesign name="addfile" size={24} color="white" />,
+        icon: <AntDesign name="file1" size={24} color="white" />,
         name: "bt_file",
         position: 3
     }
 ];
+
+
 
 // Add Post Component..
 const Post = () => {
