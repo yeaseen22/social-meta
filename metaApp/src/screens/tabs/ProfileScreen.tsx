@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   FlatList,
   View,
+  Text,
+  StyleSheet,
   RefreshControl,
   useWindowDimensions,
-  StyleSheet,
 } from 'react-native';
 import ProfileHeaderUI from '../../components/ui/ProfileHeaderUI';
 import PostCard from '../../components/widgets/PostCard';
-import {Container} from '../../styles/ProfileStyles';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import FollowersTab from '../../components/widgets/FollowersTab';
 import FollowingTab from '../../components/widgets/FollowingTab';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Tab = createMaterialTopTabNavigator();
 
 const postData = [
   {
@@ -44,130 +47,97 @@ const postData = [
   },
 ];
 
-// const PostsRoute2 = () => (
-//   <FlatList
-//     data={postData}
-//     renderItem={({item}) => <PostCard item={item} />}
-//     keyExtractor={item => item.id}
-//     showsVerticalScrollIndicator={false}
-//     contentContainerStyle={styles.postList}
-//   />
-// );
-
+// Posts Tab Component
 const PostsRoute = () => (
-  <ScrollView>
-    {postData?.map(item => (
-        <PostCard key={item.id} item={item} />
+  <ScrollView style={styles.tabContent}>
+    <Text style={styles.heading}>Posts</Text>
+    {postData.map(item => (
+      <PostCard key={item.id} item={item} />
     ))}
   </ScrollView>
 );
 
+// Following Tab Component
 const FollowingRoute = () => (
   <View style={styles.tabContent}>
     <FollowingTab />
   </View>
 );
 
+// Followers Tab Component
 const FollowersRoute = () => (
   <View style={styles.tabContent}>
     <FollowersTab />
   </View>
 );
 
-const renderScene = SceneMap({
-  posts: PostsRoute,
-  following: FollowingRoute,
-  followers: FollowersRoute,
-});
-
-const routes = [
-  {key: 'posts', title: 'Posts'},
-  {key: 'following', title: 'Following'},
-  {key: 'followers', title: 'Followers'},
-];
-
 const ProfileTabScreen = (props: any) => {
-  const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
+  // Handle Pull-to-Refresh
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // Implement your refresh logic here
     setTimeout(() => setRefreshing(false), 2000);
   }, []);
 
-  const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={styles.tabIndicator}
-      style={styles.tabBar}
-      labelStyle={styles.tabLabel}
-      activeColor="#000"
-      inactiveColor="#999"
-    />
-  );
-
   return (
-    <Container style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <ProfileHeaderUI {...props} type="OWN" />
-        
-        <View style={styles.tabViewContainer}>
-          <TabView
-            navigationState={{index, routes}}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{width: layout.width}}
-            renderTabBar={renderTabBar}
-          />
-        </View>
-      </ScrollView>
-    </Container>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <ProfileHeaderUI {...props} type="OWN" />
+      <View style={styles.tabContainer}>
+        {/* Top Tab Navigator */}
+        <Tab.Navigator
+          screenOptions={{
+            tabBarStyle: styles.tabBar,
+            tabBarIndicatorStyle: styles.tabIndicator,
+            tabBarLabelStyle: styles.tabLabel,
+          }}
+        >
+          <Tab.Screen name="Posts" component={PostsRoute} />
+          <Tab.Screen name="Following" component={FollowingRoute} />
+          <Tab.Screen name="Followers" component={FollowersRoute} />
+        </Tab.Navigator>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
-  scrollView: {
+  tabContainer: {
+    height: 600, // Customize this based on your layout needs
     flex: 1,
-    width: '100%',
   },
-  tabViewContainer: {
+  tabContent: {
     flex: 1,
-    height: '100%', // Adjust this value based on your needs
+    padding: 10,
   },
   tabBar: {
     backgroundColor: '#fff',
-    elevation: 0,
-    shadowOpacity: 0,
-    borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    borderBottomWidth: 1,
   },
   tabIndicator: {
     backgroundColor: '#000',
   },
   tabLabel: {
+    fontSize: 14,
     fontWeight: 'bold',
     textTransform: 'uppercase',
+    color: '#000',
   },
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  postList: {
-    padding: 10,
+  heading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 
 export default ProfileTabScreen;
-
