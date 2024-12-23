@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import Post from "../models/Post";
 import { Types } from "mongoose";
 import { LikeService } from '../services';
@@ -7,7 +7,26 @@ class PostController {
   private readonly likeService: LikeService;
 
   constructor() {
+    // bind this
     this.likeService = new LikeService();
+  }
+
+  /**
+   * GET POST LIKES CONTROLLER
+   * @param req 
+   * @param res 
+   */
+  public async getPostLikes(req: Request, res: Response): Promise<any> {
+    const postId = req.params.postId;
+
+    try {
+      const likes = await this.likeService.getPostLikes(postId);
+      if (!likes) throw new Error('Failed to fetch likes');
+      res.status(200).json(likes);
+
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Failed to fetch likes' });
+    }
   }
 
   /**
@@ -15,28 +34,27 @@ class PostController {
    * @param req
    * @param res
    */
-  public async likePost(req: Request | any, res: Response | any): Promise<void> {
-    const { postId }: { postId: string; } = req.body;
-    const userIdObj: Types.ObjectId = (req as any).user._id || (req.body as { userId?: string }).userId;
-    const userId: string = userIdObj.toString();
-
-    console.log('UserId and PostId: ', userId, postId);
+  public async likePost(req: Request, res: Response): Promise<any> {
+    const postId: string = req.body?.postId;
+    const userIdObj: Types.ObjectId = (req as any).user?._id || req.body?.userId;
+    const userId: string = userIdObj?.toString();
 
     if (!userId || !postId) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid request",
-      });
+      res.status(400).json({ success: false, message: "Invalid request" });
     }
 
     try {
-      // await this.likeService.toggleLike(userId, postId)
-      const likeOrDislike = false;
+      const likeOrDislike = await this.likeService.toggleLike(userId, postId);
       if (!likeOrDislike) throw new Error('Failed to toggle like');
-      res.status(200).json(likeOrDislike);
+      res.status(200).send(likeOrDislike);
 
-    } catch (err) {
-      res.status(400).json({ success: false, err });
+    } catch (err: any) {
+      console.error('[LikePost] Error occurred:', err);
+      res.status(500).json({
+        success: false,
+        message: "An unexpected error occurred while toggling like.",
+        error: err?.message ?? err,
+      });
     }
   }
 
@@ -69,7 +87,7 @@ class PostController {
    * @param res
    * @returns
    */
-  public async readPost(req: Request | any, res: Response | any) {
+  public async readPost(req: Request | any, res: Response | any, next: NextFunction) {
     const postId = req.query.postId;
 
     // find Post by PostId.
@@ -79,27 +97,28 @@ class PostController {
           "user",
           "firstname lastname profilePhoto title themeMode colorMode email"
         )
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "user",
-            model: "User",
-            select:
-              "firstname lastname profilePhoto title themeMode colorMode email",
-          },
-        })
+        // .populate({
+        //   path: "comments",
+        //   options: { sort: { createdAt: -1 } },
+        //   populate: {
+        //     path: "user",
+        //     model: "User",
+        //     select:
+        //       "firstname lastname profilePhoto title themeMode colorMode email",
+        //   },
+        // })
         .exec();
 
-      if (!post)
-        return res.json({ success: false, message: "Post not found!" });
+      if (!post) throw new Error("Post not found!");
 
       res.status(200).json({
         success: true,
         post,
       });
-    } catch (err) {
-      res.json({ success: false, err });
+
+    } catch (error) {
+      console.error(`Error in readPost controller: ${error}`);
+      next(error);
     }
   }
 

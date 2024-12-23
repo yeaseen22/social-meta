@@ -20,6 +20,7 @@ const notFoundMiddleware = (_req: Request, _res: Response, next: NextFunction) =
  * @returns 
  */
 const errorHandlerMiddleware = (error: any, _req: Request, res: Response | any) => {
+    console.log('I am here who is responsible for error handling');
     const status = (error as any).status || 500;
     const message = error.message || "Something went wrong!";
     return res.status(status).json({ message });

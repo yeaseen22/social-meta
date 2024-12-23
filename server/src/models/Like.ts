@@ -5,6 +5,7 @@ export interface ILike extends Document {
     userId: mongoose.Types.ObjectId;
     postId: mongoose.Types.ObjectId;
     createdAt: Date;
+    updatedAt?: Date;
 }
 
 // Like Schema

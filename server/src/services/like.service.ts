@@ -9,6 +9,34 @@ class LikeService {
         this.postModelRepository = postModelRepository;
     }
 
+
+    /**
+     * LIKE POST SERVICE
+     * @param postId 
+     * @returns {Promise<[]>}
+     */
+    public async getPostLikes(postId: string): Promise<any[]> {
+        try {
+            const likes = await this.likeModelRepository.find({ postId })
+                .populate('userId', 'firstname lastname email profilePhoto');
+
+            // Extract data from the populated likes
+            const likesData = likes?.map(like => {
+                return {
+                    user: like.userId,
+                    createdAt: like.createdAt,
+                    updatedAt: like.updatedAt
+                };
+            })
+
+            return likesData;
+
+        } catch (error) {
+            console.error(`Error in getPostLikes service: ${error}`);
+            throw error;
+        }
+    }
+
     /**
      * TOGGLE LIKE SERVICE
      * @param userId 
@@ -16,11 +44,8 @@ class LikeService {
      * @returns {Promise<{ success: boolean, message: string, likeStatus: boolean }>}
      */
     public async toggleLike(userId: string, postId: string): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
-        console.log('Toggle Like Service Called and here - ', userId, postId);
-
-
         try {
-            const existingLike = await Like.findOne({ userId, postId });
+            const existingLike = await this.likeModelRepository.findOne({ userId, postId });
 
             if (existingLike) {
                 // Dislike the post..
