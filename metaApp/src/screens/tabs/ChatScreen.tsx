@@ -26,7 +26,7 @@ import { BottomSheetModal, BottomSheetView, BottomSheetModalProvider } from '@go
 type Message = {
   id: string;
   userName: string;
-  userImg: any; // Use ImageSourcePropType if you want to import `ImageSourcePropType` from 'react-native'
+  userImg: any; 
   messageTime: string;
   messageText: string;
 };
@@ -122,22 +122,57 @@ const ChatTabScreen: React.FC<MessagesScreenProps> = ({ navigation }) => {
       </Container>
 
       <BottomSheetModalProvider>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          onChange={handleSheetChanges}
-        >
-          <BottomSheetView style={styles.contentContainer}>
-            {/* Design your UI for the Bottom Sheet Modal here */}
-            <Text>Awesome 🎉</Text>
+  <BottomSheetModal
+    ref={bottomSheetModalRef}
+    onChange={handleSheetChanges}
+    snapPoints={['25%', '50%']} // Adjust the height of the bottom sheet as needed
+  >
+    <BottomSheetView style={styles.contentContainer}>
+      <Text style={styles.modalTitle}>Actions</Text>
 
-            <Button
-              title="Close Bottom Sheet"
-              color={'red'}
-              onPress={() => bottomSheetModalRef.current?.dismiss()}
-            />
-          </BottomSheetView>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
+      {/* Block Option */}
+      <Button
+        title="Block User"
+        color="red"
+        onPress={() => {
+          Alert.alert(
+            'Block User',
+            'Are you sure you want to block this user?',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Block', style: 'destructive', onPress: () => console.log('User Blocked') },
+            ]
+          );
+          bottomSheetModalRef.current?.dismiss();
+        }}
+      />
+
+      {/* Delete Option */}
+      <Button
+        title="Delete Chat"
+        color="red"
+        onPress={() => {
+          Alert.alert(
+            'Delete Chat',
+            'Are you sure you want to delete this chat?',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Delete', style: 'destructive', onPress: () => console.log('Chat Deleted') },
+            ]
+          );
+          bottomSheetModalRef.current?.dismiss();
+        }}
+      />
+
+      {/* Close Option */}
+      <Button
+        title="Close"
+        onPress={() => bottomSheetModalRef.current?.dismiss()}
+      />
+    </BottomSheetView>
+  </BottomSheetModal>
+</BottomSheetModalProvider>
+
     </>
   );
 };
@@ -146,9 +181,18 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    minHeight: 400,
+    justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
 });
+
 
 export default ChatTabScreen;

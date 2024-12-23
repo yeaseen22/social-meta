@@ -30,7 +30,6 @@ const App = () => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
     const titleMap: { [key: string]: string } = {
       Home: 'Home',
-      Chats: 'Chats',
       Profile: 'Profile',
       Explore: 'Explore',
       Notification: 'Notifications',
