@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-// Like Interface
+// region Like Interface
 export interface ILike extends Document {
     userId: mongoose.Types.ObjectId;
     postId: mongoose.Types.ObjectId;
@@ -8,7 +8,7 @@ export interface ILike extends Document {
     updatedAt?: Date;
 }
 
-// Like Schema
+// region Like Schema
 const LikeSchema = new Schema<ILike>(
     {
         userId: {
@@ -27,6 +27,6 @@ const LikeSchema = new Schema<ILike>(
     }
 );
 
-// Like Model
+// region Like Model
 const Like = mongoose.model<ILike>('Like', LikeSchema);
 export default Like;

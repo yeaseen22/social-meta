@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { authRoutes, userRoutes, postRoutes, commentRoutes, conversationRoutes, messageRoutes } from '../routes';
-import authenticate from '../middlewares/auth';
+import { auth as authenticate } from '../middlewares';
 
 const router: Router = Router();
 

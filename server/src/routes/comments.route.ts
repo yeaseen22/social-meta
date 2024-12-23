@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { CommentController } from '../controllers';
 
 const router = express.Router();
@@ -7,23 +7,20 @@ const router = express.Router();
 const commentController = new CommentController();
 
 /**
- * ---- Read Comments ----
- */
-router.get('/read_comment', commentController.readComment);
-
-/**
  * ---- Create Comment ----
  */
-router.post('/make_comment', commentController.createComment);
+router.route('/').post(commentController.createComment.bind(commentController))
+    .put(commentController.updateComment.bind(commentController));
 
 /**
- * ---- Update Comment ----
+ * ---- Read Comments ----
  */
-router.post('/update_comment', commentController.updateComment);
+// region GET /comment/:postId?page=1&limit=5
+router.get('/:postId', commentController.getComments.bind(commentController));
 
 /**
  * ---- Delete Comment ----
  */
-router.delete('/comment_delete', commentController.deleteComment);
+router.delete('/:commentId', commentController.deleteComment.bind(commentController));
 
 export default router;

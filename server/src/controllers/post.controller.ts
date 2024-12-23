@@ -7,7 +7,6 @@ class PostController {
   private readonly likeService: LikeService;
 
   constructor() {
-    // bind this
     this.likeService = new LikeService();
   }
 
