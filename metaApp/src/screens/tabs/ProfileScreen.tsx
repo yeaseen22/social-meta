@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import ProfileHeaderUI from '../../components/ui/ProfileHeaderUI';
-import PostCard from '../../components/widgets/PostCard';
+import PostCard from '../../components/ui/PostCard';
 import FollowersTab from '../../components/widgets/FollowersTab';
 import FollowingTab from '../../components/widgets/FollowingTab';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

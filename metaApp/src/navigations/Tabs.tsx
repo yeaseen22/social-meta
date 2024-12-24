@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
-import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   ProfileScreen,
   PostScreen,
@@ -22,7 +22,7 @@ const MainTabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <AntDesignIcons name="home" size={24} color={color} />
           ),
         }}
@@ -31,7 +31,7 @@ const MainTabs = () => {
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="explore" size={24} color={color} />
           ),
         }}
@@ -40,7 +40,7 @@ const MainTabs = () => {
         name="Post"
         component={PostScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="add" size={24} color={color} />
           ),
         }}
@@ -49,7 +49,17 @@ const MainTabs = () => {
         name="Notification"
         component={NotificationScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Entypo name="notification" size={24} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          tabBarIcon: ({ color }: { color: string }) => (
             <Entypo name="notification" size={24} color={color} />
           ),
         }}
@@ -59,7 +69,7 @@ const MainTabs = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({color}: {color: string}) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <MaterialIcons name="account-circle" size={24} color={color} />
           ),
         }}
