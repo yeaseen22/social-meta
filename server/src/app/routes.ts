@@ -17,12 +17,21 @@ router.use('/api', authenticate, conversationRoutes);
 router.use('/api', authenticate, messageRoutes);
 
 /**
+ * ---- Health Check for the application here ----
  * Checking for Health of application at very first time..
  */
 router.get('/health', (_req: Request, res: Response, _next: NextFunction) => {
     res.status(200).json({
         message: 'Successful'
     });
+});
+
+/**
+ * ---- Resource not found endpoint ----
+ * Not Found of resource
+ */
+router.use("*", (_req: Request, res: Response, _next: NextFunction) => {
+    res.status(404).send("Resource not found!");
 });
 
 export default router;

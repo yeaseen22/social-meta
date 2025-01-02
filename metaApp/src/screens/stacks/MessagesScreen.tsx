@@ -167,7 +167,7 @@ const MessagesScreen: React.FC<{ navigation: any; route: any }> = ({
             <View style={styles.optionContainer}>
               <TouchableOpacity
                 onPress={handleEdit}
-             
+
               >
                 <Icon name="edit" size={24} color="#000" />
               </TouchableOpacity>
@@ -176,7 +176,7 @@ const MessagesScreen: React.FC<{ navigation: any; route: any }> = ({
             <View style={styles.optionContainer}>
               <TouchableOpacity
                 onPress={handleDelete}
-                // style={{ backgroundColor: '#000' }}
+              // style={{ backgroundColor: '#000' }}
               >
                 <Icon name="delete" size={24} color="#000" />
               </TouchableOpacity>
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomSheetContent: {
-    flexDirection: 'column', 
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
