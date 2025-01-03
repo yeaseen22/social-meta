@@ -1,6 +1,6 @@
 'use client';
-import '@/styles/messenger/message-box.scss';
 import '@/styles/messenger/message-list.scss';
+import '@/styles/messenger/message-box.scss';
 import { useState } from 'react';
 import { useColorScheme } from '@mui/material/styles';
 import { Paper, Box, CircularProgress } from '@mui/material';
@@ -42,7 +42,7 @@ const MessagesChat = () => {
             removeButton: false,
             retracted: false,
             notch: true,
-            status: 'waiting',
+            status: 'read',
             position: 'right',
         },
         {
@@ -58,7 +58,7 @@ const MessagesChat = () => {
             removeButton: false,
             retracted: false,
             notch: true,
-            status: 'read',
+            status: 'received',
             position: 'left',
         },
         {
@@ -74,10 +74,11 @@ const MessagesChat = () => {
             removeButton: false,
             retracted: false,
             notch: true,
-            status: 'received',
+            status: 'waiting',
             position: 'right',
         }
     ]);
+    const [userInput, setUserInput] = useState<string>('');
 
 
     // Function to refresh the chat list
@@ -101,12 +102,40 @@ const MessagesChat = () => {
                     removeButton: false,
                     retracted: false,
                     notch: true,
-                    status: 'waiting',
+                    status: 'sent',
                     position: 'left',
                 },
             ]);
             setIsRefreshing(false);
         }, 1500);
+    };
+
+
+    const handleSendMessage = () => {
+        if (userInput?.trim() !== '') {
+            setMessageList((prev) => [
+                ...prev,
+                {
+                    id: Date.now().toString(),
+                    title: "Asad",
+                    type: "text",
+                    text: `${userInput}`,
+                    date: new Date(),
+                    focus: false,
+                    titleColor: "#000",
+                    forwarded: false,
+                    replyButton: false,
+                    removeButton: false,
+                    retracted: false,
+                    notch: true,
+                    status: 'waiting',
+                    position: 'right',
+                },
+            ]);
+            setUserInput('');
+        } else {
+            alert('Please enter a message to send.');
+        }
     };
 
 
@@ -153,12 +182,13 @@ const MessagesChat = () => {
                             retracted={message.retracted}
                             notch={message.notch}
                             status={message?.status}
+                            className={themeClass === 'dark-theme' ? 'message-box-dark' : 'message-box-light'}
                         />
                     ))
                 }
 
                 {/* Demo Message Design */}
-                <MessageBox
+                {/* <MessageBox
                     id={1}
                     position="right"
                     title="Asad"
@@ -173,7 +203,8 @@ const MessagesChat = () => {
                     retracted={false}
                     notch={true}
                     status='read'
-                />
+                    className={themeClass === 'dark-theme' ? 'message-box-dark' : 'message-box-light'}
+                /> */}
                 {/* More messages as needed */}
 
                 {/* Show loader while refreshing */}
@@ -186,8 +217,11 @@ const MessagesChat = () => {
 
             {/* Input section */}
             <MessageSendInput
-                handleInput={() => alert('Typing...')}
-                handleSendMessage={() => alert('Sending...')}
+                value={userInput}
+                handleInput={(event: Event): void => {
+                    setUserInput((event.target as HTMLInputElement).value);
+                }}
+                handleSendMessage={handleSendMessage}
                 refreshChatList={refreshChatList}
                 isRefreshing={isRefreshing}
             />

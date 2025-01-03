@@ -5,13 +5,14 @@ import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 interface MessageSendInputProps {
-    handleInput: () => void;
+    value?: string;
+    handleInput: (event: any) => void;
     handleSendMessage: () => void;
     refreshChatList?: () => void;
     isRefreshing?: boolean;
-}
+}   
 
-const MessageSendInput = ({ handleInput, handleSendMessage, refreshChatList = () => { }, isRefreshing = false }: MessageSendInputProps) => {
+const MessageSendInput = ({ value, handleInput, handleSendMessage, refreshChatList = () => { }, isRefreshing = false }: MessageSendInputProps) => {
     const { mode } = useColorScheme();
     const themeClass = mode === 'dark' ? 'dark-theme' : 'light-theme';
 
@@ -40,6 +41,7 @@ const MessageSendInput = ({ handleInput, handleSendMessage, refreshChatList = ()
                 placeholder="Type your message..."
                 fullWidth
                 multiline
+                value={value}
                 onChange={handleInput}
                 sx={{
                     flex: 1,

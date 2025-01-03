@@ -1,5 +1,5 @@
 'use client';
-import '@/styles/messenger/chatlist.scss';
+import '@/styles/messenger/chats-list.scss';
 import { Sidebar } from 'react-pro-sidebar';
 import { ChatItem } from 'react-chat-elements';
 import { useColorScheme } from '@mui/material/styles';
@@ -62,13 +62,13 @@ const SidebarChat = () => {
 
     return (
         <Paper elevation={3} sx={{ height: '100%' }}>
-            <Sidebar style={{ width: '100%' }}>
+            <Sidebar style={{ width: '100%', backgroundColor: 'transparent', borderColor: 'transparent' }}>
                 <Box
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    sx={{ padding: '16px' }}
                     className={`${themeClass}`}
+                    sx={{ padding: '16px', marginTop: '0 !important', paddingTop: '24px' }}
                 >
                     {/* Desktop Refresh Button */}
                     <IconButton
