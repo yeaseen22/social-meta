@@ -1,8 +1,8 @@
-import Messanger from './Messenger';
+import { EmptyChat } from '@/components/messenger';
 
 const page = () => {
   return (
-    <Messanger />
+    <EmptyChat />
   )
 }
 

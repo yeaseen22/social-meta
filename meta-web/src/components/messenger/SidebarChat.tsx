@@ -117,6 +117,7 @@ const SidebarChat = () => {
                     <div className={`${themeClass}`}>
                         {chatList.map((chat) => (
                             <ChatItem
+                                onClick={() => router.push(`/messenger/${chat.id}`)}
                                 key={chat.id}
                                 id={chat.id}
                                 avatar={chat.avatar}
