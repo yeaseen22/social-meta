@@ -1,5 +1,5 @@
 'use client';
-import '@/styles/messenger/messenger.module.scss';
+import '@/styles/messenger/chatlist.scss';
 import { Sidebar } from 'react-pro-sidebar';
 import { ChatItem } from 'react-chat-elements';
 import { useColorScheme } from '@mui/material/styles';

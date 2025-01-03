@@ -1,12 +1,12 @@
 'use client';
-import '@/styles/messenger/messenger.module.scss';
+import '@/styles/messenger/message-box.scss';
+import '@/styles/messenger/message-list.scss';
 import { useState } from 'react';
 import { useColorScheme } from '@mui/material/styles';
-import { Paper, Typography, Avatar, Box, InputBase, IconButton, CircularProgress } from '@mui/material';
+import { Paper, Box, CircularProgress } from '@mui/material';
 import { MessageBox } from "react-chat-elements";
-import SendIcon from '@mui/icons-material/Send';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import { ModeSwitch } from '../widgets';
+import TopHeading from './TopHeading';
+import MessageSendInput from './MessageSendInput';
 
 const MessagesChat = () => {
     const { mode } = useColorScheme();
@@ -80,7 +80,6 @@ const MessagesChat = () => {
     ]);
 
 
-
     // Function to refresh the chat list
     const refreshChatList = async () => {
         setIsRefreshing(true);
@@ -122,27 +121,7 @@ const MessagesChat = () => {
             }}
         >
             {/* Top section */}
-            <Box
-                sx={{
-                    padding: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderBottom: `1px solid ${themeClass === 'dark-theme' ? '#444' : '#ddd'}`,
-                }}
-            >
-                <Avatar
-                    alt="User Avatar"
-                    src="https://avatars.githubusercontent.com/u/80540635?v=4"
-                    sx={{ marginRight: '16px' }}
-                />
-                <Typography variant="h6">Burhan</Typography>
-
-
-                {/* Mode Theme Switch */}
-                <Box sx={{ marginLeft: 'auto' }}>
-                    <ModeSwitch />
-                </Box>
-            </Box>
+            <TopHeading />
 
             {/* Messages section */}
             <Box
@@ -181,8 +160,8 @@ const MessagesChat = () => {
                 {/* Demo Message Design */}
                 <MessageBox
                     id={1}
-                    position="left"
-                    title="Burhan"
+                    position="right"
+                    title="Asad"
                     type="text"
                     text="Hi there !"
                     date={new Date()}
@@ -206,48 +185,12 @@ const MessagesChat = () => {
             </Box>
 
             {/* Input section */}
-            <Box
-                sx={{
-                    padding: '8px 16px',
-                    borderTop: `1px solid ${themeClass === 'dark-theme' ? '#444' : '#ddd'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    background: themeClass === 'dark-theme' ? '#2a2a2a' : '#fff',
-                }}
-            >
-                {/* Desktop Refresh Button */}
-                <IconButton
-                    onClick={refreshChatList}
-                    disabled={isRefreshing} // Disable while refreshing
-                    color="primary"
-                    aria-label="refresh"
-                >
-                    <RefreshIcon />
-                </IconButton>
-
-                {/* Message Input */}
-                <InputBase
-                    placeholder="Type your message..."
-                    fullWidth
-                    multiline
-                    sx={{
-                        flex: 1,
-                        marginRight: '8px',
-                        padding: '8px',
-                        borderRadius: '8px',
-                        background: themeClass === 'dark-theme' ? '#333' : '#f0f0f0',
-                    }}
-                />
-
-                {/* Send Button */}
-                <IconButton
-                    color="primary"
-                    onClick={() => alert('Sending...')}
-                    sx={{ padding: '8px' }}
-                >
-                    <SendIcon />
-                </IconButton>
-            </Box>
+            <MessageSendInput
+                handleInput={() => alert('Typing...')}
+                handleSendMessage={() => alert('Sending...')}
+                refreshChatList={refreshChatList}
+                isRefreshing={isRefreshing}
+            />
         </Paper>
     )
 }
