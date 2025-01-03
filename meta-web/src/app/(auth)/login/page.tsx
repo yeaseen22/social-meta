@@ -1,7 +1,9 @@
-const page = () => {
+import Login from './Login';
+
+const LoginPage = () => {
   return (
-    <div>page - register</div>
+    <Login />
   )
 }
 
-export default page
+export default LoginPage;

@@ -1,0 +1,192 @@
+.loginContainer {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to right, #fff, #f8f9fa);
+    background:
+            url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover
+                no-repeat,
+            #1976d2;
+
+    @media (max-width: 768px) {
+        flex-direction: column; /* Stack sections vertically on mobile */
+    }
+
+    .leftSection {
+        flex: 1; /* 50% width for desktop */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+
+        // https://i.gifer.com/YAaa.gif
+        // https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif
+        // https://i.gifer.com/Y1WA.gif
+        // https://static.wixstatic.com/media/bb1bd6_686e292a9ff740d39c4e60479dcdf319~mv2.gif
+        // background:
+        //     url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover
+        //         no-repeat,
+        //     #1976d2;
+
+        @media (max-width: 768px) {
+            display: none; /* Hide left section on mobile */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .animatedText {
+            position: relative;
+            z-index: 2; /* Place text above overlay */
+            overflow: hidden;
+            height: 120px;
+            text-align: center;
+            background: #0000008f;
+            border-radius: 5px;
+
+            .text {
+                font-size: 2.5rem;
+                font-weight: bold;
+                animation: slide 6s ease-in-out infinite;
+
+                @media (max-width: 768px) {
+                    font-size: 1.5rem;
+                    animation: none;
+                }
+            }
+
+            @keyframes slide {
+                0%,
+                33% {
+                    transform: translateY(0);
+                }
+                66% {
+                    transform: translateY(-40px);
+                }
+                100% {
+                    transform: translateY(-80px);
+                }
+            }
+        }
+    }
+
+    .rightSection {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+
+        @media (max-width: 768px) {
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .formBox {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            @media (max-width: 768px) {
+                padding: 1.5rem;
+            }
+
+            .title {
+                text-align: center;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                color: #333;
+
+                @media (max-width: 768px) {
+                    font-size: 1.2rem;
+                }
+            }
+
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 1rem 0;
+
+                @media (max-width: 768px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+
+                    .forgotPassword {
+                        align-self: flex-end;
+                        margin-top: 0.5rem;
+                    }
+                }
+            }
+
+            .loginButton {
+                background-color: #1976d2;
+                color: white;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.3s ease;
+
+                &:hover {
+                    background-color: #115293;
+                    transform: translateY(-3px);
+                }
+            }
+
+            .socialButton {
+                border-color: #1976d2;
+                color: #1976d2;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.3s ease;
+
+                &:hover {
+                    background-color: rgba(25, 118, 210, 0.1);
+                    transform: translateY(-3px);
+                }
+            }
+
+            .textField {
+                margin-bottom: 1rem;
+                .MuiInput-underline:after {
+                    border-bottom-color: #1976d2;
+                }
+            }
+
+            .divider {
+                margin: 2rem 0;
+                color: #aaa;
+
+                @media (max-width: 768px) {
+                    margin: 1.5rem 0;
+                }
+            }
+
+            .forgotPassword {
+                color: #1976d2;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

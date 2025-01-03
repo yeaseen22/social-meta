@@ -1,0 +1,137 @@
+.container {
+    display: flex;
+    height: 100vh;
+    background: url("https://static.wixstatic.com/media/bb1bd6_686e292a9ff740d39c4e60479dcdf319~mv2.gif") center center / cover no-repeat,  
+        linear-gradient(to bottom right, #f5f5f5, #eaeaea);
+    //  linear-gradient(to bottom right, #f5f5f5, #eaeaea);
+    padding: 1rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column; /* Stack sections vertically */
+        height: auto;
+        padding: 2rem 1rem;
+    }
+
+    .leftSection {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+
+        @media (max-width: 768px) {
+            padding: 1.5rem;
+            width: 100%;
+        }
+
+        .formWrapper {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            @media (max-width: 768px) {
+                padding: 1.5rem 1rem;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .step {
+                margin-top: 2rem;
+
+                .MuiTextField-root,
+                .MuiFormControl-root {
+                    margin-bottom: 1rem;
+
+                    @media (max-width: 768px) {
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+
+            .actions {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 2rem;
+
+                @media (max-width: 768px) {
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    button {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    .rightSection {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // background: url("https://static.wixstatic.com/media/bb1bd6_686e292a9ff740d39c4e60479dcdf319~mv2.gif") center center / cover no-repeat;
+        color: white;
+        position: relative;
+        overflow: hidden;
+
+        @media (max-width: 768px) {
+            height: auto;
+            padding: 2rem 0;
+            background-size: cover;
+            justify-content: flex-start; /* Align left for mobile */
+            align-items: center;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .animatedText {
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            height: 120px;
+            text-align: center;
+            background: #0000008f;
+            border-radius: 5px;
+
+            @media (max-width: 768px) {
+                text-align: left;
+                height: auto;
+            }
+
+            .text {
+                font-size: 2rem;
+                font-weight: bold;
+                animation: slide 6s ease-in-out infinite;
+
+                @media (max-width: 768px) {
+                    font-size: 1.5rem;
+                    animation: none;
+                }
+            }
+
+            @keyframes slide {
+                0%,
+                33% {
+                    transform: translateY(0);
+                }
+                66% {
+                    transform: translateY(-40px);
+                }
+                100% {
+                    transform: translateY(-80px);
+                }
+            }
+        }
+    }
+}

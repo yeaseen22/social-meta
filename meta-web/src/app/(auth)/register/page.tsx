@@ -1,6 +1,8 @@
+import Register from './Register';
+
 const page = () => {
   return (
-    <div>page register</div>
+    <Register />
   )
 }
 
