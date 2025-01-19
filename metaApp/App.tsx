@@ -1,9 +1,9 @@
 import React from 'react';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {TouchableOpacity} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import {
   ChatScreen,
   LoginScreen,
@@ -15,7 +15,7 @@ import {
   SplashScreen,
   UploadProfileScreen,
 } from './src/screens';
-import {Tabs} from './src/navigations';
+import { Tabs } from './src/navigations';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 const Stack = createNativeStackNavigator();
@@ -28,7 +28,7 @@ const App = () => {
    */
   const getHeaderTitle = (route: any) => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    const titleMap: {[key: string]: string} = {
+    const titleMap: { [key: string]: string } = {
       Home: 'Home',
       Profile: 'Profile',
       Explore: 'Explore',
@@ -96,9 +96,9 @@ const App = () => {
           <Stack.Screen
             name="Tabs"
             component={Tabs}
-            options={({route, navigation}: any) => {
+            options={({ route, navigation }: any) => {
               const focusedRouteName =
-                getFocusedRouteNameFromRoute(route) ?? 'Home'; 
+                getFocusedRouteNameFromRoute(route) ?? 'Home';
 
               return {
                 headerShown: true,
@@ -111,10 +111,10 @@ const App = () => {
                         name="chat"
                         size={24}
                         color="#A4C400"
-                        style={{marginRight: 15}}
+                        style={{ marginRight: 15 }}
                       />
                     </TouchableOpacity>
-                  ) : null, 
+                  ) : null,
               };
             }}
           />
