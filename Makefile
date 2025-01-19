@@ -9,3 +9,10 @@ down:
 
 build:
 	docker-compose build
+
+# Database Mangement
+up-db:
+	docker-compose up mongodb
+
+down-db:
+	docker-compose down mongodb

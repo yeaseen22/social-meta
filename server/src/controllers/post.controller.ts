@@ -1,33 +1,58 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import Post from "../models/Post";
 import { Types } from "mongoose";
+import { LikeService } from '../services';
 
 class PostController {
+  private readonly likeService: LikeService;
+
+  constructor() {
+    this.likeService = new LikeService();
+  }
+
+  /**
+   * GET POST LIKES CONTROLLER
+   * @param req 
+   * @param res 
+   */
+  public async getPostLikes(req: Request, res: Response): Promise<any> {
+    const postId = req.params.postId;
+
+    try {
+      const likes = await this.likeService.getPostLikes(postId);
+      if (!likes) throw new Error('Failed to fetch likes');
+      res.status(200).json(likes);
+
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Failed to fetch likes' });
+    }
+  }
+
   /**
    * LIKE POST CONTROLLER
    * @param req
    * @param res
    */
-  public async likePost(req: Request, res: Response) {
-    const postId = req.query.postId;
-    const likes = req.query.likes;
-    const post = new Post(req.body);
+  public async likePost(req: Request, res: Response): Promise<any> {
+    const postId: string = req.body?.postId;
+    const userIdObj: Types.ObjectId = (req as any).user?._id || req.body?.userId;
+    const userId: string = userIdObj?.toString();
 
-    // Adding like...
-    post.likes = likes ? parseInt(String(likes), 10) : 0;
+    if (!userId || !postId) {
+      res.status(400).json({ success: false, message: "Invalid request" });
+    }
 
     try {
-      const docs = await Post.findByIdAndUpdate({ _id: postId }, post, {
-        new: true,
-      });
-      res.status(200).json({
-        success: true,
-        likes: docs ? docs.likes : 0,
-      });
-    } catch (err) {
-      res.status(400).json({
+      const likeOrDislike = await this.likeService.toggleLike(userId, postId);
+      if (!likeOrDislike) throw new Error('Failed to toggle like');
+      res.status(200).send(likeOrDislike);
+
+    } catch (err: any) {
+      console.error('[LikePost] Error occurred:', err);
+      res.status(500).json({
         success: false,
-        err,
+        message: "An unexpected error occurred while toggling like.",
+        error: err?.message ?? err,
       });
     }
   }
@@ -48,7 +73,7 @@ class PostController {
 
       res.status(200).json({
         success: true,
-        likes: post.likes,
+        likes_count: post.likes_count,
       });
     } catch (err) {
       res.json({ success: false, error: err });
@@ -61,7 +86,7 @@ class PostController {
    * @param res
    * @returns
    */
-  public async readPost(req: Request | any, res: Response | any) {
+  public async readPost(req: Request | any, res: Response | any, next: NextFunction) {
     const postId = req.query.postId;
 
     // find Post by PostId.
@@ -71,27 +96,28 @@ class PostController {
           "user",
           "firstname lastname profilePhoto title themeMode colorMode email"
         )
-        .populate({
-          path: "comments",
-          options: { sort: { createdAt: -1 } },
-          populate: {
-            path: "user",
-            model: "User",
-            select:
-              "firstname lastname profilePhoto title themeMode colorMode email",
-          },
-        })
+        // .populate({
+        //   path: "comments",
+        //   options: { sort: { createdAt: -1 } },
+        //   populate: {
+        //     path: "user",
+        //     model: "User",
+        //     select:
+        //       "firstname lastname profilePhoto title themeMode colorMode email",
+        //   },
+        // })
         .exec();
 
-      if (!post)
-        return res.json({ success: false, message: "Post not found!" });
+      if (!post) throw new Error("Post not found!");
 
       res.status(200).json({
         success: true,
         post,
       });
-    } catch (err) {
-      res.json({ success: false, err });
+
+    } catch (error) {
+      console.error(`Error in readPost controller: ${error}`);
+      next(error);
     }
   }
 
@@ -115,15 +141,15 @@ class PostController {
           select: "firstname lastname profilePhoto email title",
           match: { _id: { $exists: true } },
         })
-        .populate({
-          path: "comments",
-          populate: {
-            path: "user",
-            model: "User",
-            select: "firstname lastname profilePhoto email title",
-            match: { _id: { $exists: true } },
-          },
-        })
+        // .populate({
+        //   path: "comments",
+        //   populate: {
+        //     path: "user",
+        //     model: "User",
+        //     select: "firstname lastname profilePhoto email title",
+        //     match: { _id: { $exists: true } },
+        //   },
+        // })
         .sort([["createdAt", -1]])
         .skip(skip)
         .limit(limitNumber);

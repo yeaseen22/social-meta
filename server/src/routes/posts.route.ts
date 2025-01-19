@@ -34,8 +34,19 @@ router.get('/user_posts', postController.specificUserPosts);
 
 /**
  * ---- Make Like a Post ----
+ * Binded method to avoid 'this' keyword error.
+ * The Error was for 'this' keyword. which is about lost context of 'this' keyword.
+ * This error came when we are using callback function as Express routes and controller.
  */
-router.post('/post_like', postController.likePost);
+router.post('/post_like', postController.likePost.bind(postController));
+
+/**
+ * ---- Get Post Likes ----
+ * Binded method to avoid 'this' keyword error.
+ * The Error was for 'this' keyword. which is about lost context of 'this' keyword.
+ * This error came when we are using callback function as Express routes and controller.
+ */
+router.get('/:postId/likes', postController.getPostLikes.bind(postController));
 
 /**
  * ----- Create new Post ----

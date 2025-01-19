@@ -1,8 +1,8 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { emailChecker, validationReq } from '../middlewares';
-import { UserSchema } from '../lib';
+// import { AuthValidation } from '@/utils/validation';
+import { AuthValidation } from '../utils/validation';
 import { AuthController } from '../controllers';
-import { User } from '../models';
 
 const router = express.Router();
 
@@ -12,12 +12,12 @@ const authController = new AuthController();
 /**
  * ---- Login User ----
  */
-router.post('/login', validationReq(UserSchema.loginSchema), authController.login);
+router.post('/login', validationReq(AuthValidation.loginUser), authController.login);
 
 /**
  * ---- Register User ----
  */
-router.post('/register', emailChecker, validationReq(UserSchema.registrationSchema), authController.register);
+router.post('/register', emailChecker, validationReq(AuthValidation.registerUser), authController.register);
 
 /**
  * ---- Forgot Password ----

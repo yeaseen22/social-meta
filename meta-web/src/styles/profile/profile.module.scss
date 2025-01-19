@@ -1,0 +1,69 @@
+.profileContainer {
+    margin-top: 2rem;
+
+    .coverCard {
+        position: relative;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: visible; // Allow the avatar to extend outside the card
+
+        .coverImage {
+            border-radius: 16px 16px 0 0;
+            object-fit: cover;
+        }
+
+        .avatarSection {
+            position: absolute;
+            top: 150px; // Adjust the `top` to bring the avatar fully inside the container
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+
+            .avatar {
+                width: 150px; // Circle size
+                height: 150px;
+                border: 4px solid white; // Ensure a white border to match background
+                border-radius: 50%; // Forcefully make it a circle
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                // background-color: white; // In case the image fails to load
+                z-index: 10; // Bring it to the top layer
+            }
+        }
+    }
+
+    .infoCard {
+        margin-top: 4rem;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .name {
+            font-weight: bold;
+            // color: #333;
+        }
+
+        .bio {
+            margin-top: 0.5rem;
+            font-style: italic;
+            // color: #555;
+        }
+    }
+
+    .statsCard {
+        margin-top: 2rem;
+        padding: 1rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .MuiTypography-h6 {
+            font-weight: bold;
+        }
+    }
+
+    .tweetsTitle {
+        margin-top: 1rem;
+        font-weight: bold;
+        // color: #333;
+    }
+}

@@ -1,0 +1,45 @@
+.notificationContainer {
+    margin-top: 2rem;
+
+    .heading {
+        font-weight: bold;
+        // color: #333;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .notificationList {
+        // background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+    }
+
+    .notificationItem {
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        .MuiAvatar-root {
+            background-color: #1e88e5;
+            // color: white;
+        }
+
+        .MuiTypography-root {
+            font-weight: 500;
+        }
+    }
+
+    // .read {
+    //     // background-color: #f4f4f4;
+
+    //     &:hover {
+    //         border: 1px solid #1e88e5;
+    //         background-color: #1e88e5;
+    //     }
+
+    //     .MuiTypography-root {
+    //         color: #777;
+    //     }
+    // }
+}

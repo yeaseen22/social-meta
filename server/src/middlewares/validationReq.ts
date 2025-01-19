@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { z, ZodError } from 'zod';
+import { ZodError } from 'zod';
+// import { ValidatorAdapter } from '@/lib';
+import { ValidatorAdapter } from '../lib/shared';
 import { StatusCodes } from 'http-status-codes';
 
 /**
@@ -7,10 +9,10 @@ import { StatusCodes } from 'http-status-codes';
  * @param schema 
  * @returns 
  */
-function validationReq(schema: z.ZodObject<any, any>) {
+function validationReq(schema: any) {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
-            schema.parse(req.body);
+            req.body = ValidatorAdapter.validate(schema, req.body);
             next();
          
         } catch (error) {

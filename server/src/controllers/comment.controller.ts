@@ -1,21 +1,35 @@
-import { Request, Response } from 'express';
-import Comment from '../models/Comment';
-import Post from '../models/Post';
+import { NextFunction, Request, Response } from 'express';
+import { CommentService } from '../services';
 
 class CommentController {
+    private readonly commentService: CommentService;
+
+    constructor() {
+        this.commentService = new CommentService();
+    }
+
     /**
-     * ---- Read Comments ----
+     * ---- Get/Read Comments ----
      * @param {Request} req 
      * @param {Response} res 
      */
-    public async readComment(req: Request, res: Response) {
-        const postId = req.query.postId;
+    public async getComments(req: Request, res: Response, next: NextFunction) {
+        const postId: string = req.params.postId;
+        const { page, limit } = req.query;
+
+        if (!postId) {
+            throw new Error('Post ID is required');
+        }
 
         try {
-            const comments = await Comment.find({ postId }).sort([['createdAt', -1]])
-                .populate('user', '-_id -password -createdAt -updatedAt -__v -token');
+            // Fetch comments from the service
+            const comments = await this.commentService.fetchComments(postId, Number(page), Number(limit));
+            if (!comments || comments.length === 0) {
+                res.status(404).json({ success: false, message: 'No comments found' });
+            }
 
             res.status(200).json(comments);
+
         } catch (error) {
             res.status(400).json(error);
         }
@@ -27,25 +41,22 @@ class CommentController {
      * @param {Response} res 
      */
     public async createComment(req: Request, res: Response) {
-        const comment = new Comment(req.body);
-        const postId = req.body.postId;
-        const currentLoggedInUserId = (req as any).user._id;
+        const { postId, comment } = req.body;
+        const userId = (req as any).user._id;
 
-        comment.user = currentLoggedInUserId;
-        comment.post = postId;
+        if (!postId || !comment) {
+            throw new Error('Post ID and comment are required');
+        }
 
         try {
-            await Post.updateOne({ _id: postId }, {
-                $push: {
-                    comments: comment._id
-                }
-            }, { new: true });
+            // Create comment in the service
+            const savedComment = await this.commentService.createComment(userId, postId, comment);
+            if (!savedComment) {
+                res.status(400).json({ success: false, message: 'Failed to create comment' });
+            }
 
-            const savedComment = await comment.save();
-            res.status(200).json({
-                success: true,
-                comment: savedComment
-            });
+            res.status(200).json(savedComment);
+
         } catch (error) {
             res.status(400).json({ success: false, error });
         }
@@ -57,15 +68,21 @@ class CommentController {
      * @param {Response} res 
      */
     public async updateComment(req: Request, res: Response) {
-        const id = req.body._id;
-        const comment = new Comment(req.body);
+        const { commentId, comment } = req.body;
+
+        if (!commentId || !comment) {
+            throw new Error('Comment ID and comment are required');
+        }
 
         try {
-            const updatedComment = await Comment.findByIdAndUpdate({ _id: id }, comment, { new: true });
-            res.status(200).json({
-                success: true,
-                comment: updatedComment
-            });
+            // Update comment in the service
+            const updatedComment = await this.commentService.updateComment(commentId, comment);
+            if (!updatedComment) {
+                res.status(400).json({ message: 'Failed to update comment' });
+            }
+
+            res.status(200).json(updatedComment);
+
         } catch (error) {
             res.status(400).json({ success: false, error });
         }
@@ -77,11 +94,21 @@ class CommentController {
      * @param {Response} res 
      */
     public async deleteComment(req: Request, res: Response) {
-        const id = req.query.id;
+        const commentId: string = req.params.commentId;
+
+        if (!commentId) {
+            throw new Error('Comment ID is required');
+        }
 
         try {
-            await Comment.findByIdAndDelete(id);
-            res.status(200).json({ deleted: true });
+            // Delete comment in the service
+            const deletedComment = await this.commentService.deleteComment(commentId);
+            if (!deletedComment) {
+                res.status(400).json({ message: 'Failed to delete comment' });
+            }
+
+            res.status(200).json(deletedComment);
+
         } catch (error) {
             res.status(400).json({ deleted: false, error });
         }

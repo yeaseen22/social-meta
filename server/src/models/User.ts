@@ -1,4 +1,3 @@
-// User Model..
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
@@ -19,8 +18,9 @@ const userSchema = new Schema({
     themeMode: { type: String, required: false, default: 'lightMode' },
     colorMode: { type: String, required: false, default: 'royalblue' },
     token: { type: String },
-    followings: { type: Array },
-    followers: { type: Array }
+    followings_count: { type: Number, required: false, default: 0 },
+    followers_count: { type: Number, required: false, default: 0 },
+    refreshToken: { type: String },
 }, {
     timestamps: true
 });
