@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
 import { Post } from '../models';
-import { Types } from 'mongoose';
 
 class PostService {
     private readonly postModelRepository: typeof Post;
@@ -16,6 +14,7 @@ class PostService {
      * @param postId 
      * @returns 
      */
+    // region Read Post
     public async readPost(postId: string): Promise<any> {
         try {
             const post = await this.postModelRepository.find({ _id: postId })
@@ -37,6 +36,7 @@ class PostService {
      * @param page 
      * @param limit 
      */
+    // region Read All Posts
     public async readAllPosts(page: number = 1, limit: number = 5): Promise<any> {
         try {
             const posts = await this.postModelRepository.find({})
@@ -72,6 +72,79 @@ class PostService {
         } catch (error) {
             console.error('Failed to read all posts:', error);
             throw new Error('Failed to read all posts');
+        }
+    }
+
+    /**
+     * READ CURRENT USER POSTS SERVICE
+     * This is for reading all posts of the current user
+     * @param userId 
+     */
+    // region Current User Posts
+    public async currentUserPosts(userId: string): Promise<any> {
+        try {
+
+        } catch (error) {
+            console.error('Failed to read current user posts:', error);
+            throw new Error('Failed to read current user posts');
+        }
+    }
+
+    /**
+     * READ SPECIFIC USER POSTS SERVICE
+     * This is for reading all posts of a specific user
+     * @param userId 
+     */
+    // region Specific User Posts
+    public async specificUserPosts(userId: string): Promise<any> {
+        try {
+
+        } catch (error) {
+            console.error('Failed to read specific user posts:', error);
+            throw new Error('Failed to read specific user posts');
+        }
+    }
+
+    /**
+     * CREATE POST SERVICE
+     * This is for creating a new post
+     * @param post 
+     */
+    //  region Create Post
+    public async createPost(post: any): Promise<any> {
+        try {
+        } catch (error) {
+            console.error('Failed to create post:', error);
+            throw new Error('Failed to create post');
+        }
+    }
+
+    /**
+     * UPDATE POST SERVICE
+     * This is for updating a post
+     * @param postId 
+     * @param updatedPost 
+     */
+    // region Update Post
+    public async updatePost(postId: string, updatedPost: any): Promise<any> {
+        try {
+        } catch (error) {
+            console.error('Failed to update post:', error);
+            throw new Error('Failed to update post');
+        }
+    }
+
+    /**
+     * DELETE POST SERVICE
+     * This is for deleting a post
+     * @param postId 
+     */
+    // region Delete Post
+    public async deletePost(postId: string): Promise<any> {
+        try {
+        } catch (error) {
+            console.error('Failed to delete post:', error);
+            throw new Error('Failed to delete post');
         }
     }
 }
