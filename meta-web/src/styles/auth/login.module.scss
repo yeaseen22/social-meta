@@ -2,10 +2,10 @@
     display: flex;
     height: 100vh;
     background: linear-gradient(to right, #fff, #f8f9fa);
-    background:
-            url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover
-                no-repeat,
-            #1976d2;
+    // background:
+    //         url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover
+    //             no-repeat,
+    //         #1976d2;
 
     @media (max-width: 768px) {
         flex-direction: column; /* Stack sections vertically on mobile */
@@ -28,6 +28,12 @@
         //     url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover
         //         no-repeat,
         //     #1976d2;
+
+        background:
+            url("https://cheeseeffects.sg/wp-content/uploads/2023/10/Pedder-On-Scott-gif.gif") center center / cover no-repeat, #1976d2;
+        border-radius: 10px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
 
         @media (max-width: 768px) {
             display: none; /* Hide left section on mobile */

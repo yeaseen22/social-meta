@@ -1,8 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../models';
-import { errorResponse } from '../lib';
+import { errorResponse } from '../lib/common';
+import { AuthService } from '../services';
+
 
 class AuthController {
+    private readonly authService: AuthService;
+
+    constructor(authService: AuthService = new AuthService()) {
+        this.authService = new AuthService();
+    }
+
     /**
      * ---- Register Controller ----
      * @param {Request} req 
@@ -28,7 +36,26 @@ class AuthController {
      * ---- Login Controller ----
      * @param {Request} req 
      * @param {Response} res 
-     * @param {NextFunction} _next 
+     * @param {NextFunction} next
+     */
+    public loginCon = async (req: Request, res: Response, next: NextFunction) => {
+        const reqBody = req.body;
+
+        try {
+            const authLogin = await this.authService.loginUser({ email: reqBody.email, password: reqBody.password, deviceId: reqBody.deviceId });
+            if (!authLogin.success) return res.status(400).json(authLogin);
+            res.status(200).json(authLogin);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * ---- Login Controller ----
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
      */
     public async login(req: Request, res: Response | any, next: NextFunction) {
         const loginEmail = req.body.email;

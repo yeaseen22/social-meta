@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import dotenv from 'dotenv';
 
 // Load environment variables from `.env` file
@@ -23,4 +23,4 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-export default cloudinary;
+export { cloudinary, UploadApiResponse };

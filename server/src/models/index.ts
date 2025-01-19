@@ -4,3 +4,4 @@ export { default as Message } from './Message';
 export { default as Conversation } from './Conversation';
 export { default as Comment } from './Comment';
 export { default as Like } from './Like';
+export { default as Session } from './Session';

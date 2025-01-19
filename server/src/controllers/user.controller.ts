@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../models";
-import { uploadFile } from "../lib";
+import { BlobStorageUtils } from "../lib/shared";
 
 class UserController {
     /**
@@ -57,7 +57,7 @@ class UserController {
                 isUpdate: true,
                 user: updatedUser,
             });
-            
+
         } catch (error: any) {
             res.status(500).json({
                 isUpdate: false,
@@ -81,7 +81,7 @@ class UserController {
                 { themeMode: themeMode },
                 { new: true }
             );
-            
+
             if (!updatedUser)
                 return res
                     .status(404)
@@ -239,15 +239,15 @@ class UserController {
             }
 
             // Upload file to Cloudinary
-            const uploadResult = await uploadFile(
-                file.path,
+            const uploaded_secure_url = await BlobStorageUtils.uploadImage(
+                file,
                 "profile_uploads"
             );
 
             // Update user's profile picture
             const updatedUser = await User.findByIdAndUpdate(
                 userId,
-                { profilePhoto: uploadResult.secure_url },
+                { profilePhoto: uploaded_secure_url },
                 { new: true, select: "firstname lastname email profilePhoto" }
             );
 
@@ -266,10 +266,9 @@ class UserController {
         } catch (error: unknown) {
             if (error instanceof Error) {
                 res.status(500).json({ success: false, message: error.message });
+                
             } else {
-                res
-                    .status(500)
-                    .json({ success: false, message: "An unknown error occurred" });
+                res.status(500).json({ success: false, message: "An unknown error occurred" });
             }
         }
     }
@@ -293,11 +292,11 @@ class UserController {
                     .json({ success: false, message: "No file uploaded" });
             }
 
-            const uploadResult = await uploadFile(file.path, "cover_uploads");
+            const uploaded_secure_url = await BlobStorageUtils.uploadImage(file, "cover_uploads");
 
             const updatedUser = await User.findByIdAndUpdate(
                 userId,
-                { coverPhoto: uploadResult.secure_url },
+                { coverPhoto: uploaded_secure_url },
                 { new: true, select: "firstname lastname email coverPhoto" }
             );
 
@@ -316,10 +315,9 @@ class UserController {
         } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({ success: false, message: error.message });
+
             } else {
-                res
-                    .status(500)
-                    .json({ success: false, message: "An unknown error occurred" });
+                res.status(500).json({ success: false, message: "An unknown error occurred" });
             }
         }
     }
