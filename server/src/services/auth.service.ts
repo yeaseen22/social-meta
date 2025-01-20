@@ -117,7 +117,7 @@ class AuthService {
     // region User Logout
     public async logoutUser(refreshToken: string): Promise<any> {
         try {
-            await this.sessionService.logoutByRefreshToken(refreshToken);
+            return await this.sessionService.logoutByRefreshToken(refreshToken);
 
         } catch (error) {
             console.error(`Error occured while do logout: ${error}`);

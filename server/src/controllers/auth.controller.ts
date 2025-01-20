@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../models';
-import { errorResponse } from '../lib/common';
 import { AuthService } from '../services';
 import requestIp from 'request-ip';
 
@@ -9,7 +7,7 @@ class AuthController {
     private readonly authService: AuthService;
 
     constructor(authService: AuthService = new AuthService()) {
-        this.authService = new AuthService();
+        this.authService = authService;
     }
 
     /**
@@ -18,16 +16,12 @@ class AuthController {
      * @param {Response} res 
      * @param {NextFunction} _next 
      */
-    public async register(req: Request, res: Response, _next: NextFunction) {
-        const user = new User(req.body);
-
+    public register = async (req: Request, res: Response, _next: NextFunction) => {
         try {
-            const docs = await user.save();
-            res.status(200).json({
-                success: true,
-                message: 'User created successfully.',
-                user: docs,
-            });
+            const userRegister = await this.authService.register(req.body);
+            if (!userRegister.success) res.status(400).json(userRegister);
+            res.status(200).json(userRegister);
+
         } catch (error) {
             res.json({ success: false, error });
         }
@@ -39,7 +33,7 @@ class AuthController {
      * @param {Response} res 
      * @param {NextFunction} next
      */
-    public loginCon = async (req: Request, res: Response, next: NextFunction) => {
+    public login = async (req: Request, res: Response | any, next: NextFunction) => {
         const reqBody = req.body;
         const ipAddress = requestIp.getClientIp(req) || req.ip;
         const userAgent = req.headers['user-agent'];
@@ -60,39 +54,6 @@ class AuthController {
     }
 
     /**
-     * ---- Login Controller ----
-     * @param {Request} req
-     * @param {Response} res
-     * @param {NextFunction} next
-     */
-    public async login(req: Request, res: Response | any, next: NextFunction) {
-        const loginEmail = req.body.email;
-        const loginPassword = req.body.password;
-
-        try {
-            const user = await User.findOne({ email: loginEmail });
-            console.log('user exist', user)
-
-            if (!user) return errorResponse({ status: 404, message: 'User not found!', isAuth: false }, res);
-
-            // compare password with registered user..
-            const isMatch = await (user as any).comparePassword(loginPassword);
-            if (!isMatch) return errorResponse({ status: 401, message: 'Auth failed! wrong password!', isAuth: false }, res);
-
-            // generate token when user login with fine..
-            const token = await (user as any).generateToken();
-            res.cookie('auth', token).json({
-                isAuth: true,
-                id: user._id,
-                email: user.email
-            });
-
-        } catch (err: unknown) {
-            next(err);
-        }
-    }
-
-    /**
      * ---- Forgot Password Controller ----
      * @param {Request} req 
      * @param {Response} res 
@@ -106,15 +67,20 @@ class AuthController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    public async logout(req: Request, res: Response) {
+    public logout = async (req: Request | any, res: Response | any, next: NextFunction) => {
         try {
-            await (req as any).user.deleteToken();
+            const requestUser = (req as any).user;
+            const logoutUser = await this.authService.logoutUser(requestUser.refreshToken);
+            if (!logoutUser.success) return res.status(400).json({ success: false, msg: 'Can not logout!' });
+
             res.status(200).json({
                 isAuth: false,
+                success: true,
                 msg: 'Logged-Out, session deleted!'
             });
-        } catch (err) {
-            res.status(400).send(err);
+
+        } catch (error) {
+            next(error);
         }
     }
 }

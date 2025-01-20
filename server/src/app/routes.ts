@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { authRoutes, userRoutes, postRoutes, commentRoutes, conversationRoutes, messageRoutes } from '../routes';
-import { auth as authenticate } from '../middlewares';
+import { AuthMiddleware } from '../middlewares';
 
 const router: Router = Router();
 
@@ -9,12 +9,12 @@ const router: Router = Router();
  * Now moved API Rutes from /api/v1/ to /api/
  */
 router.use('/api/v1/auth', authRoutes);
-router.use('/api/v1/user', authenticate, userRoutes);
-router.use('/api/v1/post', authenticate, postRoutes);
-router.use('/api/v1/comment', authenticate, commentRoutes);
+router.use('/api/v1/user', AuthMiddleware.verifyUser, userRoutes);
+router.use('/api/v1/post', AuthMiddleware.verifyUser, postRoutes);
+router.use('/api/v1/comment', AuthMiddleware.verifyUser, commentRoutes);
 
-router.use('/api', authenticate, conversationRoutes);
-router.use('/api', authenticate, messageRoutes);
+router.use('/api', AuthMiddleware.verifyUser, conversationRoutes);
+router.use('/api', AuthMiddleware.verifyUser, messageRoutes);
 
 /**
  * ---- Health Check for the application here ----
