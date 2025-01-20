@@ -33,8 +33,8 @@ class PostService {
     /**
      * READ ALL POSTS SERVICE
      * This is for reading all posts
-     * @param page 
-     * @param limit 
+     * @param page = 1 (Default)
+     * @param limit = 5 (Default)
      */
     // region Read All Posts
     public async readAllPosts(page: number = 1, limit: number = 5): Promise<any> {
@@ -83,6 +83,26 @@ class PostService {
     // region Current User Posts
     public async currentUserPosts(userId: string): Promise<any> {
         try {
+            const posts = await this.postModelRepository.find({ ownerId: userId })
+                .populate({
+                    path: "comments",
+                    model: "Comment",
+                    options: {
+                        sort: {
+                            createdAt: -1,
+                        },
+                    },
+                    populate: {
+                        path: "user",
+                        model: "User",
+                        select:
+                            "firstname lastname profilePhoto title themeMode colorMode email",
+                    },
+                })
+                .sort([["createdAt", -1]])
+                .exec();
+
+            return posts;
 
         } catch (error) {
             console.error('Failed to read current user posts:', error);
@@ -98,6 +118,11 @@ class PostService {
     // region Specific User Posts
     public async specificUserPosts(userId: string): Promise<any> {
         try {
+            const posts = await Post.find({ ownerId: userId })
+                .populate("comments")
+                .exec();
+
+            return posts;
 
         } catch (error) {
             console.error('Failed to read specific user posts:', error);
@@ -113,6 +138,9 @@ class PostService {
     //  region Create Post
     public async createPost(post: any): Promise<any> {
         try {
+            const newPost = await this.postModelRepository.create(post);
+            return newPost;
+
         } catch (error) {
             console.error('Failed to create post:', error);
             throw new Error('Failed to create post');
@@ -126,8 +154,12 @@ class PostService {
      * @param updatedPost 
      */
     // region Update Post
-    public async updatePost(postId: string, updatedPost: any): Promise<any> {
+    public async updatePost(postId: string, postData: any): Promise<any> {
         try {
+            const updatedPost = await this.postModelRepository.findByIdAndUpdate({ _id: postId }, postData, { new: true });
+            if (!updatedPost) throw new Error('Post not found!');
+            return updatedPost;
+
         } catch (error) {
             console.error('Failed to update post:', error);
             throw new Error('Failed to update post');
@@ -142,6 +174,10 @@ class PostService {
     // region Delete Post
     public async deletePost(postId: string): Promise<any> {
         try {
+            const deletedPost = await this.postModelRepository.findByIdAndDelete(postId);
+            if (!deletedPost) throw new Error('Post not found!');
+            return deletedPost;
+
         } catch (error) {
             console.error('Failed to delete post:', error);
             throw new Error('Failed to delete post');

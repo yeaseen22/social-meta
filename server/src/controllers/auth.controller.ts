@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { User } from '../models';
 import { errorResponse } from '../lib/common';
 import { AuthService } from '../services';
+import requestIp from 'request-ip';
 
 
 class AuthController {
@@ -40,9 +41,16 @@ class AuthController {
      */
     public loginCon = async (req: Request, res: Response, next: NextFunction) => {
         const reqBody = req.body;
+        const ipAddress = requestIp.getClientIp(req) || req.ip;
+        const userAgent = req.headers['user-agent'];
 
         try {
-            const authLogin = await this.authService.loginUser({ email: reqBody.email, password: reqBody.password, deviceId: reqBody.deviceId });
+            const authLogin = await this.authService.loginUser({
+                email: reqBody.email,
+                password: reqBody.password,
+                ipAddress: ipAddress || 'unknown',
+                userAgent: userAgent || 'unknown'
+            });
             if (!authLogin.success) return res.status(400).json(authLogin);
             res.status(200).json(authLogin);
 
@@ -64,8 +72,8 @@ class AuthController {
         try {
             const user = await User.findOne({ email: loginEmail });
             console.log('user exist', user)
-            
-            if (!user) return errorResponse({ status: 404, message: 'User not found!', isAuth: false}, res);
+
+            if (!user) return errorResponse({ status: 404, message: 'User not found!', isAuth: false }, res);
 
             // compare password with registered user..
             const isMatch = await (user as any).comparePassword(loginPassword);

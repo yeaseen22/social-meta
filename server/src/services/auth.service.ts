@@ -17,12 +17,24 @@ class AuthService {
     }
 
     /**
+     * Generate a unique deviceId (based on IP address and User-Agent)
+     * Use a combination of IP address, User-Agent, and Timestamp to generate a unique device ID
+     * Ensure uniqueness with timestamp
+     * Optionally hash the device ID to hide raw data
+    */
+    private generateDeviceId(ipAddress: string, userAgent: string): string {
+        const timestamp = new Date().getTime();
+        const rawDeviceId = `${ipAddress}-${userAgent}-${timestamp}`;
+        return rawDeviceId;
+    }
+
+    /**
      * USER LOGIN SERVICE
      * @param userInfo @Object - { emaiL: string, password: string }
      * @return Promise<{ any }>
      */
     // region Login Service
-    public async loginUser(userInfo: { email: string, password: string, deviceId: string }): Promise<any> {
+    public async loginUser(userInfo: { email: string, password: string, ipAddress: string, userAgent: string }): Promise<any> {
         try {
             const user = await this.userModelRepository.findOne({ email: userInfo.email });
             if (!user) return { success: false, message: 'Invalid Credentials!' };
@@ -39,8 +51,14 @@ class AuthService {
             await user.save();
 
             // Update/Create Session for the Device tracking feature..
-            const deviceId = userInfo.deviceId;
-            await this.sessionService.updateOrCreateSession({ userId: user._id, deviceId, refreshToken } as ISession);
+            const deviceId = this.generateDeviceId(userInfo.ipAddress, userInfo.userAgent);
+            await this.sessionService.updateOrCreateSession({
+                userId: user._id,
+                deviceId,
+                ipAddress: userInfo.ipAddress,
+                userAgent: userInfo.userAgent,
+                refreshToken
+            } as ISession);
 
             return {
                 success: true,

@@ -18,8 +18,16 @@ class SessionService {
         try {
             // Update/Create Session for the Device tracking feature..
             await this.sessionModelRepository.findOneAndUpdate(
-                { userId: sessionInfo.userId, deviceId: sessionInfo.deviceId },
-                { refreshToken: sessionInfo.refreshToken, lastActiveDate: new Date() },
+                { 
+                    userId: sessionInfo.userId, 
+                    deviceId: sessionInfo.deviceId, 
+                },
+                { 
+                    refreshToken: sessionInfo.refreshToken, 
+                    ipAddress: sessionInfo.ipAddress, 
+                    userAgent: sessionInfo.userAgent,
+                    lastActiveDate: new Date() 
+                },
                 { new: true, upsert: true }
             );
 

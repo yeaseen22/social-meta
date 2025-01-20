@@ -7,6 +7,8 @@ export interface ISession extends Document {
     refreshToken: string;
     loginDate?: Date;
     lastActiveDate?: Date;
+    ipAddress?: string;
+    userAgent?: string;
 }
 
 // region Session Schema
@@ -15,7 +17,9 @@ const sessionSchema: Schema<ISession> = new Schema({
     deviceId: { type: String, required: true },
     refreshToken: { type: String, required: true },
     loginDate: { type: Date, required: true, default: Date.now },
-    lastActiveDate: { type: Date, required: true, default: Date.now }
+    lastActiveDate: { type: Date, required: true, default: Date.now },
+    ipAddress: { type: String, required: false },
+    userAgent: { type: String, required: false },
 });
 
 // region Session Model

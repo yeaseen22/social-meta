@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import Post from "../models/Post";
 import { Types } from "mongoose";
-import { LikeService } from '../services';
+import { LikeService, PostService } from '../services';
 
 class PostController {
   private readonly likeService: LikeService;
+  private readonly postService: PostService;
 
   constructor() {
     this.likeService = new LikeService();
+    this.postService = new PostService();
   }
 
   /**
@@ -91,23 +93,7 @@ class PostController {
 
     // find Post by PostId.
     try {
-      const post = await Post.find({ _id: postId })
-        .populate(
-          "user",
-          "firstname lastname profilePhoto title themeMode colorMode email"
-        )
-        // .populate({
-        //   path: "comments",
-        //   options: { sort: { createdAt: -1 } },
-        //   populate: {
-        //     path: "user",
-        //     model: "User",
-        //     select:
-        //       "firstname lastname profilePhoto title themeMode colorMode email",
-        //   },
-        // })
-        .exec();
-
+      const post = await this.postService.readPost(postId);
       if (!post) throw new Error("Post not found!");
 
       res.status(200).json({
@@ -126,50 +112,20 @@ class PostController {
    * @param req
    * @param res
    */
-  public async readAllPosts(_req: Request, res: Response) {
+  public async readAllPosts(req: Request, res: Response) {
     try {
-      const { page = 1, limit = 5 } = _req.query;
+      const { page = 1, limit = 5 } = req.query;
       const pageNumber = Math.max(1, Number(page));
       const limitNumber = Math.max(1, Number(limit));
-      const skip = (pageNumber - 1) * limitNumber;
+      // const skip = (pageNumber - 1) * limitNumber;
 
       // Fetch posts with populated user, filtering out those with non-existent users
-      const posts = await Post.find({})
-        .populate({
-          path: "ownerId",
-          model: "User",
-          select: "firstname lastname profilePhoto email title",
-          match: { _id: { $exists: true } },
-        })
-        // .populate({
-        //   path: "comments",
-        //   populate: {
-        //     path: "user",
-        //     model: "User",
-        //     select: "firstname lastname profilePhoto email title",
-        //     match: { _id: { $exists: true } },
-        //   },
-        // })
-        .sort([["createdAt", -1]])
-        .skip(skip)
-        .limit(limitNumber);
-
-      // Filter out posts where `ownerId` is null (user no longer exists)
-      const filteredPosts = posts.filter((post) => post.ownerId !== null);
-
-      // Count the total number of valid posts for pagination
-      const total = filteredPosts.length;
-      const totalPages = Math.ceil(total / limitNumber);
-      const hasNextPage = pageNumber < totalPages;
+      const posts = await this.postService.readAllPosts(pageNumber, limitNumber);
+      if (!posts) res.status(400).json({ ...posts, success: false });
 
       res.status(200).json({
         success: true,
-        posts: filteredPosts,
-        total,
-        totalPages,
-        hasNextPage,
-        page: pageNumber,
-        limit: limitNumber,
+        posts,
       });
     } catch (error) {
       res.status(500).json({ success: false, error });
@@ -185,26 +141,10 @@ class PostController {
     const currentLoggedInUserId = String((req as any).user?._id);
 
     try {
-      const posts = await Post.find({ ownerId: currentLoggedInUserId })
-        .populate({
-          path: "comments",
-          model: "Comment",
-          options: {
-            sort: {
-              createdAt: -1,
-            },
-          },
-          populate: {
-            path: "user",
-            model: "User",
-            select:
-              "firstname lastname profilePhoto title themeMode colorMode email",
-          },
-        })
-        .sort([["createdAt", -1]])
-        .exec();
-
+      const posts = await this.postService.currentUserPosts(currentLoggedInUserId);
+      if (!posts?.length) res.status(400).json({ ...posts, success: false });
       res.status(200).send(posts);
+
     } catch (error) {
       res.status(400).send(error);
     }
@@ -219,10 +159,10 @@ class PostController {
     const userId = req.query.userId;
 
     try {
-      const posts = await Post.find({ ownerId: userId })
-        .populate("comments")
-        .exec();
+      const posts = await this.postService.specificUserPosts(userId as string);
+      if (!posts?.length) res.status(400).json({ ...posts, success: false });
       res.status(200).send(posts);
+
     } catch (error) {
       res.status(400).send(error);
     }
@@ -234,11 +174,14 @@ class PostController {
    * @param res
    */
   public async createPost(req: Request, res: Response) {
-    const post = new Post(req.body);
-
     const currentLoggedInUserId = String((req as any).user._id);
-    post.ownerId = currentLoggedInUserId;
-    post.user = new Types.ObjectId(currentLoggedInUserId);
+    const post = {
+      title: req.body.title,
+      description: req.body.description,
+      image: req.file?.originalname,
+      ownerId: currentLoggedInUserId,
+      user: new Types.ObjectId(currentLoggedInUserId),
+    };
 
     // if there is new post image update file to make it up..
     // and if no new update image file so don't need update extra..
@@ -247,11 +190,13 @@ class PostController {
     }
 
     try {
-      const docs = await post.save();
+      await this.postService.createPost(post);
+
       res.status(200).json({
         success: true,
-        docs,
+        message: 'Post Created',
       });
+
     } catch (error) {
       res.json({ success: false, error });
     }
@@ -264,7 +209,7 @@ class PostController {
    */
   public async updatePost(req: Request, res: Response) {
     const id = req.body._id;
-    const post = new Post(req.body);
+    const post = { ...req.body };
 
     // if there is new post image update file to make it up..
     // and if no new update image file so don't need update extra..
@@ -273,13 +218,14 @@ class PostController {
     }
 
     try {
-      const docs = await Post.findByIdAndUpdate({ _id: id }, post, {
-        new: true,
-      });
+      const docs = await this.postService.updatePost(id, post);
+      if (!docs) throw new Error("Post Can not Update!");
+
       res.status(200).json({
         success: true,
         docs,
       });
+
     } catch (err) {
       res.status(400).json({
         success: false,
@@ -297,10 +243,14 @@ class PostController {
     const id = req.query.id;
 
     try {
-      await Post.findByIdAndDelete(id);
+      const docs = await this.postService.deletePost(id as string);
+      if (!docs) throw new Error("Post Can not Delete!");
+
       res.status(200).json({
-        deleted: true,
+        success: true,
+        docs,
       });
+
     } catch (err) {
       res.status(400).json({ deleted: false, err });
     }
