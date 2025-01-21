@@ -13,9 +13,13 @@ import {
 // import GoogleIcon from '@mui/icons-material/Google';
 import loginStyles from '@/styles/auth/login.module.scss';
 import { useRouter } from 'next/navigation';
+import { useLoginMutation, setCredentials } from '@/redux/slice/auth.slice';
+import { useDispatch } from 'react-redux';
 
 export default function LoginPage() {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const [login, { isLoading }] = useLoginMutation();
     const [formValues, setFormValues] = useState({
         email: '',
         password: '',
@@ -30,8 +34,23 @@ export default function LoginPage() {
         }));
     };
 
-    const handleLogin = () => {
-        console.log('Login form submitted:', formValues);
+    /**
+     * HANDLE LOGIN ASYNC-FUNCTION
+     * This is responsible for make login connection with API Backend
+     * @param event
+     */
+    const handleLogin = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        try {
+            const authLoginResponse = await login({ email: formValues.email, password: formValues.password }).unwrap();
+            console.log('AUTH LOGIN RESPONSE - ', authLoginResponse);
+            dispatch(setCredentials({ user: null, token: authLoginResponse.accessToken }));
+            router.push('/');
+
+        } catch (error) {
+            console.error('Failed to log in: ', error);
+        }
     };
 
     return (

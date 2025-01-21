@@ -1,14 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { apiSlice } from './slice/apiSlice';
+import { authAPISlice, authSliceReducer } from './slice';
+// @ts-ignore
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+
+// Persistance Configurations
+const persistConfig = {
+    key: 'root',
+    storage,
+    whitelist: ['auth']
+}
+
+const rootReducer = combineReducers({
+    auth: authSliceReducer,
+    [authAPISlice.reducerPath]: authAPISlice.reducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // region Store
 export const store = configureStore({
-    reducer: {
-         [apiSlice.reducerPath]: apiSlice.reducer,
-    },
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(apiSlice.middleware)
+        return getDefaultMiddleware({
+            serializableCheck: false // Disable for redux-perists for specific API-Slices
+        }).concat(authAPISlice.middleware)
     }
 });
 
