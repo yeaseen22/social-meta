@@ -1234,7 +1234,7 @@ PODS:
     - Yoga
   - react-native-insta-story (1.1.9):
     - React
-  - react-native-pager-view (6.6.1):
+  - react-native-pager-view (6.7.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1255,7 +1255,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context (5.0.0):
+  - react-native-safe-area-context (5.1.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1268,8 +1268,8 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-safe-area-context/common (= 5.0.0)
-    - react-native-safe-area-context/fabric (= 5.0.0)
+    - react-native-safe-area-context/common (= 5.1.0)
+    - react-native-safe-area-context/fabric (= 5.1.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1278,7 +1278,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/common (5.0.0):
+  - react-native-safe-area-context/common (5.1.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1299,7 +1299,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/fabric (5.0.0):
+  - react-native-safe-area-context/fabric (5.1.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1601,20 +1601,20 @@ PODS:
     - fmt (= 11.0.2)
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - React-callinvoker (= 0.77.0)
-    - React-cxxreact (= 0.77.0)
-    - React-debug (= 0.77.0)
-    - React-featureflags (= 0.77.0)
-    - React-jsi (= 0.77.0)
-    - React-logger (= 0.77.0)
-    - React-perflogger (= 0.77.0)
-    - React-utils (= 0.77.0)
-  - RNGestureHandler (2.22.1):
+    - RCT-Folly (= 2024.01.01.00)
+    - React-callinvoker (= 0.76.5)
+    - React-cxxreact (= 0.76.5)
+    - React-debug (= 0.76.5)
+    - React-featureflags (= 0.76.5)
+    - React-jsi (= 0.76.5)
+    - React-logger (= 0.76.5)
+    - React-perflogger (= 0.76.5)
+    - React-utils (= 0.76.5)
+  - RNGestureHandler (2.22.0):
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1635,7 +1635,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1658,7 +1658,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1680,7 +1680,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1701,7 +1701,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1722,7 +1722,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1745,7 +1745,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -1767,7 +1767,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
+    - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
     - React-Core
@@ -2058,8 +2058,8 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 8a80099ad7391f4e13a48b12796d96680f120dc6
   react-native-image-picker: e7331948589e764ecd5a9c715c3fc14d4e6187e6
   react-native-insta-story: 67a7bc0b4ba052973aa54b613708a838f4774bf2
-  react-native-pager-view: 9dbdfdc85d9409c054ee2581c6837c193fbadccc
-  react-native-safe-area-context: d6406c2adbd41b2e09ab1c386781dc1c81a90919
+  react-native-pager-view: c89e08cdd49b04c65c108108779c56acc25c2700
+  react-native-safe-area-context: cbadf383376f589bb611c8ae0280c1d4b7b447e9
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
   React-NativeModulesApple: 70600f7edfc2c2a01e39ab13a20fd59f4c60df0b
   React-perflogger: ceb97dd4e5ca6ff20eebb5a6f9e00312dcdea872
@@ -2087,9 +2087,9 @@ SPEC CHECKSUMS:
   React-utils: 541c6cca08f32597d4183f00e83eef2ed20d4c54
   ReactCodegen: daa13d9e48c9bdb1daac4bd694b9dd54e06681df
   ReactCommon: a6b87a7591591f7a52d9c0fec3aa05e0620d5dd3
-  RNGestureHandler: 0e5ae8d72ef4afb855e98dcdbe60f27d938abe13
-  RNReanimated: 56fffbede49b5bddb327616096e822f342978794
-  RNScreens: d022507f2b6d76c73335e9e35aedcf7bb2f791b0
+  RNGestureHandler: 8ce7a079c513f96f9b580bcb2ecee621d511361f
+  RNReanimated: 9ee6347ca0aa3cf78cae715455e781728ae142e2
+  RNScreens: b02af14099030cc1e63f74f2791574e909fc1541
   RNVectorIcons: 07792a9538e8577c1263fcad187712e90d65d8fb
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
