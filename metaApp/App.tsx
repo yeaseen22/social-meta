@@ -1,142 +1,118 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
 import React from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import type {PropsWithChildren} from 'react';
 import {
-  ChatScreen,
-  LoginScreen,
-  MessageScreen,
-  OnboardingScreen,
-  RegisterScreen,
-  RegisterScreen2,
-  RegisterScreen3,
-  SplashScreen,
-  UploadProfileScreen,
-} from './src/screens';
-import { Tabs } from './src/navigations';
-import Entypo from 'react-native-vector-icons/Entypo';
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-const Stack = createNativeStackNavigator();
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
 
-const App = () => {
-  /**
-   * CUSTOM HEADERS TITLE FOR BOTTOM TABS
-   * @param route
-   * @returns
-   */
-  const getHeaderTitle = (route: any) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    const titleMap: { [key: string]: string } = {
-      Home: 'Home',
-      Profile: 'Profile',
-      Explore: 'Explore',
-      Notification: 'Notifications',
-      Post: 'Create Post',
-      Messages: 'Messages',
-    };
+type SectionProps = PropsWithChildren<{
+  title: string;
+}>;
 
-    return titleMap[routeName as keyof typeof titleMap] || routeName;
+function Section({children, title}: SectionProps): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+  return (
+    <View style={styles.sectionContainer}>
+      <Text
+        style={[
+          styles.sectionTitle,
+          {
+            color: isDarkMode ? Colors.white : Colors.black,
+          },
+        ]}>
+        {title}
+      </Text>
+      <Text
+        style={[
+          styles.sectionDescription,
+          {
+            color: isDarkMode ? Colors.light : Colors.dark,
+          },
+        ]}>
+        {children}
+      </Text>
+    </View>
+  );
+}
+
+function App(): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <GestureHandlerRootView>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Tabs">
-          <Stack.Screen
-            name="Onboarding"
-            component={OnboardingScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Splash"
-            component={SplashScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={RegisterScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Register2"
-            component={RegisterScreen2}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Register3"
-            component={RegisterScreen3}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="UploadProfile"
-            component={UploadProfileScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Tabs"
-            component={Tabs}
-            options={({ route, navigation }: any) => {
-              const focusedRouteName =
-                getFocusedRouteNameFromRoute(route) ?? 'Home';
-
-              return {
-                headerShown: true,
-                headerTitle: getHeaderTitle(route) || 'Home',
-                headerRight: () =>
-                  focusedRouteName === 'Home' ? (
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('Chat')}>
-                      <Entypo
-                        name="chat"
-                        size={24}
-                        color="#A4C400"
-                        style={{ marginRight: 15 }}
-                      />
-                    </TouchableOpacity>
-                  ) : null,
-              };
-            }}
-          />
-
-          <Stack.Screen
-            name="Messages"
-            component={MessageScreen}
-            options={{
-              headerShown: true,
-            }}
-          />
-          <Stack.Screen
-            name="Chat"
-            component={ChatScreen}
-            options={{
-              headerShown: true,
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <Header />
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Section title="Step One">
+            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
+            screen and then come back to see your edits.
+          </Section>
+          <Section title="See Your Changes">
+            <ReloadInstructions />
+          </Section>
+          <Section title="Debug">
+            <DebugInstructions />
+          </Section>
+          <Section title="Learn More">
+            Read the docs to discover what to do next:
+          </Section>
+          <LearnMoreLinks />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+});
 
 export default App;
