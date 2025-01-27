@@ -1,4 +1,5 @@
 import { Like, Post } from '../models';
+import mongoose from 'mongoose';
 
 class LikeService {
     private readonly likeModelRepository: typeof Like;
@@ -11,11 +12,78 @@ class LikeService {
 
 
     /**
+     * TOGGLE LIKE SERVICE
+     * Aggregates the like data with user info from the database.
+     * Joined the user info to the like data. with the help of $lookup.
+     * with $project we can select the fields we want to return.
+     * with $unwind we can unwind the array.
+     * with $match  we can filter the data.
+     * @param postId 
+     * @returns 
+     */
+    public async getPostLikes(postId: string, page: number = 1, limit: number = 10): Promise<any[]> {
+        try {
+            const skip = (page - 1) * limit;
+
+            // Fetch likes with pagination and aggregation
+            const likes = await this.likeModelRepository.aggregate([
+                { $match: { postId: new mongoose.Types.ObjectId(postId) } },
+                {
+                    $lookup: { // Populate/Join the user info
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user'
+                    }
+                },
+                {
+                    $unwind: '$user' // unwind the user array
+                },
+                {
+                    $project: { // select the fields we want to return
+                        user: {
+                            firstname: '$user.firstname',
+                            lastname: '$user.lastname',
+                            email: '$user.email',
+                            profilePhoto: '$user.profilePhoto'
+                        },
+                        createdAt: 1,
+                        updatedAt: 1,
+                        _id: 0
+                    }
+                },
+                {
+                    $sort: { createdAt: -1 }
+                },
+                {
+                    $facet: { // Use $facet to group multiple pipelines
+                        data: [
+                            { $skip: skip },
+                            { $limit: limit }
+                        ],
+                        total: [ // total number of likes
+                            { $count: 'total' }
+                        ]
+                    }
+                }
+            ]);
+
+            return likes;
+
+        } catch (error) {
+            console.error(`Error in getPostLikes service: ${error}`);
+            throw error;
+        }
+    }
+
+
+    /**
      * LIKE POST SERVICE
+     * Not using this becuase of scalability issue on large data set.
      * @param postId 
      * @returns {Promise<[]>}
      */
-    public async getPostLikes(postId: string): Promise<any[]> {
+    public async getPostLikesOld(postId: string): Promise<any[]> {
         try {
             const likes = await this.likeModelRepository.find({ postId })
                 .populate('userId', 'firstname lastname email profilePhoto');
