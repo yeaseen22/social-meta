@@ -6,6 +6,7 @@ import theme from '@/components/theme';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 // import { ModeSwitch } from '@/components/widgets';
 import ReduxProvider from '@/redux/ReduxProvider';
+import { Toaster } from 'react-hot-toast';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,16 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  duration: 5000,
+                }}
+                containerStyle={{
+                  top: 80,
+                }}
+              // containerClassName="toast-container"
+              />
               {/* <ModeSwitch /> */}
               {props.children}
             </ThemeProvider>

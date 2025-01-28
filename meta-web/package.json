@@ -17,10 +17,12 @@
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
     "@reduxjs/toolkit": "^2.5.0",
+    "axios": "^1.7.9",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-chat-elements": "^12.0.17",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.1",
     "react-pro-sidebar": "^1.1.0",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0"

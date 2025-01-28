@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 const genders = ['Male', 'Female', 'Non-binary', 'Other'];
 const professions = ['Student', 'Engineer', 'Designer', 'Developer', 'Other'];
 
+
 export default function RegisterPage() {
     const router = useRouter();
     const [currentTab, setCurrentTab] = useState(0);
@@ -30,6 +31,9 @@ export default function RegisterPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | { value: unknown }> | any) => {
         const { name, value, type, files } = e.target as HTMLInputElement & { files?: FileList };
+
+        console.log('TYPING...', type, files, name, value);
+
         setFormData({
             ...formData,
             [name]: type === 'file' ? files?.[0] || null : value,
@@ -44,17 +48,61 @@ export default function RegisterPage() {
         console.log('Form submitted:', formData);
     };
 
+    // region Step-1
     const Step1 = () => (
         <Box className={registerStyles.step}>
             <Typography variant="h5">Basic Information</Typography>
-            <TextField fullWidth label="First Name" name="firstName" onChange={handleChange} value={formData.firstName} margin="normal" />
-            <TextField fullWidth label="Last Name" name="lastName" onChange={handleChange} value={formData.lastName} margin="normal" />
-            <TextField fullWidth label="Email" name="email" onChange={handleChange} value={formData.email} margin="normal" />
-            <TextField fullWidth multiline minRows={2} label="Bio" name="bio" onChange={handleChange} value={formData.bio} margin="normal" />
-            <TextField fullWidth label="Title" name="title" onChange={handleChange} value={formData.title} margin="normal" />
+
+            <TextField 
+                fullWidth 
+                label="First Name" 
+                name="firstName" 
+                onChange={handleChange} 
+                value={formData.firstName} 
+                margin="normal" 
+            />
+
+            <TextField 
+                fullWidth 
+                label="Last Name" 
+                name="lastName" 
+                onChange={handleChange} 
+                value={formData.lastName} 
+                margin="normal" 
+            />
+            
+            <TextField 
+                fullWidth 
+                label="Email" 
+                name="email" 
+                onChange={handleChange} 
+                value={formData.email} 
+                margin="normal" 
+            />
+
+            <TextField 
+                fullWidth 
+                multiline 
+                minRows={2} 
+                label="Bio" 
+                name="bio" 
+                onChange={handleChange} 
+                value={formData.bio} 
+                margin="normal" 
+            />
+
+            <TextField 
+                fullWidth 
+                label="Title" 
+                name="title" 
+                onChange={handleChange} 
+                value={formData.title} 
+                margin="normal" 
+            />
         </Box>
     );
 
+    // region Step-2
     const Step2 = () => (
         <Box className={registerStyles.step}>
             <Typography variant="h5">Profile Details</Typography>
@@ -91,6 +139,7 @@ export default function RegisterPage() {
         </Box>
     );
 
+    // region Step-3
     const Step3 = () => (
         <Box className={registerStyles.step}>
             <Typography variant="h5">Security & Profile</Typography>
@@ -128,6 +177,7 @@ export default function RegisterPage() {
         </Box>
     );
 
+    // region UI
     return (
         <Container className={registerStyles.container}>
             {/* Left Section */}

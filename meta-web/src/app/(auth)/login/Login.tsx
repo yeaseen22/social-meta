@@ -15,6 +15,7 @@ import loginStyles from '@/styles/auth/login.module.scss';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation, setCredentials } from '@/redux/slice/auth.slice';
 import { useDispatch } from 'react-redux';
+import toaster from 'react-hot-toast';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -121,6 +122,7 @@ export default function LoginPage() {
                             color="primary"
                             className={loginStyles.loginButton}
                             onClick={handleLogin}
+                            disabled={isLoading}
                         >
                             Login
                         </Button>
