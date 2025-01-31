@@ -79,16 +79,43 @@ export default function RegisterPage() {
     return true;
   };
 
+  // const handleSubmit = async () => {
+  //   console.log("Form submitted:", formData);
+
+  //   if (!validateForm()) return;
+
+  //   const formDataToSubmit = {
+  //     ...formData,
+  //     profileImage: formData.profileImage ? formData.profileImage : null,
+  //   };
+
+  //   try {
+  //     const response = await register(formDataToSubmit).unwrap();
+  //     dispatch(setCredentials(response));
+  //     toaster.success("Registration successful!");
+  //     router.push("/");
+  //   } catch (error: any) {
+  //     toaster.error(error?.data?.message || "Registration failed.");
+  //   }
+  // };
+
   const handleSubmit = async () => {
-    console.log("Form submitted:", formData);
-
     if (!validateForm()) return;
-
-    const formDataToSubmit = {
-      ...formData,
-      profileImage: formData.profileImage ? formData.profileImage[0] : null,
-    };
-
+  
+    const formDataToSubmit = new FormData();
+  
+    // Append form data while safely checking types
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        if (key === "profileImage" && typeof value !== "string") {
+          // Safe check for non-string, assuming it's the file
+          formDataToSubmit.append(key, value as Blob);
+        } else {
+          formDataToSubmit.append(key, value as string);
+        }
+      }
+    });
+  
     try {
       const response = await register(formDataToSubmit).unwrap();
       dispatch(setCredentials(response));
@@ -98,6 +125,8 @@ export default function RegisterPage() {
       toaster.error(error?.data?.message || "Registration failed.");
     }
   };
+  
+
 
   // region Step-1
   const Step1 = () => (
