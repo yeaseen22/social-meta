@@ -98,7 +98,6 @@ class AuthService {
 
             // store..
             const createdUser = await this.userModelRepository.create(userInfo);
-            console.log(`Created user ${createdUser}`);
             await createdUser.save();
 
             return { success: true, message: 'Registered User', user: createdUser }
@@ -121,6 +120,43 @@ class AuthService {
 
         } catch (error) {
             console.error(`Error occured while do logout: ${error}`);
+            throw error;
+        }
+    }
+
+    /**
+     * REFRESH ACCESS TOKEN
+     * Renew access token service
+     * @param refreshToken 
+     */
+    public async refreshAccessToken(refreshToken: string): Promise<any> {
+        try {
+            const session = await this.sessionService.findByRefreshToken(refreshToken);
+            if (!session) return {
+                success: false,
+                message: 'Invalid refresh token',
+            }
+
+            const user = await this.userModelRepository.findById(session.userId);
+            if (!user) return {
+                success: false,
+                message: 'User not found',
+            }
+
+            // Generate new access token
+            // For Development Purpose 30m is the time limit
+            const accessToken = this.tokenUtils.generateToken({ id: user._id, email: user.email }, '30m');
+
+            return {
+                success: true,
+                message: 'Access token refreshed',
+                data: {
+                    accessToken,
+                }
+            }
+
+        } catch (error) {
+            console.error(`Error occured while refresh access token: ${error}`);
             throw error;
         }
     }

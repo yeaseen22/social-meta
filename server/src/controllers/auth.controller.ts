@@ -54,6 +54,27 @@ class AuthController {
     }
 
     /**
+     * ---- Refresh Token Controller ----
+     * @param req 
+     * @param res 
+     * @param next 
+     * @returns 
+     */
+    public renewToken = async (req: Request, res: Response | any, next: NextFunction) => {
+        // const refreshToken = req.headers['x-refresh-token'];
+        const refreshToken = req.body.refreshToken;
+
+        try {
+            const authRenewToken = await this.authService.refreshAccessToken(refreshToken);
+            if (!authRenewToken.success) return res.status(400).json(authRenewToken);
+            res.status(200).json(authRenewToken);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
      * ---- Forgot Password Controller ----
      * @param {Request} req 
      * @param {Response} res 

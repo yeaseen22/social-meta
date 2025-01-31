@@ -50,7 +50,7 @@ class PostService {
                 .limit(limit);
 
             // Filter out posts where `ownerId` is null (user no longer exists)
-            const filteredPosts = posts.filter(post => post.ownerId !== null);
+            const filteredPosts = posts.filter((post: any) => post.ownerId !== null);
 
             // Count the total number of valid posts for pagination
             const total = filteredPosts.length;

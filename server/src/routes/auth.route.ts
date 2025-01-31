@@ -19,6 +19,11 @@ router.post('/login', validationReq(AuthValidation.loginUser), authController.lo
 router.post('/register', emailChecker, validationReq(AuthValidation.registerUser), authController.register);
 
 /**
+ * ---- Renew Access Token ----
+ */
+router.get('/refresh_token', authController.renewToken);
+
+/**
  * ---- Forgot Password ----
  */
 router.get('/forgot_password', authController.forgotPassword);

@@ -112,7 +112,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public async readAllPosts(req: Request, res: Response) {
+  public readAllPosts = async (req: Request, res: Response) => {
     try {
       const { page = 1, limit = 5 } = req.query;
       const pageNumber = Math.max(1, Number(page));
@@ -173,7 +173,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public async createPost(req: Request, res: Response) {
+  public createPost = async(req: Request, res: Response) => {
     const currentLoggedInUserId = String((req as any).user._id);
     const post = {
       title: req.body.title,
