@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
             try {
                 const state = store.getState() as RootState;
                 // Attempt to refresh the access token
-                const refreshResponse = await axios.post(`${API_URL}/auth/refresh`, {}, {
+                const refreshResponse = await axios.post(`${API_URL}/auth/refresh_token`, {}, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${state.auth.refreshToken}`
