@@ -1,4 +1,5 @@
 import { Comment, Post } from '../models';
+import mongoose from 'mongoose';
 
 class CommentService {
     private readonly commentModelRepository: typeof Comment;
@@ -11,11 +12,76 @@ class CommentService {
 
     /**
      * FETCH COMMENTS SERVICE
+     * Aggretation for comments on a post with user info
+     * @param postId 
+     * @param page 
+     * @param limit 
+     * @returns 
+     */
+    // region Fetch Comments
+    public async fetchComments(postId: string, page: number = 1, limit: number = 10): Promise<any> {
+        try {
+            // Calculate the number of comments to skip
+            const skip = (page - 1) * limit;
+
+            // Fetch comments with pagination
+            const comments = await this.commentModelRepository.aggregate([
+                { $match: { postId: new mongoose.Types.ObjectId(postId) } },
+                {
+                    $lookup: { // Populate/Join the user info
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user'
+                    }
+                },
+                { $unwind: '$user' }, // unwind the user array
+                {
+                    $project: {
+                        user: {
+                            firstname: '$user.firstname',
+                            lastname: '$user.lastname',
+                            email: '$user.email',
+                            profilePhoto: '$user.profilePhoto'
+                        },
+                        createdAt: 1,
+                        updatedAt: 1,
+                        comment: 1,
+                        _id: 0
+                    }
+                },
+                {
+                    $sort: { createdAt: -1 }
+                },
+                {
+                    $facet: { // use $facet to group the results multiple pipelines
+                        data: [
+                            { $skip: skip },
+                            { $limit: limit }
+                        ],
+                        total: [
+                            { $count: 'total' }
+                        ]
+                    }
+                },
+            ]);
+
+            return { success: true, comments };
+
+        } catch (error) {
+            console.error(`Error in fetchComments service: ${error}`);
+            throw error;
+        }
+    }
+
+    /**
+     * FETCH COMMENTS SERVICE
      * @param postId 
      * @param page 
      * @param limit 
      */
-    public async fetchComments(postId: string, page: number = 1, limit: number = 10): Promise<any> {
+    // region Fetch Comments Old
+    public async fetchCommentsOld(postId: string, page: number = 1, limit: number = 10): Promise<any> {
         try {
             // Calculate the number of comments to skip
             const skip = (page - 1) * limit;
@@ -54,6 +120,7 @@ class CommentService {
      * @param comment 
      * @returns 
      */
+    // region Create Comment
     public async createComment(userId: string, postId: string, comment: string): Promise<any> {
         try {
             const newComment = await this.commentModelRepository.create({ userId, postId, comment });
@@ -73,6 +140,7 @@ class CommentService {
      * UPDATE COMMENT SERVICE
      * @param commentId 
      */
+    // region Update Comment
     public async updateComment(commentId: string, newComment: string): Promise<any> {
         try {
             const comment = await this.commentModelRepository.findById(commentId);
@@ -94,6 +162,7 @@ class CommentService {
      * DELETE COMMENT SERVICE
      * @param commentId 
      */
+    // region Delete Comment
     public async deleteComment(commentId: string): Promise<any> {
         try {
             const comment = await this.commentModelRepository.findById(commentId);
