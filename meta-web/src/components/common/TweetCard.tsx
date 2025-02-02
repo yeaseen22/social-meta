@@ -15,7 +15,8 @@ export default function TweetCard() {
 
     return (
         <div className={styles['tweet-card-wrapper']}>
-            <Card className={styles['tweet-card']}>
+           <div style={{ marginTop: '60px' }}>
+           <Card className={styles['tweet-card']}>
                 {/* HEADER */}
                 <CardHeader
                     avatar={<Avatar sx={{ bgcolor: red[500] }}>R</Avatar>}
@@ -70,6 +71,7 @@ export default function TweetCard() {
                     </CardContent>
                 </Collapse>
             </Card>
+           </div>
         </div>
     );
 }
