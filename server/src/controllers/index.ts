@@ -5,3 +5,4 @@ export { default as MessageController } from './message.controller';
 export { default as PostController } from './post.controller';
 export { default as UserController } from './user.controller';
 export { default as LikeController } from './like.controller';
+export { default as NotificationController } from './notification.controller';

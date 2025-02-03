@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { authRoutes, userRoutes, postRoutes, commentRoutes, conversationRoutes, messageRoutes, likeRoutes } from '../routes';
+import { authRoutes, userRoutes, postRoutes, commentRoutes, conversationRoutes, messageRoutes, likeRoutes, notificationRoutes } from '../routes';
 import { AuthMiddleware } from '../middlewares';
 
 const router: Router = Router();
@@ -13,6 +13,7 @@ router.use('/api/v1/user', AuthMiddleware.verifyUser, userRoutes);
 router.use('/api/v1/post', AuthMiddleware.verifyUser, postRoutes);
 router.use('/api/v1/comment', AuthMiddleware.verifyUser, commentRoutes);
 router.use('/api/v1/likes', AuthMiddleware.verifyUser, likeRoutes);
+router.use('/api/v1/notifications', AuthMiddleware.verifyUser, notificationRoutes);
 
 router.use('/api', AuthMiddleware.verifyUser, conversationRoutes);
 router.use('/api', AuthMiddleware.verifyUser, messageRoutes);
