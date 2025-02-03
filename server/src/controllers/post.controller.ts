@@ -13,54 +13,6 @@ class PostController {
   }
 
   /**
-   * GET POST LIKES CONTROLLER
-   * @param req 
-   * @param res 
-   */
-  public async getPostLikes(req: Request, res: Response): Promise<any> {
-    const postId = req.params.postId;
-
-    try {
-      const likes = await this.likeService.getPostLikes(postId);
-      if (!likes) throw new Error('Failed to fetch likes');
-      res.status(200).json(likes);
-
-    } catch (error) {
-      res.status(500).json({ success: false, error: 'Failed to fetch likes' });
-    }
-  }
-
-  /**
-   * LIKE POST CONTROLLER
-   * @param req
-   * @param res
-   */
-  public async likePost(req: Request, res: Response): Promise<any> {
-    const postId: string = req.body?.postId;
-    const userIdObj: Types.ObjectId = (req as any).user?._id || req.body?.userId;
-    const userId: string = userIdObj?.toString();
-    const io = (req as any).io;
-
-    if (!userId || !postId) {
-      res.status(400).json({ success: false, message: "Invalid request" });
-    }
-
-    try {
-      const likeOrDislike = await this.likeService.toggleLike(userId, postId, io);
-      if (!likeOrDislike) throw new Error('Failed to toggle like');
-      res.status(200).send(likeOrDislike);
-
-    } catch (err: any) {
-      console.error('[LikePost] Error occurred:', err);
-      res.status(500).json({
-        success: false,
-        message: "An unexpected error occurred while toggling like.",
-        error: err?.message ?? err,
-      });
-    }
-  }
-
-  /**
    * READ POST CONTROLLER
    * @param req
    * @param res
