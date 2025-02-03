@@ -8,10 +8,10 @@ class LikeService {
     private readonly postModelRepository: typeof Post;
     private readonly notificationService: NotificationService;
 
-    constructor(likeModelRepository: typeof Like = Like, postModelRepository: typeof Post = Post, notificationService: NotificationService = new NotificationService()) {
+    constructor(likeModelRepository: typeof Like = Like, postModelRepository: typeof Post = Post) {
         this.likeModelRepository = likeModelRepository;
         this.postModelRepository = postModelRepository;
-        this.notificationService = notificationService;
+        this.notificationService = new NotificationService();
     }
 
 
@@ -137,7 +137,7 @@ class LikeService {
                 // Send notification to the post owner if the user is not the owner of the post.
                 if (post && post.user?.toString() !== userId) {
                     await this.notificationService.createNotification({
-                        recipientId: post.user || '',
+                        recipientId: post.user?.toString(),
                         senderId: userId,
                         postId,
                         type: 'like',

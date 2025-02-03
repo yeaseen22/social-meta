@@ -1,13 +1,17 @@
 import { Comment, Post } from '../models';
 import mongoose from 'mongoose';
+import NotificationService from './notification.service';
+import { INotification } from '../models/Notification';
 
 class CommentService {
     private readonly commentModelRepository: typeof Comment;
     private readonly postModelRepository: typeof Post;
+    private readonly notificationService: NotificationService;
 
     constructor(commentModelRepository: typeof Comment = Comment, postModelRepository: typeof Post = Post) {
         this.commentModelRepository = commentModelRepository;
         this.postModelRepository = postModelRepository;
+        this.notificationService = new NotificationService();
     }
 
     /**
@@ -128,6 +132,19 @@ class CommentService {
                 $inc: { comments_count: 1 }
             });
 
+            const post = await this.postModelRepository.findById(postId);
+
+            // Make a notification for the post owner
+            if (post && post.user?.toString() !== userId) {
+                await this.notificationService.createNotification({
+                    recipientId: post.user?.toString(),
+                    senderId: userId,
+                    type: 'comment',
+                    postId,
+                    message: 'Someone commented on your post.',
+                } as INotification);
+            }
+
             return { success: true, message: "Comment created.", comment: newComment };
 
         } catch (error) {
@@ -172,6 +189,13 @@ class CommentService {
             await this.commentModelRepository.deleteOne({ _id: commentId });
             await this.postModelRepository.findByIdAndUpdate(comment.postId, {
                 $inc: { comments_count: -1 }
+            });
+
+            // Delete the notifications related to this comment
+            await this.notificationService.deleteNotification({
+                senderId: comment.userId?.toString(),
+                postId: comment.postId?.toString(),
+                type: 'comment'
             });
 
             return { success: true, message: "Comment deleted." };
