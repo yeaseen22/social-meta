@@ -1,5 +1,6 @@
 import { Notification } from '../models';
-import mongoose from 'mongoose';
+import { INotification } from '../models/Notification';
+// import mongoose from 'mongoose';
 
 class NotificationService {
     private readonly notificationModelRepository: typeof Notification;
@@ -48,6 +49,36 @@ class NotificationService {
 
         } catch (error) {
             console.error(`Error in markNotificationAsRead service: ${error}`);
+            throw error;
+        }
+    }
+
+    /**
+     * CREATE NOTIFICATION SERVICE
+     * This is for creating a notification
+     * @param param0 
+     */
+    public async createNotification({ recipientId, senderId, postId, type, message }: INotification): Promise<void> {
+        try {
+            await this.notificationModelRepository.create({ recipientId, senderId, postId, type, message });
+
+        } catch (error) {
+            console.error(`Error in createNotification service: ${error}`);
+            throw error;
+        }
+    }
+
+    /**
+     * DELETE NOTIFICATION SERVICE
+     * This is for deleting a notification
+     * @param param0 
+     */
+    public async deleteNotification({ senderId, postId, type }: { senderId: string, postId: string, type: string }): Promise<void> {
+        try {
+            await this.notificationModelRepository.deleteOne({ senderId, postId, type });
+
+        } catch (error) {
+            console.error(`Error in deleteNotification service: ${error}`);
             throw error;
         }
     }

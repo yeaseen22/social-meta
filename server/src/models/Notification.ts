@@ -2,14 +2,14 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 // region Notification Interface..
 export interface INotification extends Document {
-    recipientId: mongoose.Types.ObjectId;
-    senderId: mongoose.Types.ObjectId;
-    postId: mongoose.Types.ObjectId;
+    recipientId: mongoose.Types.ObjectId | string;
+    senderId: mongoose.Types.ObjectId | string;
+    postId: mongoose.Types.ObjectId | string;
     type: string;
-    read: boolean;
+    read?: boolean;
     message: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 // region Notification Schema..

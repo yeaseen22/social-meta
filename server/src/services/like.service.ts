@@ -1,13 +1,17 @@
 import { Like, Post } from '../models';
 import mongoose from 'mongoose';
+import NotificationService from './notification.service';
+import { INotification } from '../models/Notification';
 
 class LikeService {
     private readonly likeModelRepository: typeof Like;
     private readonly postModelRepository: typeof Post;
+    private readonly notificationService: NotificationService;
 
-    constructor(likeModelRepository: typeof Like = Like, postModelRepository: typeof Post = Post) {
+    constructor(likeModelRepository: typeof Like = Like, postModelRepository: typeof Post = Post, notificationService: NotificationService = new NotificationService()) {
         this.likeModelRepository = likeModelRepository;
         this.postModelRepository = postModelRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -21,6 +25,7 @@ class LikeService {
      * @param postId 
      * @returns 
      */
+    // region Get Post Likes
     public async getPostLikes(postId: string, page: number = 1, limit: number = 10): Promise<any[]> {
         try {
             const skip = (page - 1) * limit;
@@ -80,9 +85,11 @@ class LikeService {
     /**
      * LIKE POST SERVICE
      * Not using this becuase of scalability issue on large data set.
+     * We are using the getPostLikes() service instead.
      * @param postId 
      * @returns {Promise<[]>}
      */
+    // region Get Post Likes Old
     public async getPostLikesOld(postId: string): Promise<any[]> {
         try {
             const likes = await this.likeModelRepository.find({ postId })
@@ -111,17 +118,34 @@ class LikeService {
      * @param postId 
      * @returns {Promise<{ success: boolean, message: string, likeStatus: boolean }>}
      */
+    // region Toggle Like/Dislike 
     public async toggleLike(userId: string, postId: string): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
         try {
             const existingLike = await this.likeModelRepository.findOne({ userId, postId });
 
             if (existingLike) {
                 // Dislike the post..
-                return await this.dislikePost(userId, postId);
+                const dislikeThePost = await this.dislikePost(userId, postId);
+                await this.notificationService.deleteNotification({ senderId: userId, postId, type: 'like' });
+                return dislikeThePost;
 
             } else {
                 // Like the post..
-                return await this.likePost(userId, postId);
+                const likeThePost = await this.likePost(userId, postId);
+                const post = await this.postModelRepository.findById(postId);
+
+                // Send notification to the post owner if the user is not the owner of the post.
+                if (post && post.user?.toString() !== userId) {
+                    await this.notificationService.createNotification({
+                        recipientId: post.user || '',
+                        senderId: userId,
+                        postId,
+                        type: 'like',
+                        message: 'Someone liked your post.'
+                    } as INotification);
+                }
+
+                return likeThePost;
             }
 
         } catch (error) {
