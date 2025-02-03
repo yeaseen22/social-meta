@@ -8,11 +8,6 @@ const router = Router();
 const postController = new PostController();
 
 /**
- * ---- Get Likes from Post ----
- */
-router.get('/get_post_likes', postController.getLikes);
-
-/**
  * ---- Read Post ----
  */
 router.get('/post_read', postController.readPost);

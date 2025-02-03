@@ -43,6 +43,7 @@ class LikeController {
     public toggleLike = async (req: Request, res: Response) => {
         const { postId } = req.body;
         const userId = (req as any).user._id;
+        const io = (req as any).io;
 
         if (!postId) {
             throw new Error('Post ID is required');
@@ -50,7 +51,7 @@ class LikeController {
 
         try {
             // Toggle like using the service
-            const toggledLike = await this.likeService.toggleLike(userId, postId);
+            const toggledLike = await this.likeService.toggleLike(userId, postId, io);
             if (!toggledLike) {
                 res.status(400).json({ success: false, message: 'Failed to create comment' });
             }

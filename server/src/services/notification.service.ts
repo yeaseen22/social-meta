@@ -16,6 +16,7 @@ class NotificationService {
      * @param page 
      * @param limit 
      */
+    // region  Get Notifications
     public async getUserNotifications(userId: string, page: number = 1, limit: number = 10): Promise<any> {
         try {
             const skip = (page - 1) * limit;
@@ -43,6 +44,7 @@ class NotificationService {
      * This for marking the notification as read
      * @param notificationId 
      */
+    // region Mark Noti. As Read
     public async markNotificationAsRead(notificationId: string): Promise<void> {
         try {
             await this.notificationModelRepository.findByIdAndUpdate(notificationId, { read: true });
@@ -58,9 +60,10 @@ class NotificationService {
      * This is for creating a notification
      * @param param0 
      */
-    public async createNotification({ recipientId, senderId, postId, type, message }: INotification): Promise<void> {
+    // region Create Notification
+    public async createNotification({ recipientId, senderId, postId, type, message }: INotification): Promise<any> {
         try {
-            await this.notificationModelRepository.create({ recipientId, senderId, postId, type, message });
+            return await this.notificationModelRepository.create({ recipientId, senderId, postId, type, message });
 
         } catch (error) {
             console.error(`Error in createNotification service: ${error}`);
@@ -73,6 +76,7 @@ class NotificationService {
      * This is for deleting a notification
      * @param param0 
      */
+    // region Delete Notification
     public async deleteNotification({ senderId, postId, type }: { senderId: string, postId: string, type: string }): Promise<void> {
         try {
             await this.notificationModelRepository.deleteOne({ senderId, postId, type });

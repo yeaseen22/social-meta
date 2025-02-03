@@ -39,13 +39,14 @@ class PostController {
     const postId: string = req.body?.postId;
     const userIdObj: Types.ObjectId = (req as any).user?._id || req.body?.userId;
     const userId: string = userIdObj?.toString();
+    const io = (req as any).io;
 
     if (!userId || !postId) {
       res.status(400).json({ success: false, message: "Invalid request" });
     }
 
     try {
-      const likeOrDislike = await this.likeService.toggleLike(userId, postId);
+      const likeOrDislike = await this.likeService.toggleLike(userId, postId, io);
       if (!likeOrDislike) throw new Error('Failed to toggle like');
       res.status(200).send(likeOrDislike);
 
@@ -56,29 +57,6 @@ class PostController {
         message: "An unexpected error occurred while toggling like.",
         error: err?.message ?? err,
       });
-    }
-  }
-
-  /**
-   * GET LIKES CONTROLLER
-   * @param req
-   * @param res
-   * @returns
-   */
-  public async getLikes(req: Request | any, res: Response | any) {
-    const postId = req.query.postId;
-
-    try {
-      const post = await Post.findById({ _id: postId });
-      if (!post)
-        return res.json({ success: false, message: "Post not found!" });
-
-      res.status(200).json({
-        success: true,
-        likes_count: post.likes_count,
-      });
-    } catch (err) {
-      res.json({ success: false, error: err });
     }
   }
 
@@ -173,7 +151,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public createPost = async(req: Request, res: Response) => {
+  public createPost = async (req: Request, res: Response) => {
     const currentLoggedInUserId = String((req as any).user._id);
     const post = {
       title: req.body.title,

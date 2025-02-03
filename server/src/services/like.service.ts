@@ -119,7 +119,7 @@ class LikeService {
      * @returns {Promise<{ success: boolean, message: string, likeStatus: boolean }>}
      */
     // region Toggle Like/Dislike 
-    public async toggleLike(userId: string, postId: string): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
+    public async toggleLike(userId: string, postId: string, io: any): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
         try {
             const existingLike = await this.likeModelRepository.findOne({ userId, postId });
 
@@ -136,13 +136,22 @@ class LikeService {
 
                 // Send notification to the post owner if the user is not the owner of the post.
                 if (post && post.user?.toString() !== userId) {
-                    await this.notificationService.createNotification({
+                    const notification = await this.notificationService.createNotification({
                         recipientId: post.user?.toString(),
                         senderId: userId,
                         postId,
                         type: 'like',
                         message: 'Someone liked your post.'
                     } as INotification);
+
+                    // Emit real-time notification to the recipient
+                    // region Socket Send TO-IO
+                    io.to(post.user?.toString()).emit('notification', {
+                        message: notification.message,
+                        postId: notification.id,
+                        senderId: userId,
+                        createdAt: notification.createdAt
+                    });
                 }
 
                 return likeThePost;
