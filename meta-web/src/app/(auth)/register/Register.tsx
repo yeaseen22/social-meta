@@ -27,7 +27,6 @@ import { useDispatch } from "react-redux";
 import toaster from "react-hot-toast";
 import { useStep } from "@/hooks/useStep";
 import { useFormHandler } from "@/hooks/useForm";
-import { log } from "node:console";
 
 const genders = ["Male", "Female", "Non-binary", "Other"];
 const professions = ["Student", "Engineer", "Designer", "Developer", "Other"];

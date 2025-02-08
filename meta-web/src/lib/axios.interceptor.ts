@@ -43,17 +43,14 @@ axiosInstance.interceptors.response.use(
         const state = store.getState() as RootState;
         // Attempt to refresh the access token
         const refreshResponse = await axios.post(
-          `${API_URL}/auth/refresh_token`,
-          {},
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${state.auth.refreshToken}`,
-            },
-          }
-        );
+      `${API_URL}/auth/refresh_token`,
+      { refreshToken: state.auth.refreshToken },
+      { headers: { "Content-Type": "application/json" } }
+    );
 
-        const { accessToken, refreshToken } = refreshResponse.data;
+    console.log("Refresh Response: ", refreshResponse.data);
+
+        const { accessToken, refreshToken } = refreshResponse.data.data;
         // Update tokens in Redux Persistance State..
         store.dispatch(setCredentials({ accessToken, refreshToken }));
 

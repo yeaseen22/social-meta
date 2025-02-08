@@ -145,7 +145,7 @@ class AuthService {
 
             // Generate new access token
             // For Development Purpose 30m is the time limit
-            const accessToken = this.tokenUtils.generateToken({ id: user._id, email: user.email }, '30m');
+            const accessToken = this.tokenUtils.generateToken({ id: user._id, email: user.email }, '1m');
 
             return {
                 success: true,

@@ -54,8 +54,10 @@ export default function LoginPage() {
         password: formData.password,
       }).unwrap();
 
-      dispatch(setCredentials({ user: null, token: authLoginResponse.accessToken }));
-      toast.success("Login successful!");
+      dispatch(setCredentials({ user: null, accessToken: authLoginResponse.data.accessToken, refreshToken: authLoginResponse.data.refreshToken }));
+      console.log('Login successful!', setCredentials({ accessToken: authLoginResponse.data.accessToken }));
+
+      // toast.success("Login successful!");
       router.push('/');
     } catch (error) {
       console.error('Failed to log in: ', error);

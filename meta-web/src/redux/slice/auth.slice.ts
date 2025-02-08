@@ -1,27 +1,35 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import toaster from "react-hot-toast";
+import { RootState, store } from "@/redux/store";
+import axiosInstance from "@/lib/axios.interceptor";
+
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api/v1";
 
+// region Axios instance with default configuration
+const customBaseQuery = async ({ url, method, data }: any) => {
+  try {
+    const result = await axiosInstance({ url, method, data });
+    return { data: result.data };
+  } catch (error) {
+    return { error };
+  }
+};
+
+
 // region Auth API Slice
 export const authAPISlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${API_URL}/auth`,
-    // prepareHeaders: (headers, { getState }) => {
-    //     const accessToken = (getState() as RootState).auth.accessToken;
-    //     if (accessToken) {
-    //         headers.set('Authorization', `Bearer ${accessToken}`);
-    //     }
-    //     return headers;
-    // }
-  }),
+  baseQuery: customBaseQuery,
   endpoints: (builder) => ({
     // region Get Posts Query
     getPosts: builder.query({
-      query: () => "posts",
+      query: ({ page = 1, limit = 5 }) => ({
+        url: `/post/read_all_posts?page=${page}&limit=${limit}`,
+        method: 'GET',
+      }),
     }),
 
     // region Add Posts Mutation
@@ -36,9 +44,9 @@ export const authAPISlice = createApi({
     // region Login Mutation..
     login: builder.mutation({
       query: (body) => ({
-        url: "/login",
+        url: "/auth/login",
         method: "POST",
-        body,
+        data: body,
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
@@ -47,6 +55,8 @@ export const authAPISlice = createApi({
           // Destructure response to extract token and user
           const { accessToken, refreshToken, user } = data;
           dispatch(setCredentials({ accessToken, refreshToken, user }));
+          console.log('Login successful!', accessToken)
+
           toaster.success("Login successful!");
         } catch (error) {
           console.error("Login failed: ", error);
@@ -58,16 +68,19 @@ export const authAPISlice = createApi({
     // region Register Mutation..
     register: builder.mutation({
       query: (body) => ({
-        url: "/register",
+        url: "/auth/register",
         method: "POST",
-        body,
+        data: body,
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          const { accessToken, refreshToken, user } = data;
+          console.log('data', data);
+
 
           if (data) {
+            const { accessToken, refreshToken, user } = data;
+
             dispatch(setCredentials({ accessToken, refreshToken, user }));
             toaster.success("Registration successful!");
           }
@@ -77,11 +90,28 @@ export const authAPISlice = createApi({
         }
       },
     }),
-    //..
+
+    // region Logout Mutation
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "GET",
+      }),
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(clearCredentials());
+          toaster.success("Logout successful!");
+        } catch (error) {
+          console.error("Logout failed: ", error);
+          toaster.error("Logout failed. Please try again.");
+        }
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authAPISlice;
+export const { useLoginMutation, useRegisterMutation, useGetPostsQuery, useLogoutMutation } = authAPISlice;
 
 // region Auth Slice
 interface AuthState {
@@ -108,7 +138,9 @@ const authSlice = createSlice({
   reducers: {
     // region Set Credentials
     setCredentials: (state, action) => {
-      state.accessToken = action.payload.token;
+      console.log('action', action);
+
+      state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.user = action.payload.user;
     },
