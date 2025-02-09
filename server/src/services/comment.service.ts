@@ -122,6 +122,7 @@ class CommentService {
      * @param userId 
      * @param postId 
      * @param comment 
+     * @param io
      * @returns 
      */
     // region Create Comment
@@ -152,7 +153,7 @@ class CommentService {
                     type: 'comment',
                     postId,
                     message: 'Someone commented on your post.',
-                    comment,
+                    comment: newComment,
                 });
             }
 
