@@ -9,6 +9,7 @@ interface ReduxProviderProps {
     children: ReactNode;
 }
 
+//region adding provider for redux store
 const ReduxProvider: React.FC<ReduxProviderProps> = ({ children }) => (
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
