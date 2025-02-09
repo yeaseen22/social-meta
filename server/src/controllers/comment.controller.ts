@@ -43,6 +43,7 @@ class CommentController {
     public async createComment(req: Request, res: Response) {
         const { postId, comment } = req.body;
         const userId = (req as any).user._id;
+        const io = (req as any).io;
 
         if (!postId || !comment) {
             throw new Error('Post ID and comment are required');
@@ -50,7 +51,7 @@ class CommentController {
 
         try {
             // Create comment in the service
-            const savedComment = await this.commentService.createComment(userId, postId, comment);
+            const savedComment = await this.commentService.createComment(userId, postId, comment, io);
             if (!savedComment) {
                 res.status(400).json({ success: false, message: 'Failed to create comment' });
             }

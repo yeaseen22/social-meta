@@ -125,7 +125,7 @@ class CommentService {
      * @returns 
      */
     // region Create Comment
-    public async createComment(userId: string, postId: string, comment: string): Promise<any> {
+    public async createComment(userId: string, postId: string, comment: string, io: any): Promise<any> {
         try {
             const newComment = await this.commentModelRepository.create({ userId, postId, comment });
             await this.postModelRepository.findByIdAndUpdate(postId, {
@@ -143,6 +143,17 @@ class CommentService {
                     postId,
                     message: 'Someone commented on your post.',
                 } as INotification);
+
+                // Emit the real-time notification to the recepient..
+                // region Socket Send TO-IO
+                io.to(post.user?.toString()).emit('notification', {
+                    recipientId: post.user?.toString(),
+                    senderId: userId,
+                    type: 'comment',
+                    postId,
+                    message: 'Someone commented on your post.',
+                    comment,
+                });
             }
 
             return { success: true, message: "Comment created.", comment: newComment };

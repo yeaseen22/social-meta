@@ -16,7 +16,7 @@ const io = new SocketIOServer(server, {
     cors: {
         origin: '*',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-        // allowedHeaders: ['Content-Type', 'Authorization'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     }
 });
 
