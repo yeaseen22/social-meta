@@ -94,7 +94,7 @@ export default function RegisterPage() {
       dispatch(setCredentials(response));
       toaster.success("Registration successful!");
       router.push("/");
-      
+
     } catch (error: any) {
       toaster.error(error?.data?.message || "Registration failed.");
     }
@@ -272,7 +272,7 @@ export default function RegisterPage() {
         );
     }
   };
-  
+
   return (
     <Container className={registerStyles.container}>
       <Box className={registerStyles.leftSection}>
