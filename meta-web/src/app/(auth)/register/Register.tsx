@@ -37,12 +37,12 @@ const validationRules = {
     !value
       ? "Email is required."
       : !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
-      ? "Invalid email format."
-      : "",
+        ? "Invalid email format."
+        : "",
   password: (value: string) =>
     value.length < 6 ? "Password must be at least 6 characters." : "",
-  firstName: (value: string) => (!value ? "First name is required." : ""),
-  lastName: (value: string) => (!value ? "Last name is required." : ""),
+  firstname: (value: string) => (!value ? "First name is required." : ""),
+  lastname: (value: string) => (!value ? "Last name is required." : ""),
   bio: (value: string) => (!value ? "Bio is required." : ""),
   title: (value: string) => (!value ? "Title is required." : ""),
   gender: (value: string) => (!value ? "Gender is required." : ""),
@@ -61,8 +61,8 @@ export default function RegisterPage() {
   const { formData, handleChange, validateForm, handleBlur, errors } =
     useFormHandler(
       {
-        firstName: "",
-        lastName: "",
+        firstname: "",
+        lastname: "",
         email: "",
         bio: "",
         title: "",
@@ -94,6 +94,7 @@ export default function RegisterPage() {
       dispatch(setCredentials(response));
       toaster.success("Registration successful!");
       router.push("/");
+      
     } catch (error: any) {
       toaster.error(error?.data?.message || "Registration failed.");
     }
@@ -108,24 +109,24 @@ export default function RegisterPage() {
             <TextField
               fullWidth
               label="First Name"
-              name="firstName"
+              name="firstname"
               onChange={handleChange}
-              value={formData.firstName}
+              value={formData.firstname}
               margin="normal"
               onBlur={handleBlur}
-              error={!!errors.firstName}
-              helperText={errors.firstName}
+              error={!!errors.firstname}
+              helperText={errors.firstname}
             />
             <TextField
               fullWidth
               label="Last Name"
-              name="lastName"
+              name="lastname"
               onChange={handleChange}
-              value={formData.lastName}
+              value={formData.lastname}
               margin="normal"
               onBlur={handleBlur}
-              error={!!errors.lastName}
-              helperText={errors.lastName}
+              error={!!errors.lastname}
+              helperText={errors.lastname}
             />
             <TextField
               fullWidth
@@ -271,6 +272,7 @@ export default function RegisterPage() {
         );
     }
   };
+  
   return (
     <Container className={registerStyles.container}>
       <Box className={registerStyles.leftSection}>

@@ -77,7 +77,6 @@ export const authAPISlice = createApi({
           const { data } = await queryFulfilled;
           console.log('data', data);
 
-
           if (data) {
             const { accessToken, refreshToken, user } = data;
 
