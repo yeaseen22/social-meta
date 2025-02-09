@@ -12,6 +12,7 @@ const Home = () => {
   const state = store.getState() as RootState;
   console.log('auth',state.auth)
 
+// region loading
   if (isLoading) return <p>Loading posts...</p>;
 
   if (error) {
