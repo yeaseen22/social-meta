@@ -5,7 +5,6 @@ import {
     Text,
     StyleSheet,
     ImageBackground,
-    TouchableOpacity,
     TextInput,
     NativeSyntheticEvent,
     TextInputEndEditingEventData,
@@ -34,6 +33,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     });
 
     // Displaying Error Message Dynamically
+    // region Display Error Msg
     const displayErrorMessage = (msg: string) => (
         <Animatable.View animation="fadeInLeft" duration={500}>
             <Text style={styles.errorMsg}>{msg}</Text>
@@ -41,6 +41,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     );
 
     // End Of Editing Input Fields
+    // region End Editing
     const handleEndEditing = (
         event: NativeSyntheticEvent<TextInputEndEditingEventData>,
         type: string
@@ -64,6 +65,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     };
 
     // Text Change Input Fields
+    // region onChange Input
     const handleOnChange = (value: string, type: string) => {
         if (type === 'LNAME') {
             if (value === data.firstName) {
@@ -90,11 +92,12 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
         }
     };
 
+    // region Handle Next Press
     const handleOnNextPress = () => {
         if (data.firstName && data.lastName) {
             if (error.isValidFirstName && error.isValidLastName) {
                 // navigation.navigate('Register2', data);
-                
+
                 // router.push({
                 //     pathname: "/auth/register2",
                 //     params: {
@@ -106,6 +109,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
         }
     };
 
+    // region UI
     return (
         <ImageBackground
             style={styles.container}
@@ -178,6 +182,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
 };
 
 // Styles
+// region Style Sheet
 const styles = StyleSheet.create({
     container: {
         flex: 1,

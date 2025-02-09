@@ -13,8 +13,13 @@ import * as Animatable from 'react-native-animatable';
 // import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
 
-const Login: React.FC = () => {
+type LoginProps = {
+    navigation: any;
+};
+
+const Login: React.FC<LoginProps> = ({ navigation }) => {
     // const router = useRouter(); // Use the router from expo-router
+    // console.log('MY NAVIGATION HERE - ', navigation);
 
     const [data, setData] = useState({
         email: '',
@@ -26,12 +31,14 @@ const Login: React.FC = () => {
         errorMsg: '',
     });
 
+    // region DisplayError Msg
     const displayErrorMessage = (msg: string) => (
         <Animatable.View animation="fadeInLeft" duration={500}>
             <Text style={styles.errorMsg}>{msg}</Text>
         </Animatable.View>
     );
 
+    // region TextInput Change
     const textInputChange = (value: string, type: 'EMAIL' | 'PASSWORD') => {
         if (type === 'EMAIL') {
             if (value.trim().length > 4) {
@@ -72,6 +79,7 @@ const Login: React.FC = () => {
         }
     };
 
+    // region UpdateSecure Text
     const updateSecureTextEntry = () => {
         setData({
             ...data,
@@ -79,6 +87,7 @@ const Login: React.FC = () => {
         });
     };
 
+    // region UI
     return (
         <ImageBackground
             style={styles.container}
@@ -102,6 +111,7 @@ const Login: React.FC = () => {
                 </View>
                 {!data.isValidUser && displayErrorMessage(data.errorMsg)}
 
+                {/* eslint-disable-next-line react-native/no-inline-styles */}
                 <Text style={[styles.text_footer, { marginTop: 30 }]}>Password</Text>
                 <View style={styles.action}>
                     {/* <Feather name="lock" size={20} color="#05375a" /> */}
@@ -121,7 +131,7 @@ const Login: React.FC = () => {
                     </TouchableOpacity>
                 </View>
                 {!data.isValidPassword && displayErrorMessage(data.errorMsg)}
-
+                {/* eslint-disable-next-line react-native/no-inline-styles */}
                 <View style={{ marginTop: 30 }}>
                     <Button
                         title="Login"
@@ -133,6 +143,7 @@ const Login: React.FC = () => {
                         height={50}
                         onPress={() => console.log('Login pressed')}
                     />
+                    {/* eslint-disable-next-line react-native/no-inline-styles */}
                     <View style={{ marginTop: 20 }}>
                         <OutlineButton
                             title="Sign Up"
@@ -140,7 +151,7 @@ const Login: React.FC = () => {
                             size={18}
                             width="100%"
                             height={50}
-                            // onPress={() => router.push('/auth/register')} // Use router.push to navigate
+                            onPress={() => navigation.navigate('Register')} // Use router.push to navigate
                         />
                     </View>
                 </View>
@@ -149,6 +160,7 @@ const Login: React.FC = () => {
     );
 };
 
+// region Style Sheet
 const styles = StyleSheet.create({
     container: {
         flex: 1,
