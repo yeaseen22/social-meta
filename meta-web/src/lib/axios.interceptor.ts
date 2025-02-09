@@ -5,14 +5,13 @@ import { clearCredentials, setCredentials } from "@/redux/slice/auth.slice";
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api/v1";
 
-// Axios Instance Created
 // region Axios Instance
 const axiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
 });
 
-// Request Interceptor (Attach Access Token to Request Headers)
+
 // region Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
