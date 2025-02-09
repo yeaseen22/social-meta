@@ -8,7 +8,7 @@ class TokenUtils {
      * @param payload 
      * @returns 
      */
-    public generateToken = (payload: any, time: string = '1m'): string => {
+    public generateToken = (payload: any, time: string = '15m'): string => {
         // Generate a JWT token
         const token = jwt.sign(payload, this.jwtSecret, {
             expiresIn: time,
