@@ -5,14 +5,15 @@ import styles from "@/styles/layouts/home-layout.module.scss";
 import { TweetCard } from "@/components/common";
 import CreateInput from "@/components/common/CreateInput";
 import { useGetPostsQuery } from "@/redux/slice/auth.slice";
-import { RootState,store } from "@/redux/store";
+import { RootState, store } from "@/redux/store";
+import { Loading, NotFound } from '@/components/widgets';
 
 const Home = () => {
   const { data, isLoading, error } = useGetPostsQuery({ page: 1, limit: 5 });
   const state = store.getState() as RootState;
-  console.log('auth',state.auth)
+  console.log('auth', state.auth)
 
-// region loading
+  // region loading
   if (isLoading) return <p>Loading posts...</p>;
 
   if (error) {
@@ -26,9 +27,14 @@ const Home = () => {
     <>
       <div className={styles["tweets-area"]}>
         <CreateInput userProfileImage={"https://via.placeholder.com/150"} />
-        {posts.map((post: any) => (
+        {posts.length > 0 ? posts.map((post: any) => (
           <TweetCard key={post._id} post={post} />
-        ))}
+        )) : (
+          <div style={{ marginTop: '10rem' }}>
+            {/* <Loading label="No feeds are available!" /> */}
+            <NotFound label="No feeds are available!" />
+          </div>
+        )}
       </div>
     </>
   );
