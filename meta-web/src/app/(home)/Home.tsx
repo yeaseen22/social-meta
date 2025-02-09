@@ -6,7 +6,7 @@ import { TweetCard } from "@/components/common";
 import CreateInput from "@/components/common/CreateInput";
 import { useGetPostsQuery } from "@/redux/slice/auth.slice";
 import { RootState, store } from "@/redux/store";
-import { Loading, NotFound } from '@/components/widgets';
+import { NotFound } from '@/components/widgets';
 
 const Home = () => {
   const { data, isLoading, error } = useGetPostsQuery({ page: 1, limit: 5 });
