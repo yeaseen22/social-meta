@@ -7,7 +7,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'], // only persist auth state
+  whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({
