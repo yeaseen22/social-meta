@@ -16,7 +16,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <ReduxProvider>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon.author */}
               <CssBaseline />
               <Toaster
                 position="top-center"
