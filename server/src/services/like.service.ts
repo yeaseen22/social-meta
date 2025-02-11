@@ -150,6 +150,7 @@ class LikeService {
                         message: notification.message,
                         postId: notification.id,
                         senderId: userId,
+                        type: notification.type,
                         createdAt: notification.createdAt
                     });
                 }
@@ -169,6 +170,7 @@ class LikeService {
      * @param postId 
      * @returns 
      */
+    // region Like Post
     private async likePost(userId: string, postId: string): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
         try {
             const newLike = new this.likeModelRepository({ userId, postId });
@@ -191,6 +193,7 @@ class LikeService {
      * @param postId 
      * @returns 
      */
+    // region Dislike Post
     private async dislikePost(userId: string, postId: string): Promise<{ success: boolean, message: string, likeStatus: boolean }> {
         try {
             await this.likeModelRepository.deleteOne({ userId, postId });

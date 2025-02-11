@@ -6,3 +6,4 @@ export { default as postRoutes } from './posts.route';
 export { default as messageRoutes } from './messages.route';
 export { default as likeRoutes } from './like.route';
 export { default as notificationRoutes } from './notification.route';
+export { default as followRoutes } from './follow.route';
