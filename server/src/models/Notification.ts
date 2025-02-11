@@ -4,7 +4,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface INotification extends Document {
     recipientId: mongoose.Types.ObjectId | string;
     senderId: mongoose.Types.ObjectId | string;
-    postId: mongoose.Types.ObjectId | string;
+    postId?: mongoose.Types.ObjectId | string;
     type: string;
     read?: boolean;
     message: string;
@@ -27,11 +27,11 @@ const NotificationScheme = new Schema<INotification>({
     postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',
-        required: true
+        required: false
     },
     type: {
         type: String,
-        enum: ['like', 'comment', 'follow', 'message'],
+        enum: ['like', 'comment', 'follow', 'message', 'follow_request', 'follow_accept', 'follow_reject'],
         required: true
     },
     read: {

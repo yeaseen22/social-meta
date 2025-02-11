@@ -63,7 +63,7 @@ class NotificationService {
     // region Create Notification
     public async createNotification({ recipientId, senderId, postId, type, message }: INotification): Promise<any> {
         try {
-            return await this.notificationModelRepository.create({ recipientId, senderId, postId, type, message });
+            return await this.notificationModelRepository.create({ recipientId, senderId, postId: postId ?? '', type, message });
 
         } catch (error) {
             console.error(`Error in createNotification service: ${error}`);

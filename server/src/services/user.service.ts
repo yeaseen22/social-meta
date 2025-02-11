@@ -7,6 +7,26 @@ class UserService {
         this.userModelRepository = userModelRepository;
     }
 
+
+    /**
+     * UPDATE USER INFORMATIONS
+     * Find user by Id and then update informations
+     * @param userId 
+     * @param userInfo 
+     * @returns 
+     */
+    // region Update User-Info
+    public async updateUserInfo(userId: string, userInfo: any) {
+        try {
+            const updatedUser = await this.userModelRepository.findByIdAndUpdate(userId, userInfo);
+            if (!updatedUser) throw new Error('Error while try to update user info.');
+            return updatedUser;
+
+        } catch (error) {
+            console.error(`Error occured while update user info: ${error}`);
+        }
+    }
+
     /**
      * FIND USER BY USER_ID
      * Finds a user by their ID.
