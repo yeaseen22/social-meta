@@ -21,6 +21,12 @@ router.post('/follow', followController.sendFollowRequest);
 router.post('/accept-follow', followController.acceptFollowRequest);
 
 /**
+ * ---- Reject Follow ----
+ */
+// region POST /reject-follow
+router.post('/reject-follow', followController.rejectFollowRequest);
+
+/**
  * ---- Unfollow User ----
  * When you unfollow any User
  */

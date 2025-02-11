@@ -33,13 +33,90 @@ class PostService {
   }
 
   /**
+   * FETCH ALL POSTS SERVICE
+   * This is the optimized way of fetching all posts
+   * We used aggregate which is better for large set of data fetching
+   * Usefull for pagination, searching, filtering, and sorting and also relationships
+   * @param page 
+   * @param limit 
+   */
+  // region Get All Posts
+  public async fetchAllPosts(page: number = 1, limit: number = 5) {
+    try {
+      const skip = (page - 1) * limit;
+      const [result] = await this.postModelRepository.aggregate([
+        {
+          $match: {
+            ownerId: { $ne: null } // Filterout null owners at database level
+          }
+        },
+
+        {
+          $facet: { // facet for grouping multiple pipelines
+            metadata: [
+              { $count: "total" } // Getting total data
+            ],
+            posts: [
+              { $sort: { $createdAt: -1 } },
+              { $skip: skip },
+              { $limit: limit },
+              {
+                $lookup: { // Populate/Join user model
+                  from: 'users',
+                  localField: 'ownerId',
+                  foreignField: '_id',
+                  pipeline: [
+                    {
+                      $project: { // Select fields from user
+                        firstname: 1,
+                        lastname: 1,
+                        email: 1,
+                        title: 1,
+                        profilePhoto: 1,
+                      }
+                    }
+                  ],
+                  as: 'owner'
+                }
+              },
+              { $unwind: '$owner' } // Unwind owner array
+            ]
+          }
+        }
+      ]);
+
+      // Calculate pagination metadata
+      const total = result.metadata[0]?.total || 0;
+      const totalPages = Math.ceil(total / limit);
+      const hasNextPage = page < totalPages;
+      const hasPreviousPage = page > 1;
+
+      return {
+        success: true,
+        posts: result.posts,
+        total,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage,
+        page,
+        limit,
+      };
+
+    } catch (error) {
+      console.error("Failed to fetch all posts:", error);
+      throw new Error("Failed to fetch all posts");
+    }
+  }
+
+  /**
    * READ ALL POSTS SERVICE
+   * No Longer Used (using fetchAllPosts instead)
    * This is for reading all posts
    * @param page = 1 (Default)
    * @param limit = 5 (Default)
    */
   // region Read All Posts
-  public async readAllPosts(page: number = 1, limit: number = 5): Promise<any> {
+  public async readAllPostsOld(page: number = 1, limit: number = 5): Promise<any> {
     try {
       const posts = await this.postModelRepository
         .find({})

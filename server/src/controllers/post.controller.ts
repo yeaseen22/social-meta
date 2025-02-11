@@ -50,8 +50,8 @@ class PostController {
       // const skip = (pageNumber - 1) * limitNumber;
 
       // Fetch posts with populated user, filtering out those with non-existent users
-      const posts = await this.postService.readAllPosts(pageNumber, limitNumber);
-      if (!posts) res.status(400).json({ ...posts, success: false });
+      const posts = await this.postService.fetchAllPosts(pageNumber, limitNumber);
+      if (!posts) res.status(400).json({ success: false, posts });
 
       res.status(200).json({
         success: true,
