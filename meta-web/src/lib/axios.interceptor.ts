@@ -40,6 +40,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const state = store.getState() as RootState;
+        console.log("State: ", state);
         // Attempt to refresh the access token
         const refreshResponse = await axios.post(
       `${API_URL}/auth/refresh_token`,

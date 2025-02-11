@@ -30,7 +30,8 @@ const CreateInput: React.FC<CustomizedInputProps> = ({ userProfileImage }) => {
           maxWidth: 500,
           borderRadius: "12px",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)",
-          position: "absolute",
+          // position: "relative",
+          // left: "20%",
           zIndex: 1000,
         }}
       >

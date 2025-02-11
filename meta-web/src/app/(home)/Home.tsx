@@ -1,42 +1,73 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/styles/layouts/home-layout.module.scss";
 import { TweetCard } from "@/components/common";
 import CreateInput from "@/components/common/CreateInput";
 import { useGetPostsQuery } from "@/redux/slice/auth.slice";
-import { RootState, store } from "@/redux/store";
-import { NotFound } from '@/components/widgets';
+import { NotFound } from "@/components/widgets";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import SkeletonPost from "@/components/widgets/Skeletion";
 
 const Home = () => {
-  const { data, isLoading, error } = useGetPostsQuery({ page: 1, limit: 5 });
-  const state = store.getState() as RootState;
-  console.log('auth', state.auth)
+  const [posts, setPosts] = useState<any[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
-  // region loading
-  if (isLoading) return <p>Loading posts...</p>;
+  const { data, isFetching, isError, error } = useGetPostsQuery({ page, limit: 5 });
 
-  if (error) {
-    const errorMessage = error && typeof error === 'object' && 'data' in error ? (error.data as { message: string }).message : "Something went wrong!";
-    return <p>Failed to load posts: {errorMessage}</p>;
+  useEffect(() => {
+    if (data && data.posts?.posts?.length > 0) {
+      setPosts((prevPosts) => [...prevPosts, ...data.posts.posts]);
+      setHasMore(data.posts.hasNextPage);
+      setIsLoadingMore(false);
+    }
+  }, [data]);
+
+  const loadMorePosts = () => {
+    if (hasMore && !isLoadingMore && !isFetching) {
+      setIsLoadingMore(true);
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const { loaderRef } = useInfiniteScroll(loadMorePosts, hasMore);
+
+  if (isError) {
+    const errorMessage =
+      error && typeof error === "object" && "data" in error
+        ? (error.data as { message: string }).message
+        : "Something went wrong!";
+    return <NotFound label={`Failed to load posts: ${errorMessage}`} />;
   }
 
-  const posts = data?.posts?.posts || [];
-
   return (
-    <>
-      <div className={styles["tweets-area"]}>
-        <CreateInput userProfileImage={"https://via.placeholder.com/150"} />
-        {posts.length > 0 ? posts.map((post: any) => (
-          <TweetCard key={post._id} post={post} />
-        )) : (
-          <div style={{ marginTop: '10rem' }}>
-            {/* <Loading label="No feeds are available!" /> */}
-            <NotFound label="No feeds are available!" />
-          </div>
-        )}
+    <div className={styles["tweets-area"]}>
+    <CreateInput userProfileImage="https://via.placeholder.com/150" />
+
+    {isFetching && posts.length === 0 ? (
+      Array.from({ length: 5 }).map((_, index) => (
+        <SkeletonPost key={index} />
+      ))
+    ) : (
+      posts.map((post) => <TweetCard key={post._id} post={post} />)
+    )}
+
+    {/* Show the loader when there are more posts to load */}
+    {hasMore && !isFetching && !isLoadingMore && (
+      <div ref={loaderRef}>Loading more posts...</div>
+    )}
+
+    {/* Show loading skeletons if more posts are being fetched */}
+    {isLoadingMore && (
+      <div className="space-y-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <SkeletonPost key={index} />
+        ))}
       </div>
-    </>
+    )}
+  </div>
   );
 };
 
