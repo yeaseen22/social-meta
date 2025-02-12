@@ -117,8 +117,6 @@ class PostController {
     if (req.file !== undefined) {
       post.image = req.file.originalname;
     }
-
-    console.log('post', post);
     
     try {
       await this.postService.createPost(post);

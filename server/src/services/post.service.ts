@@ -51,7 +51,9 @@ class PostService {
             ownerId: { $ne: null } // Filterout null owners at database level
           }
         },
-
+        {
+          $addFields: { ownerId: { $toObjectId: "$ownerId" } }
+        },
         {
           $facet: { // facet for grouping multiple pipelines
             metadata: [
@@ -80,7 +82,12 @@ class PostService {
                   as: 'owner'
                 }
               },
-              { $unwind: '$owner' } // Unwind owner array
+              {
+                $unwind: { // Unwind owner array
+                  path: "$owner",
+                  preserveNullAndEmptyArrays: true // Prevents filtering out posts without an owner
+                }
+              }
             ]
           }
         }
