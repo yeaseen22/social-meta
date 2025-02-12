@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import toaster from "react-hot-toast";
-import { RootState, store } from "@/redux/store";
 import axiosInstance from "@/lib/axios.interceptor";
 
 
@@ -81,11 +80,9 @@ export const authAPISlice = createApi({
             const { accessToken, refreshToken, user } = data;
 
             dispatch(setCredentials({ accessToken, refreshToken, user }));
-            toaster.success("Registration successful!");
           }
         } catch (error) {
           console.error("Registration failed: ", error);
-          toaster.error("Registration failed. Please check your credentials.");
         }
       },
     }),

@@ -24,9 +24,10 @@ import registerStyles from "@/styles/auth/register.module.scss";
 import { useRouter } from "next/navigation";
 import { useRegisterMutation, setCredentials } from "@/redux/slice/auth.slice";
 import { useDispatch } from "react-redux";
-import toaster from "react-hot-toast";
+import toaster, { toast } from "react-hot-toast";
 import { useStep } from "@/hooks/useStep";
 import { useFormHandler } from "@/hooks/useForm";
+import RenderStepForms from "@/components/auth/register/StepForms";
 
 const genders = ["Male", "Female", "Non-binary", "Other"];
 const professions = ["Student", "Engineer", "Designer", "Developer", "Other"];
@@ -40,7 +41,7 @@ const validationRules = {
         ? "Invalid email format."
         : "",
   password: (value: string) =>
-    value.length < 6 ? "Password must be at least 6 characters." : "",
+    value.length < 6 ? "Password must be at least 8 characters." : "",
   firstname: (value: string) => (!value ? "First name is required." : ""),
   lastname: (value: string) => (!value ? "Last name is required." : ""),
   bio: (value: string) => (!value ? "Bio is required." : ""),
@@ -48,7 +49,6 @@ const validationRules = {
   gender: (value: string) => (!value ? "Gender is required." : ""),
   birthdate: (value: string) => (!value ? "Birthdate is required." : ""),
   profession: (value: string) => (!value ? "Profession is required." : ""),
-  passsword: (value: string) => (!value ? "Password is required." : ""),
   confirmPassword: (value: string) =>
     !value ? "Confirm Password is required." : "",
 };
@@ -56,6 +56,7 @@ const validationRules = {
 export default function RegisterPage() {
   const router = useRouter();
   const [register, { isLoading }] = useRegisterMutation();
+
   const dispatch = useDispatch();
 
   const { formData, handleChange, validateForm, handleBlur, errors } =
@@ -80,197 +81,41 @@ export default function RegisterPage() {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
-    // Prepare the JSON payload
+  
     const formDataToSubmit = {
       ...formData,
       profileImage: undefined, // Skip image in the JSON payload
     };
-
-    console.log("Form data to submit:", formDataToSubmit);
-
+  
     try {
+      console.log("Submitting Data:", formDataToSubmit);
       const response = await register(formDataToSubmit).unwrap();
       dispatch(setCredentials(response));
-      toaster.success("Registration successful!");
-      router.push("/");
-
+      toast.success("Registration successful!");
+      router.push("/login");
     } catch (error: any) {
-      toaster.error(error?.data?.message || "Registration failed.");
+      if (error?.data?.details) {
+        error.data.details.forEach((detail: any) =>
+          toast.error(`${detail.path}: ${detail.message}`)
+        );
+      } else {
+        toast.error(error?.data?.message || "Registration failed.");
+      }
     }
   };
+  
+  
 
   const renderStepContent = () => {
-    switch (currentTab) {
-      case 0:
-        return (
-          <>
-            <Typography variant="h5">Basic Information</Typography>
-            <TextField
-              fullWidth
-              label="First Name"
-              name="firstname"
-              onChange={handleChange}
-              value={formData.firstname}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.firstname}
-              helperText={errors.firstname}
-            />
-            <TextField
-              fullWidth
-              label="Last Name"
-              name="lastname"
-              onChange={handleChange}
-              value={formData.lastname}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.lastname}
-              helperText={errors.lastname}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              name="email"
-              onChange={handleChange}
-              value={formData.email}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.email}
-              helperText={errors.email}
-            />
-            <TextField
-              fullWidth
-              multiline
-              minRows={2}
-              label="Bio"
-              name="bio"
-              onChange={handleChange}
-              value={formData.bio}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.bio}
-              helperText={errors.bio}
-            />
-            <TextField
-              fullWidth
-              label="Title"
-              name="title"
-              onChange={handleChange}
-              value={formData.title}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.title}
-              helperText={errors.title}
-            />
-          </>
-        );
-      case 1:
-        return (
-          <>
-            <Typography variant="h5">Profile Details</Typography>
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Gender</InputLabel>
-              <Select
-                name="gender"
-                value={formData.gender}
-                onChange={(event) => handleChange(event as any)}
-                error={!!errors.gender}
-              >
-                {genders.map((gender) => (
-                  <MenuItem key={gender} value={gender}>
-                    {gender}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <TextField
-              fullWidth
-              type="date"
-              label="Birthdate"
-              name="birthdate"
-              onChange={handleChange}
-              value={formData.birthdate}
-              InputLabelProps={{ shrink: true }}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.birthdate}
-              helperText={errors.birthdate}
-            />
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Profession</InputLabel>
-              <Select
-                name="profession"
-                value={formData.profession}
-                onChange={(event) => handleChange(event as any)}
-                error={!!errors.profession}
-              >
-                {professions.map((profession) => (
-                  <MenuItem key={profession} value={profession}>
-                    {profession}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </>
-        );
-      case 2:
-        return (
-          <>
-            <Typography variant="h5">Security & Profile</Typography>
-            <TextField
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              onChange={handleChange}
-              value={formData.password}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.password}
-              helperText={errors.password}
-            />
-            <TextField
-              fullWidth
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              onChange={handleChange}
-              value={formData.confirmPassword}
-              margin="normal"
-              onBlur={handleBlur}
-              error={!!errors.confirmPassword}
-              helperText={errors.confirmPassword}
-            />
-            <Box marginTop={2} textAlign="center">
-              {formData.profileImage ? (
-                <Avatar
-                  src={URL.createObjectURL(formData.profileImage)}
-                  className={registerStyles.avatar}
-                />
-              ) : (
-                <Avatar className={registerStyles.avatar}>
-                  <CloudUploadIcon />
-                </Avatar>
-              )}
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-              >
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={handleChange}
-                  name="profileImage"
-                />
-                Upload Profile Picture
-              </IconButton>
-            </Box>
-          </>
-        );
-    }
+    return (
+
+      <RenderStepForms
+        formData={formData}
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        errors={errors} currentTab={currentTab} />
+
+    )
   };
 
   return (
@@ -329,7 +174,6 @@ export default function RegisterPage() {
           </Box>
         </Box>
       </Box>
-      {/* Right Section */}
       <Box className={registerStyles.rightSection}>
         <Box className="overlay"></Box>
         <Box className={registerStyles.animatedText}>

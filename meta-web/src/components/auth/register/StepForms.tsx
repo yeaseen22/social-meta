@@ -17,7 +17,7 @@ type StepForm1Props = {
         profession: string;
         password: string;
         confirmPassword: string;
-        profileImage: File | null;
+        profileImage: File;
     };
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -46,7 +46,7 @@ export const StepForm1 = ({ formData, handleChange, handleBlur, errors }: StepFo
                 label="First Name"
                 name="firstname"
                 onChange={handleChange}
-                value={formData.firstname}
+                value={formData.firstname || ""}
                 margin="normal"
                 onBlur={handleBlur}
                 error={!!errors.firstname}
@@ -57,7 +57,7 @@ export const StepForm1 = ({ formData, handleChange, handleBlur, errors }: StepFo
                 label="Last Name"
                 name="lastname"
                 onChange={handleChange}
-                value={formData.lastname}
+                value={formData.lastname || ""}
                 margin="normal"
                 onBlur={handleBlur}
                 error={!!errors.lastname}
@@ -179,9 +179,7 @@ export const StepForm2 = ({ formData, handleChange, handleBlur, errors }: TStepF
 type TStepForm3Props = {
     formData: {
         password: string;
-        confirmPassword: string;
-        profileImage: string | Blob | MediaSource;
-    };
+        confirmPassword: string;    };
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
     errors: {
@@ -220,32 +218,7 @@ export const StepForm3 = ({ formData, handleChange, handleBlur, errors }: TStepF
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
             />
-            <Box marginTop={2} textAlign="center">
-                {formData.profileImage ? (
-                    <Avatar
-                        src={URL.createObjectURL(formData.profileImage as any)}
-                        className={registerStyles.avatar}
-                    />
-                ) : (
-                    <Avatar className={registerStyles.avatar}>
-                        <CloudUploadIcon />
-                    </Avatar>
-                )}
-                <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="label"
-                >
-                    <input
-                        hidden
-                        accept="image/*"
-                        type="file"
-                        onChange={handleChange}
-                        name="profileImage"
-                    />
-                    Upload Profile Picture
-                </IconButton>
-            </Box>
+    
         </>
     );
 }
@@ -255,24 +228,25 @@ export const StepForm3 = ({ formData, handleChange, handleBlur, errors }: TStepF
 type TRenderStepFormsProps = {
     currentTab: number;
     formData: {
-        firstName: string;
-        lastName: string;
+        firstname: string;
+        lastname: string;
         email: string;
-        phoneNumber: string;
+        bio: string;
+        title: string;
         gender: string;
         birthdate: string;
         profession: string;
         password: string;
         confirmPassword: string;
-        profileImage: string | Blob | MediaSource;
     };
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
     errors: {
-        firstName: string;
-        lastName: string;
+        firstname: string;
+        lastname: string;
+        bio: string;
+        title: string;
         email: string;
-        phoneNumber: string;
         gender: string;
         birthdate: string;
         profession: string;
@@ -280,6 +254,7 @@ type TRenderStepFormsProps = {
         confirmPassword: string;
     };
 };
+
 
 
 // region Render Step Forms
