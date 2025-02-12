@@ -1,5 +1,6 @@
 import { Post } from "../models";
 
+
 class PostService {
   private readonly postModelRepository: typeof Post;
 
@@ -57,7 +58,7 @@ class PostService {
               { $count: "total" } // Getting total data
             ],
             posts: [
-              { $sort: { $createdAt: -1 } },
+              { $sort: { createdAt: -1 } },
               { $skip: skip },
               { $limit: limit },
               {
