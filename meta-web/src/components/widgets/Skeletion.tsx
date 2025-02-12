@@ -1,18 +1,17 @@
-import React from "react";
-import styles from "@/styles/components/tweetcard.module.scss";
+import type React from "react"
+import styles from "@/styles/components/skeleton.module.scss"
 
 type SkeletonProps = {
-  width?: string | number;
-  height?: string | number;
-  variant?: "circle" | "rect";
-};
+  width?: string | number
+  height?: string | number
+  variant?: "circle" | "rect"
+}
 
 const Skeleton: React.FC<SkeletonProps> = ({ width = "100%", height = "100%", variant = "rect" }) => {
-  const style = { width, height };
+  const style = { width, height }
 
-  return (
-    <span className={`${styles.skeleton} ${styles[variant]}`} style={style}></span>
-  );
-};
+  return <span className={`${styles.skeleton} ${variant === "circle" ? styles.circle : ""}`} style={style}></span>
+}
 
-export default Skeleton;
+export default Skeleton
+
