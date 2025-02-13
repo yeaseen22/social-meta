@@ -1,1 +1,0 @@
-export { type FollowButtonType } from './Button.type';

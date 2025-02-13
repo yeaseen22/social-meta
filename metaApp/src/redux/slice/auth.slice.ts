@@ -1,11 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { createSlice } from "@reduxjs/toolkit";
-import Toast from "react-native-toast-message";
-import axiosInstance from "../../lib/axiosInstance";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { createSlice } from '@reduxjs/toolkit';
+import Toast from 'react-native-toast-message';
+import axiosInstance from '../../lib/axiosInstance';
 
 // Base API URL
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api/v1";
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://localhost:8080/api/v1';
+
+console.log('API_URL - ', API_URL);
 
 // Custom base query with Axios
 const customBaseQuery = async ({ url, method, data }: any) => {
@@ -18,29 +19,30 @@ const customBaseQuery = async ({ url, method, data }: any) => {
 };
 
 // Auth API Slice
+// region Auth Slice
 export const authAPISlice = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
     getPosts: builder.query({
       query: ({ page = 1, limit = 5 }) => ({
         url: `/post/read_all_posts?page=${page}&limit=${limit}`,
-        method: "GET",
+        method: 'GET',
       }),
     }),
 
     addPost: builder.mutation({
       query: (body) => ({
-        url: "posts",
-        method: "POST",
+        url: 'posts',
+        method: 'POST',
         body,
       }),
     }),
 
     login: builder.mutation({
       query: (body) => ({
-        url: "/auth/login",
-        method: "POST",
+        url: '/auth/login',
+        method: 'POST',
         data: body,
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
@@ -50,15 +52,15 @@ export const authAPISlice = createApi({
           dispatch(setCredentials({ accessToken, refreshToken, user }));
 
           Toast.show({
-            type: "success",
-            text1: "Login Successful!",
+            type: 'success',
+            text1: 'Login Successful!',
           });
         } catch (error) {
-          console.error("Login failed: ", error);
+          console.error('Login failed: ', error);
           Toast.show({
-            type: "error",
-            text1: "Login failed",
-            text2: "Please check your credentials.",
+            type: 'error',
+            text1: 'Login failed',
+            text2: 'Please check your credentials.',
           });
         }
       },
@@ -66,8 +68,8 @@ export const authAPISlice = createApi({
 
     register: builder.mutation({
       query: (body) => ({
-        url: "/auth/register",
-        method: "POST",
+        url: '/auth/register',
+        method: 'POST',
         data: body,
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
@@ -77,14 +79,14 @@ export const authAPISlice = createApi({
 
           dispatch(setCredentials({ accessToken, refreshToken, user }));
           Toast.show({
-            type: "success",
-            text1: "Registration Successful!",
+            type: 'success',
+            text1: 'Registration Successful!',
           });
         } catch (error) {
-          console.error("Registration failed: ", error);
+          console.error('Registration failed: ', error);
           Toast.show({
-            type: "error",
-            text1: "Registration failed",
+            type: 'error',
+            text1: 'Registration failed',
           });
         }
       },
@@ -92,22 +94,22 @@ export const authAPISlice = createApi({
 
     logout: builder.mutation({
       query: () => ({
-        url: "/auth/logout",
-        method: "GET",
+        url: '/auth/logout',
+        method: 'GET',
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           dispatch(clearCredentials());
           Toast.show({
-            type: "success",
-            text1: "Logout Successful!",
+            type: 'success',
+            text1: 'Logout Successful!',
           });
         } catch (error) {
-          console.error("Logout failed: ", error);
+          console.error('Logout failed: ', error);
           Toast.show({
-            type: "error",
-            text1: "Logout failed",
+            type: 'error',
+            text1: 'Logout failed',
           });
         }
       },
@@ -142,7 +144,7 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setCredentials: (state, action) => {
