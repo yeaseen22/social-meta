@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -12,6 +13,9 @@ import {
 import * as Animatable from 'react-native-animatable';
 // import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
+import { useLoginMutation, setCredentials } from '../../redux/slice/auth.slice';
+import { useDispatch } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 type LoginProps = {
     navigation: any;
@@ -20,6 +24,8 @@ type LoginProps = {
 const Login: React.FC<LoginProps> = ({ navigation }) => {
     // const router = useRouter(); // Use the router from expo-router
     // console.log('MY NAVIGATION HERE - ', navigation);
+    const dispatch = useDispatch();
+    const [loginMutation] = useLoginMutation();
 
     const [data, setData] = useState({
         email: '',
@@ -87,6 +93,27 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         });
     };
 
+    // region Handle Login
+    const handleLogin = async () => {
+        try {
+            console.log('DATA - ', data);
+
+            // sending data to API
+            const response = await loginMutation({ email: data.email, password: data.password }).unwrap();
+            console.log('RESPONSE - ', response);
+            dispatch(setCredentials(response.data));
+
+            Toast.show({
+                type: 'success',
+                text1: 'Hello',
+                text2: 'This is some something 👋',
+            });
+
+        } catch (error) {
+            console.error('error - ', error);
+        }
+    };
+
     // region UI
     return (
         <ImageBackground
@@ -111,7 +138,6 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                 </View>
                 {!data.isValidUser && displayErrorMessage(data.errorMsg)}
 
-                {/* eslint-disable-next-line react-native/no-inline-styles */}
                 <Text style={[styles.text_footer, { marginTop: 30 }]}>Password</Text>
                 <View style={styles.action}>
                     {/* <Feather name="lock" size={20} color="#05375a" /> */}
@@ -131,19 +157,18 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {!data.isValidPassword && displayErrorMessage(data.errorMsg)}
-                {/* eslint-disable-next-line react-native/no-inline-styles */}
+
+
                 <View style={{ marginTop: 30 }}>
                     <Button
                         title="Login"
-                        color1st="yellow"
-                        color2nd="orange"
+                        bgColor="royalblue"
                         size={18}
-                        textColor="black"
-                        width="100%"
+                        textColor="white"
                         height={50}
-                        onPress={() => console.log('Login pressed')}
+                        onPress={handleLogin}
                     />
-                    {/* eslint-disable-next-line react-native/no-inline-styles */}
+
                     <View style={{ marginTop: 20 }}>
                         <OutlineButton
                             title="Sign Up"

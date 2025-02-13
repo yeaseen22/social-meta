@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TouchableOpacity } from 'react-native';
@@ -19,6 +21,7 @@ import { Tabs } from './src/navigations';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +49,7 @@ const App = () => {
     <Provider store={store}>
       <GestureHandlerRootView>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Tabs">
+          <Stack.Navigator initialRouteName="Onboarding">
             <Stack.Screen
               name="Onboarding"
               component={OnboardingScreen}
@@ -138,6 +141,7 @@ const App = () => {
             />
           </Stack.Navigator>
         </NavigationContainer>
+        <Toast />
       </GestureHandlerRootView>
     </Provider>
   );

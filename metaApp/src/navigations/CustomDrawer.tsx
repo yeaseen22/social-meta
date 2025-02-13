@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
@@ -8,7 +9,7 @@ import {
     Paragraph,
     Drawer,
     Text,
-    Switch
+    Switch,
 } from 'react-native-paper';
 
 const CustomDrawer = (props: any) => {
@@ -42,10 +43,10 @@ const CustomDrawer = (props: any) => {
                     </View>
 
                     <Drawer.Section style={{ flex: 1, marginTop: 15, marginLeft: 10 }} >
-                        <DrawerItem label="Home" onPress={() => props.navigation.navigate("Home")} />
-                        <DrawerItem label="See Profile" onPress={() => props.navigation.navigate("Profile")} />
-                        <DrawerItem label="About Meta" onPress={() => props.navigation.navigate("About")} />
-                        <DrawerItem label="Settings" onPress={() => props.navigation.navigate("Settings")} />
+                        <DrawerItem label="Home" onPress={() => props.navigation.navigate('Home')} />
+                        <DrawerItem label="See Profile" onPress={() => props.navigation.navigate('Profile')} />
+                        <DrawerItem label="About Meta" onPress={() => props.navigation.navigate('About')} />
+                        <DrawerItem label="Settings" onPress={() => props.navigation.navigate('Settings')} />
                     </Drawer.Section>
 
                     <Drawer.Section title="Preferences">
@@ -64,7 +65,7 @@ const CustomDrawer = (props: any) => {
 
             {/* ---- LogOut ---- */}
             <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem label="Sign Out" onPress={() => props.navigation.navigate("Login")} />
+                <DrawerItem label="Sign Out" onPress={() => props.navigation.navigate('Login')} />
             </Drawer.Section>
         </View>
     );
@@ -87,22 +88,22 @@ const styles = StyleSheet.create({
     },
     paragraph: {
         fontWeight: 'bold',
-        marginRight: 3
+        marginRight: 3,
     },
     drawerSection: {
-        marginTop: 15
+        marginTop: 15,
     },
     bottomDrawerSection: {
         marginBottom: 15,
-        borderTopColor: '#f4f4f4'
+        borderTopColor: '#f4f4f4',
     },
     preference: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 12,
         paddingHorizontal: 16,
-        marginLeft: 15
-    }
+        marginLeft: 15,
+    },
 });
 
 export default CustomDrawer;

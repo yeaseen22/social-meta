@@ -1,1 +1,4 @@
-export { type FollowButtonType } from './Button.type';
+export {
+    type FollowButtonType,
+    type ButtonType,
+} from './Button.type';

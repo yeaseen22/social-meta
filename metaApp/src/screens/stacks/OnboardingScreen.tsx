@@ -6,11 +6,13 @@ import {
     View,
     ImageBackground,
     Text,
-    Platform
+    Platform,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 
+
 // Screen1 Component
+// region Screen 1
 const Screen1 = ({ navigation }: { navigation: any }) => {
     return (
         <View style={styles.container}>
@@ -38,7 +40,10 @@ const Screen1 = ({ navigation }: { navigation: any }) => {
         </View>
     );
 };
+
+
 // Screen2 Component
+// region Screen 2
 const Screen2 = ({ navigation }: { navigation: any }) => {
     return (
         <View style={styles.container}>
@@ -67,7 +72,9 @@ const Screen2 = ({ navigation }: { navigation: any }) => {
     );
 };
 
+
 // Screen3 Component
+// region Screen 3
 const Screen3 = ({ navigation }: { navigation: any }) => {
     return (
         <View style={styles.container}>
@@ -96,7 +103,9 @@ const Screen3 = ({ navigation }: { navigation: any }) => {
     );
 };
 
+
 // Onboarding Component
+// region Onboarding Comp.
 const Onboarding = (props: any) => {
     return (
         <View style={styles.container}>
@@ -111,7 +120,9 @@ const Onboarding = (props: any) => {
 
 export default Onboarding;
 
+
 // Styles
+// region Styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,

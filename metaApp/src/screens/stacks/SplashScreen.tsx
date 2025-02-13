@@ -1,18 +1,16 @@
-// import { StatusBar } from 'expo-status-bar';
+/* eslint-disable react/react-in-jsx-scope */
 import {
     View,
     Text,
     StyleSheet,
     Dimensions,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import { LinearGradient } from 'expo-linear-gradient';
-// import { MaterialIcons } from '@expo/vector-icons';
 
-
-const Splash = () => {
+// region Splash Screen
+const Splash = ({ navigation }: any) => {
     return (
         <ImageBackground
             style={styles.container}
@@ -30,15 +28,10 @@ const Splash = () => {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                        // onPress={() => navigation.navigate("Login")}
+                        style={styles.signIn}
+                        onPress={() => navigation.navigate('Login')}
                     >
-                        {/* <LinearGradient
-                            colors={['blue', 'royalblue']}
-                            style={styles.signIn}
-                        > */}
                         <Text style={styles.textSign}>Get Started</Text>
-                        {/* <MaterialIcons name="navigate-next" size={20} color="white" /> */}
-                        {/* </LinearGradient> */}
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -47,7 +40,8 @@ const Splash = () => {
 };
 
 // Styling Part..
-const { height } = Dimensions.get("screen");
+// region Styling Part
+const { height } = Dimensions.get('screen');
 const height_logo = height * 0.28;
 
 const styles = StyleSheet.create({
@@ -59,7 +53,7 @@ const styles = StyleSheet.create({
         flex: 3,
         justifyContent: 'center',
         alignItems: 'center',
-        color: 'black'
+        color: 'black',
     },
     footer: {
         flex: 1,
@@ -67,20 +61,20 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 50,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
     },
     logo: {
         width: height_logo,
-        height: height_logo
+        height: height_logo,
     },
     title: {
         fontSize: 30,
         color: '#05375a',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     text: {
         color: 'gray',
-        marginTop: 5
+        marginTop: 5,
     },
     button: {
         alignItems: 'flex-end',
@@ -91,12 +85,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: 'royalblue',
     },
     textSign: {
         color: 'white',
-        fontWeight: 'bold'
-    }
+        fontWeight: 'bold',
+    },
 });
 
 export default Splash;

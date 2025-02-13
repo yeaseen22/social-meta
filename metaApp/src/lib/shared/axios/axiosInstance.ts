@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { store } from '../redux/store';
-import { setCredentials, clearCredentials } from '../redux/slice/auth.slice';
+import { store } from '../../../redux/store';
+import { setCredentials, clearCredentials } from '../../../redux/slice/auth.slice';
 import Toast from 'react-native-toast-message';
 
 declare global {
@@ -14,11 +14,13 @@ declare global {
 
 const API_URL = 'http://localhost:8080/api/v1'; // Replace with your server URL
 
+
 // Create Axios instance
 const axiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
 });
+
 
 // Attach Access Token to Request Headers
 // region Request Interceptor
@@ -36,6 +38,7 @@ axiosInstance.interceptors.request.use(
   },
   (error: any) => Promise.reject(error)
 );
+
 
 // Handle Refresh Token Mechanism
 // region Response Interceptor
@@ -61,8 +64,7 @@ axiosInstance.interceptors.response.use(
           { headers: { 'Content-Type': 'application/json' } }
         );
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          refreshResponse.data.data;
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data.data;
 
         // Store the updated tokens in AsyncStorage
         await AsyncStorage.setItem('accessToken', newAccessToken);
@@ -74,6 +76,7 @@ axiosInstance.interceptors.response.use(
         // Retry the original request
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
+
       } catch (refreshError) {
         store.dispatch(clearCredentials());
         await AsyncStorage.clear();

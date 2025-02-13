@@ -5,7 +5,16 @@ export type FollowButtonType = {
     children?: any
 };
 
-
+export type ButtonType = {
+    title: string;
+    bgColor?: string;
+    size?: number;
+    textColor?: string;
+    width?: number;
+    height?: number;
+    onPress?: (event: any) => void;
+    children?: React.ReactNode
+};
 
 export type RootStackParamList = {
     UploadProfile: undefined;

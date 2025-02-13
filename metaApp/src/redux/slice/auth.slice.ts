@@ -1,44 +1,36 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
 import Toast from 'react-native-toast-message';
-import axiosInstance from '../../lib/axiosInstance';
+import { axiosInstance } from '../../lib/shared';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Base API URL
 const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://localhost:8080/api/v1';
 
 console.log('API_URL - ', API_URL);
 
-// Custom base query with Axios
+/**
+ * The Custom Base query for Axios Interceptor
+ * @param param0
+ * @returns
+ */
 const customBaseQuery = async ({ url, method, data }: any) => {
   try {
     const result = await axiosInstance({ url, method, data });
     return { data: result.data };
+
   } catch (error) {
     return { error };
   }
 };
 
-// Auth API Slice
-// region Auth Slice
-export const authAPISlice = createApi({
+// Auth API
+// region Auth API
+export const authAPI = createApi({
   reducerPath: 'api',
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
-    getPosts: builder.query({
-      query: ({ page = 1, limit = 5 }) => ({
-        url: `/post/read_all_posts?page=${page}&limit=${limit}`,
-        method: 'GET',
-      }),
-    }),
-
-    addPost: builder.mutation({
-      query: (body) => ({
-        url: 'posts',
-        method: 'POST',
-        body,
-      }),
-    }),
-
+    // region Login Mutation
     login: builder.mutation({
       query: (body) => ({
         url: '/auth/login',
@@ -55,6 +47,7 @@ export const authAPISlice = createApi({
             type: 'success',
             text1: 'Login Successful!',
           });
+
         } catch (error) {
           console.error('Login failed: ', error);
           Toast.show({
@@ -66,6 +59,7 @@ export const authAPISlice = createApi({
       },
     }),
 
+    // region Register Mutation
     register: builder.mutation({
       query: (body) => ({
         url: '/auth/register',
@@ -82,6 +76,7 @@ export const authAPISlice = createApi({
             type: 'success',
             text1: 'Registration Successful!',
           });
+
         } catch (error) {
           console.error('Registration failed: ', error);
           Toast.show({
@@ -92,6 +87,7 @@ export const authAPISlice = createApi({
       },
     }),
 
+    // region Logout Mutation
     logout: builder.mutation({
       query: () => ({
         url: '/auth/logout',
@@ -117,14 +113,11 @@ export const authAPISlice = createApi({
   }),
 });
 
-export const {
-  useLoginMutation,
-  useRegisterMutation,
-  useGetPostsQuery,
-  useLogoutMutation,
-} = authAPISlice;
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } = authAPI;
+
 
 // Auth State Interface
+// region Auth Slice
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
@@ -143,19 +136,32 @@ const initialState: AuthState = {
   user: null,
 };
 
+// Auth-Slice..
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    // region SetCredentials
     setCredentials: (state, action) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.user = action.payload.user;
+
+      // Setting to the AsyncStorage for Mobile Local-Storage
+      AsyncStorage.setItem('accessToken', action.payload.accessToken);
+      AsyncStorage.setItem('refreshToken', action.payload.refreshToken);
+      AsyncStorage.setItem('user', JSON.stringify(action.payload.user));
     },
+
+    // region ClearCrendential
     clearCredentials: (state) => {
       state.accessToken = null;
       state.refreshToken = null;
       state.user = null;
+
+      AsyncStorage.removeItem('accessToken');
+      AsyncStorage.removeItem('refreshToken');
+      AsyncStorage.removeItem('user');
     },
   },
 });
