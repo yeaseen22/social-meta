@@ -15,7 +15,7 @@ interface TweetCardProps {
         createdAt: string;
         likes_count: number;
         comments_count: number;
-        ownerId: {
+        owner: {
             firstname: string;
             lastname: string;
             profilePhoto?: string;
@@ -28,7 +28,7 @@ export default function TweetCard({ post }: TweetCardProps) {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => setExpanded(!expanded);
-    console.log(post.ownerId.title);
+    // console.log(post.owner.firstname);
 
     return (
         <div className={styles['tweet-card-wrapper']}>
@@ -37,14 +37,14 @@ export default function TweetCard({ post }: TweetCardProps) {
                 {/* HEADER */}
                 <CardHeader
                     avatar={<Avatar
-                        src={post.ownerId.profilePhoto || ''}
+                        src={post?.owner?.profilePhoto || ''}
                         sx={{ bgcolor: red[500] }}
                     >
-                        {post.ownerId.firstname[0] || ''}
+                        {post?.owner?.firstname || ''}
                     </Avatar>}
                     action={<IconButton aria-label="settings"><MoreVertIcon /></IconButton>}
-                    title={`${post.ownerId.firstname} ${post.ownerId.lastname}  || ${post.ownerId.title}`}
-                    subheader={new Date(post.createdAt).toDateString()}
+                    title={`${post?.owner?.firstname} ${post?.owner?.lastname}  || ${post?.owner?.title}`}
+                    subheader={new Date(post?.createdAt).toDateString()}
 
                 />
 
@@ -53,11 +53,11 @@ export default function TweetCard({ post }: TweetCardProps) {
                     component="img"
                     height="194"
                     image={
-                        post.ownerId?.profilePhoto === "avatar" || !post.ownerId?.profilePhoto?.trim()
+                        post.owner?.profilePhoto === "avatar" || !post.owner?.profilePhoto?.trim()
                             ? "https://www.stuff.tv/wp-content/uploads/sites/2/2024/09/meta-ai.jpg?w=1080"
-                            : post.ownerId.profilePhoto
+                            : post.owner.profilePhoto
                     }
-                    alt={post.ownerId.title || "Default Image"}
+                    alt={post?.owner?.title || "Default Image"}
                 />
 
 
@@ -65,10 +65,10 @@ export default function TweetCard({ post }: TweetCardProps) {
                 {/* CONTENT */}
                 <CardContent>
                     <Typography variant="h6" color="text.primary">
-                        {post.ownerId.title}
+                        {post?.owner?.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {post.body}
+                        {post?.body}
                     </Typography>
                 </CardContent>
 
@@ -81,7 +81,7 @@ export default function TweetCard({ post }: TweetCardProps) {
                     <IconButton aria-label="share">
                         <ShareIcon />
                     </IconButton>
-                    <Typography>{post.comments_count} Comments</Typography>
+                    <Typography>{post?.comments_count} Comments</Typography>
                     <IconButton
                         className={styles['expand-button']}
                         onClick={handleExpandClick}
@@ -96,7 +96,7 @@ export default function TweetCard({ post }: TweetCardProps) {
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Typography paragraph>Method:</Typography>
-                        <Typography paragraph>Post created on: {new Date(post.createdAt).toLocaleDateString()}</Typography>
+                        <Typography paragraph>Post created on: {new Date(post?.createdAt).toLocaleDateString()}</Typography>
                         <Typography paragraph>
                             Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo in the pan.
                         </Typography>

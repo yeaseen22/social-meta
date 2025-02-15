@@ -7,35 +7,38 @@ interface Post {
   createdAt: string;
   likes_count: number;
   comments_count: number;
-  ownerId: {
-    firstname: string;
-    lastname: string;
-    profilePhoto?: string;
-    title: string;
-  };
+  owner: string; // Ensure ownerId is correctly mapped
 }
 
-export function usePosts(initialPage: number, limit: number) {
-  const [page, setPage] = useState(initialPage);
+export function usePosts(page: number, limit: number) {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { data, isLoading, error, isFetching } = useGetPostsQuery({
-    page,
-    limit,
-  });
+  const { data, isLoading, error, isFetching, refetch } = useGetPostsQuery({ page, limit });
 
   useEffect(() => {
     if (data?.posts?.posts?.length) {
-      setPosts((prevPosts) => [...prevPosts, ...data.posts.posts]);
+      setPosts((prevPosts) => {
+        const newPosts = data.posts.posts.filter(
+          (newPost: { _id: string; }) => !prevPosts.some((prevPost) => prevPost._id === newPost._id)
+        );
+        return [...prevPosts, ...newPosts];
+      });
     }
   }, [data]);
 
-  const hasMore = data?.posts?.hasNextPage || false;
+  useEffect(() => {
+    refetch(); // Ensure API is re-called when page changes
+  }, [page]);
+
+
+  const hasMore = Boolean(data?.posts?.hasNextPage);
+  console.log("Fetched Posts:", posts);
+  console.log("Has More:", hasMore);
 
   return {
     posts,
     isLoading: isLoading || isFetching,
     error: error ? "Failed to fetch posts" : null,
     hasMore,
-    setPage,
+    
   };
 }

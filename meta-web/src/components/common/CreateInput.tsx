@@ -8,6 +8,8 @@ import Avatar from "@mui/material/Avatar";
 import { Box } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import CreatePostDialog from "./PostModal";
+import { useTheme } from "@mui/material/styles";
+
 
 interface CustomizedInputProps {
   userProfileImage: string;
@@ -15,6 +17,7 @@ interface CustomizedInputProps {
 
 const CreateInput: React.FC<CustomizedInputProps> = ({ userProfileImage }) => {
   const [open, setOpen] = useState(false);
+  const theme = useTheme()
 
   const handlePaperClick = () => setOpen(true);
 
@@ -30,8 +33,8 @@ const CreateInput: React.FC<CustomizedInputProps> = ({ userProfileImage }) => {
           maxWidth: 500,
           borderRadius: "12px",
           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)",
-          // position: "relative",
-          // left: "20%",
+          position: "relative",
+          left: "20px",
           zIndex: 1000,
         }}
       >
@@ -45,7 +48,9 @@ const CreateInput: React.FC<CustomizedInputProps> = ({ userProfileImage }) => {
             ml: 1,
             flex: 1,
             borderRadius: "8px",
-            backgroundColor: "#f0f2f5",
+            backgroundColor: theme.palette.mode === "dark"
+              ? theme.palette.grey[900] // Dark mode background
+              : theme.palette.grey[100], // Light mode background
             p: "8px 12px",
           }}
           placeholder="What's on your mind?"

@@ -34,8 +34,8 @@ export default function CreatePostDialog({ avatarSrc, open, setOpen }: CreatePos
       maxWidth="sm"
       PaperProps={{
         sx: {
-          bgcolor: "#f0f2f5",
-          color: "black",
+          // bgcolor: "#f0f2f5",
+          // color: "black",
           borderRadius: 3,
         },
       }}
@@ -71,8 +71,8 @@ export default function CreatePostDialog({ avatarSrc, open, setOpen }: CreatePos
               onChange={(e) => setPrivacy(e.target.value)}
               size="small"
               sx={{
-                color: "black",
-                bgcolor: "rgba(0,0,0,0.05)",
+                // color: "black",
+                // bgcolor: "rgba(0,0,0,0.05)",
                 borderRadius: 1,
                 fontSize: "0.875rem",
                 height: 32,
@@ -94,9 +94,9 @@ export default function CreatePostDialog({ avatarSrc, open, setOpen }: CreatePos
           InputProps={{
             disableUnderline: true,
             sx: {
-              color: "black",
+              // color: "black",
               fontSize: "1.25rem",
-              bgcolor: "white",
+              // bgcolor: "white",
               p: 1,
               borderRadius: 1,
               "&::placeholder": {
@@ -115,28 +115,13 @@ export default function CreatePostDialog({ avatarSrc, open, setOpen }: CreatePos
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            bgcolor: "#ffffff",
+            // bgcolor: "#ffffff",
           }}
         >
           <Typography>Add to your post</Typography>
           <Stack direction="row" spacing={1}>
             <IconButton sx={{ color: "#4CAF50" }}>
               <PhotoLibrary />
-            </IconButton>
-            <IconButton sx={{ color: "#2196F3" }}>
-              <PersonAdd />
-            </IconButton>
-            <IconButton sx={{ color: "#FFC107" }}>
-              <EmojiEmotions />
-            </IconButton>
-            <IconButton sx={{ color: "#F44336" }}>
-              <LocationOn />
-            </IconButton>
-            <IconButton sx={{ color: "#00BCD4" }}>
-              <GifBox />
-            </IconButton>
-            <IconButton>
-              <MoreHoriz />
             </IconButton>
           </Stack>
         </Box>
