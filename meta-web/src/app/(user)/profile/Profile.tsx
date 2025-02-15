@@ -97,11 +97,11 @@ export default function ProfilePage() {
         <Typography variant="h6" className={profileStyles.tweetsTitle}>
           My Tweets
         </Typography>
-        {tweets.map((tweet) => (
+        {/* {tweets.map((tweet) => (
           <Box key={tweet.id} mt={2}>
             <TweetCard />
           </Box>
-        ))}
+        ))} */}
       </Box>
     </Container>
   );
