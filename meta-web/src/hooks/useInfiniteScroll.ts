@@ -2,7 +2,8 @@ import { useEffect, useRef, useCallback, type RefObject } from "react";
 
 export function useInfiniteScroll(
   callback: () => void,
-  hasMore: boolean
+  hasMore: boolean,
+  isLoading: boolean,
 ): { loaderRef: RefObject<HTMLDivElement | null> } {
   const loaderRef = useRef<HTMLDivElement>(null);
 
@@ -12,23 +13,14 @@ export function useInfiniteScroll(
         callback();
       }
     },
-    [callback, hasMore]
+    [callback, hasMore, isLoading]
   );
-
   useEffect(() => {
-    const currentLoader = loaderRef.current;
-    const observer = new IntersectionObserver(handleIntersect, {
-      threshold: 1,
-    });
-
-    if (currentLoader) {
-      observer.observe(currentLoader);
-    }
+    const observer = new IntersectionObserver(handleIntersect, { threshold: 1 });
+    if (loaderRef.current) observer.observe(loaderRef.current);
 
     return () => {
-      if (currentLoader) {
-        observer.unobserve(currentLoader);
-      }
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
     };
   }, [handleIntersect]);
 

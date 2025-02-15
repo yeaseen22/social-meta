@@ -1,7 +1,7 @@
 import { AppBarComponent } from '@/components/common';
 import Sidebar from '@/components/common/Sidebar';
 import { Box } from '@mui/material';
-import Contacts from '@/components/common/contactSideBar';
+import ActiveFriends from '@/components/common/ActiveSidebar';
 
 const HomeLayout = (props: { children: React.ReactNode }) => {
   return (
@@ -9,7 +9,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         {/* Sidebar on the left */}
         <Box sx={{ width: 200, p: 1, borderRight: '1px solid #ddd' }}>
-          <Contacts />
+          <ActiveFriends />
         </Box>
 
         {/* Main content area */}
