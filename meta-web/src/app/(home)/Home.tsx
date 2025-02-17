@@ -1,12 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import styles from "@/styles/components/tweetcard.module.scss"
 import { TweetCard } from "@/components/common";
 import CreateInput from "@/components/common/CreateInput";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import TweetCardSkeleton from "@/components/widgets/CardSkeletion"
-import { SearchModal } from "@/components/SearchModal";
 import { NotFound } from "@/components/widgets";
 import { usePosts } from "@/hooks/use-post"
 
@@ -52,11 +50,13 @@ const Home = () => {
   }
 
   return (
-    <div className={styles["tweets-area"]}>
+    <div className="tweets-area">
       <CreateInput userProfileImage="https://via.placeholder.com/150" />
-      {posts?.map((post: Post) => (
+      {posts ? posts?.map((post: Post) => (
         <TweetCard key={post._id} post={post} />
-      ))}
+      )) : (<NotFound label={`No Post available`} />
+      )
+      }
       {isLoading &&
         Array.from({ length: 3 }).map((_, index) => <TweetCardSkeleton key={index} />)}
       <div ref={loaderRef} />

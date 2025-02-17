@@ -11,7 +11,6 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import profileStyles from '@/styles/profile/profile.module.scss';
 import { TweetCard } from '@/components/common';
 
 export default function ProfilePage() {
@@ -35,32 +34,32 @@ export default function ProfilePage() {
   ];
 
   return (
-    <Container maxWidth="md" className={profileStyles.profileContainer}>
+    <Container maxWidth="md" className='profileContainer'>
       {/* Cover Image */}
-      <Card className={profileStyles.coverCard}>
+      <Card className='coverCard'>
         <CardMedia
           component="img"
           height="200"
           image={userProfile.coverImageUrl}
           alt="Cover"
-          className={profileStyles.coverImage}
+          className='coverImage'
         />
-        <Box className={profileStyles.avatarSection}>
+        <Box className='avatarSection'>
           <Avatar
             alt={`${userProfile.firstName} ${userProfile.lastName}`}
             src={userProfile.avatarUrl}
-            className={profileStyles.avatar}
+            className='avatar'
           />
         </Box>
       </Card>
 
       {/* Personal Info Section */}
-      <Card className={profileStyles.infoCard}>
+      <Card className='infoCard'>
         <CardContent>
-          <Typography variant="h5" className={profileStyles.name}>
+          <Typography variant="h5" className='name'>
             {userProfile.firstName} {userProfile.lastName}
           </Typography>
-          <Typography variant="subtitle1" className={profileStyles.bio}>
+          <Typography variant="subtitle1" className='bio'>
             {userProfile.bio}
           </Typography>
           <Typography variant="body2" color="textSecondary">
@@ -73,7 +72,7 @@ export default function ProfilePage() {
       </Card>
 
       {/* Stats Section */}
-      <Card className={profileStyles.statsCard}>
+      <Card className='statsCard'>
         <CardContent>
           <Box display="flex" justifyContent="space-around">
             <Box textAlign="center">
@@ -94,12 +93,24 @@ export default function ProfilePage() {
 
       {/* Tweets Section */}
       <Box mt={3}>
-        <Typography variant="h6" className={profileStyles.tweetsTitle}>
+        <Typography variant="h6" className='tweetsTitle'>
           My Tweets
         </Typography>
         {/* {tweets.map((tweet) => (
           <Box key={tweet.id} mt={2}>
-            <TweetCard />
+            <TweetCard post={{
+              body: '',
+              _id: '',
+              createdAt: '',
+              likes_count: 0,
+              comments_count: 0,
+              owner: {
+                firstname: '',
+                lastname: '',
+                profilePhoto: undefined,
+                title: ''
+              }
+            }} />
           </Box>
         ))} */}
       </Box>

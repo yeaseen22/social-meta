@@ -9,8 +9,6 @@ import {
   ListItemText,
   Typography,
   Avatar,
-  ThemeProvider,
-  createTheme,
   useTheme,
 } from "@mui/material";
 import { styled } from "@mui/system";
@@ -31,17 +29,17 @@ const OnlineIndicator = styled("div")(({ theme }) => ({
 const contacts = [
   { name: "Jaden Chance", image: "/placeholder.svg?height=44&width=44" },
   { name: "Arezki Williams", image: "/placeholder.svg?height=44&width=44" },
-  { name: "Rose James", image: "/placeholder.svg?height=44&width=44" },
+  { name: "Rose James with a very long last name", image: "/placeholder.svg?height=44&width=44" },
   { name: "Tman Mats", image: "/placeholder.svg?height=44&width=44" },
   { name: "Alex Andrew", image: "/placeholder.svg?height=44&width=44" },
-  { name: "Kaixi Cark", image: "/placeholder.svg?height=44&width=44" },
+  { name: "Kaixi Cark with a very long middle and last name", image: "/placeholder.svg?height=44&width=44" },
   { name: "Hamid Oskip", image: "/placeholder.svg?height=44&width=44" },
   { name: "Serena Lewis", image: "/placeholder.svg?height=44&width=44" },
   { name: "April Sky", image: "/placeholder.svg?height=44&width=44" },
 ];
 
 export default function ActiveFriends() {
-  const theme = useTheme(); // Get current theme
+  const theme = useTheme();
 
   return (
     <Box
@@ -64,9 +62,10 @@ export default function ActiveFriends() {
         <Typography
           variant="h6"
           sx={{
-            fontWeight: 600,
+            fontWeight: 500,
             color: "text.primary",
             fontSize: "1.25rem",
+            fontFamily: "Roboto",
           }}
         >
           Active Friends
@@ -83,9 +82,10 @@ export default function ActiveFriends() {
             width: 6,
           },
           "&::-webkit-scrollbar-thumb": {
-            background: theme.palette.mode === "dark"
-              ? "rgba(255,255,255,0.2)"
-              : "rgba(0,0,0,0.2)",
+            background:
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.2)"
+                : "rgba(0,0,0,0.2)",
             borderRadius: 4,
           },
         }}
@@ -101,7 +101,16 @@ export default function ActiveFriends() {
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Typography sx={{ fontWeight: 500, fontSize: "0.9375rem" }}>
+                  <Typography
+                    sx={{
+                      fontWeight: 500,
+                      fontSize: "0.9375rem",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: "180px", // Adjust width as needed
+                    }}
+                  >
                     {contact.name}
                   </Typography>
                 }

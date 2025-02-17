@@ -1,4 +1,4 @@
-import SettingsPage from "@/app/settings/Settings"
+import SettingsPage from "@/app/(user)/settings/Settings"
 
 const SettingPage = () => {
   return (

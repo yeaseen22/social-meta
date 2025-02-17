@@ -11,17 +11,16 @@ import {
   Typography,
   Divider
 } from '@mui/material';
-import settingsStyles from '@/styles/settings/settings.module.scss';
 
 export default function SettingsPage() {
   return (
-    <Container maxWidth="md" className={settingsStyles.settingsContainer}>
-      <Typography variant="h4" gutterBottom className={settingsStyles.heading}>
+    <Container maxWidth="md" className='settingsContainer'>
+      <Typography variant="h4" gutterBottom className='heading'>
         Settings
       </Typography>
 
       {/* Personal Information Section */}
-      <Card className={settingsStyles.settingsCard}>
+      <Card className='settingsCard'>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Personal Information
@@ -55,10 +54,10 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Divider className={settingsStyles.divider} />
+      <Divider className='divider' />
 
       {/* Account Settings Section */}
-      <Card className={settingsStyles.settingsCard}>
+      <Card className='settingsCard'>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Account Settings
@@ -79,10 +78,10 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Divider className={settingsStyles.divider} />
+      <Divider className='divider' />
 
       {/* Preferences Section */}
-      <Card className={settingsStyles.settingsCard}>
+      <Card className='settingsCard'>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Preferences
