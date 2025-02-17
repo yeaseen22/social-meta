@@ -105,7 +105,6 @@ const SettingItem: React.FC = () => {
                                 mb: 1,
                                 transition: "all 0.3s ease",
                                 "&:hover": {
-                                    bgcolor: "primary.light",
                                     transform: "translateX(5px)",
                                 },
                             }}

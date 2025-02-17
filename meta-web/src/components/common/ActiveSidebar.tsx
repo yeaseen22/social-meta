@@ -17,9 +17,9 @@ import { styled } from "@mui/system";
 const OnlineIndicator = styled("div")(({ theme }) => ({
   position: "absolute",
   bottom: 2,
-  right: 10,
-  width: 12,
-  height: 12,
+  right: 20,
+  width: 8,
+  height: 8,
   backgroundColor: theme.palette.success.main,
   borderRadius: "50%",
   boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
@@ -36,6 +36,9 @@ const contacts = [
   { name: "Hamid Oskip", image: "/placeholder.svg?height=44&width=44" },
   { name: "Serena Lewis", image: "/placeholder.svg?height=44&width=44" },
   { name: "April Sky", image: "/placeholder.svg?height=44&width=44" },
+  { name: "April Sky", image: "/placeholder.svg?height=44&width=44" },
+  { name: "April Sky", image: "/placeholder.svg?height=44&width=44" },
+  { name: "April Sky", image: "/placeholder.svg?height=44&width=44" },
 ];
 
 export default function ActiveFriends() {
@@ -44,10 +47,12 @@ export default function ActiveFriends() {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "88vh",
         display: "flex",
         flexDirection: "column",
         bgcolor: "background.default",
+        fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+        fontSize: 14,
       }}
     >
       {/* Header */}
@@ -62,10 +67,9 @@ export default function ActiveFriends() {
         <Typography
           variant="h6"
           sx={{
-            fontWeight: 500,
+            fontWeight: 600,
             color: "text.primary",
-            fontSize: "1.25rem",
-            fontFamily: "Roboto",
+            fontSize: "1rem",
           }}
         >
           Active Friends
@@ -78,9 +82,7 @@ export default function ActiveFriends() {
           flex: 1,
           overflowY: "auto",
           py: 1,
-          "&::-webkit-scrollbar": {
-            width: 6,
-          },
+          "&::-webkit-scrollbar": { width: 6 },
           "&::-webkit-scrollbar-thumb": {
             background:
               theme.palette.mode === "dark"
@@ -95,7 +97,7 @@ export default function ActiveFriends() {
             <ListItemButton sx={{ borderRadius: 2, m: 0.5 }}>
               <ListItemAvatar>
                 <Box sx={{ position: "relative" }}>
-                  <Avatar src={contact.image} alt={contact.name} sx={{ width: 44, height: 44 }} />
+                  <Avatar src={contact.image} alt={contact.name} sx={{ width: 34, height: 34 }} />
                   <OnlineIndicator />
                 </Box>
               </ListItemAvatar>
@@ -104,11 +106,11 @@ export default function ActiveFriends() {
                   <Typography
                     sx={{
                       fontWeight: 500,
-                      fontSize: "0.9375rem",
+                      fontSize: "0.8125rem",
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      maxWidth: "180px", // Adjust width as needed
+                      maxWidth: "180px",
                     }}
                   >
                     {contact.name}
