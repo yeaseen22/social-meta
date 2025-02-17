@@ -10,7 +10,7 @@ import {
   Checkbox,
   Divider,
 } from '@mui/material';
-import loginStyles from '@/styles/auth/login.module.scss';
+// import loginStyles from '@/styles/auth/login.module.scss';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation, setCredentials } from '@/redux/slice/auth.slice';
 import { useDispatch } from 'react-redux';
@@ -66,27 +66,27 @@ export default function LoginPage() {
   };
 
   return (
-    <Container maxWidth={false} className={loginStyles.loginContainer}>
+    <Container maxWidth={false} className='loginContainer'>
       {/* Left Section */}
-      <Box className={loginStyles.leftSection}>
+      <Box className='leftSection'>
         <Box className="overlay"></Box>
-        <Box className={loginStyles.animatedText}>
-          <Typography variant="h4" className={loginStyles.text}>
+        <Box className='animatedText'>
+          <Typography variant="h4" className='text'>
             Welcome to Our Community
           </Typography>
-          <Typography variant="h4" className={loginStyles.text}>
+          <Typography variant="h4" className='text'>
             Share your moments.
           </Typography>
-          <Typography variant="h4" className={loginStyles.text}>
+          <Typography variant="h4" className='text'>
             Connect with your friends.
           </Typography>
         </Box>
       </Box>
 
       {/* Right Section */}
-      <Box className={loginStyles.rightSection}>
-        <Box className={loginStyles.formBox}>
-          <Typography variant="h5" className={loginStyles.title}>
+      <Box className='rightSection'>
+        <Box className='formBox'>
+          <Typography variant="h5" className='title'>
             Login to Your Account
           </Typography>
           <form onSubmit={handleLogin}>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               helperText={errors.password}
               className="textField"
             />
-            <Box className={loginStyles.actions}>
+            <Box className='actions'>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -129,7 +129,7 @@ export default function LoginPage() {
                 }
                 label="Remember Me"
               />
-              <Button className={loginStyles.forgotPassword} size="small">
+              <Button className='forgotPassword' size="small">
                 Forgot Password?
               </Button>
             </Box>
@@ -137,13 +137,13 @@ export default function LoginPage() {
               fullWidth
               variant="contained"
               color="primary"
-              className={loginStyles.loginButton}
+              className='loginButton'
               type="submit"
               disabled={isLoading}
             >
               Login
             </Button>
-            <Divider className={loginStyles.divider}>or</Divider>
+            <Divider className='divider'>or</Divider>
 
             <Button variant="text" color="primary" onClick={() => router.push('/register')}>
               Want to create account?

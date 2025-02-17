@@ -56,6 +56,7 @@ const CreateInput: React.FC<CustomizedInputProps> = ({ userProfileImage }) => {
           placeholder="What's on your mind?"
           inputProps={{ "aria-label": "What's on your mind?" }}
           onClick={handlePaperClick}
+          readOnly
         />
         <IconButton
           color="primary"

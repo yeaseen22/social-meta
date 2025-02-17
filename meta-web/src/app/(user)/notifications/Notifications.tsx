@@ -3,7 +3,6 @@ import React from 'react';
 import { Box, Container, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton, Typography, Divider, Badge } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import notificationStyles from '@/styles/notifications/notifications.module.scss';
 
 const notifications = [
     { id: 1, title: 'New comment on your post', content: 'John commented: "Great post!"', timestamp: '2 hours ago', read: false },
@@ -13,15 +12,15 @@ const notifications = [
 
 export default function NotificationsPage() {
     return (
-        <Container maxWidth="sm" className={notificationStyles.notificationContainer}>
-            <Typography variant="h4" className={notificationStyles.heading}>
+        <Container maxWidth="sm" className='notificationContainer'>
+            <Typography variant="h4" className='heading'>
                 Notifications
             </Typography>
-            <List className={notificationStyles.notificationList}>
+            <List className='notificationList'>
                 {notifications.map((notification) => (
                     <React.Fragment key={notification.id}>
                         <ListItem
-                            className={`${notificationStyles.notificationItem} ${notification.read ? notificationStyles.read : ''}`}
+                            className={`${'notificationItem'} ${notification.read ? 'read' : ''}`}
                         >
                             <ListItemAvatar>
                                 <Badge

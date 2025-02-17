@@ -6,7 +6,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import styles from '@/styles/components/tweetcard.module.scss';
 
 interface TweetCardProps {
     post: {
@@ -31,9 +30,9 @@ export default function TweetCard({ post }: TweetCardProps) {
     // console.log(post.owner.firstname);
 
     return (
-        <div className={styles['tweet-card-wrapper']}>
+        <div className='tweet-card-wrapper'>
             {/* <div style={{ marginTop: '60px' }}> */}
-            <Card className={styles['tweet-card']}>
+            <Card className='tweet-card'>
                 {/* HEADER */}
                 <CardHeader
                     avatar={<Avatar
@@ -83,7 +82,7 @@ export default function TweetCard({ post }: TweetCardProps) {
                     </IconButton>
                     <Typography>{post?.comments_count} Comments</Typography>
                     <IconButton
-                        className={styles['expand-button']}
+                        className='expand-button'
                         onClick={handleExpandClick}
                         aria-expanded={expanded}
                         aria-label="show more"

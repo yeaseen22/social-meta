@@ -20,7 +20,6 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import registerStyles from "@/styles/auth/register.module.scss";
 import { useRouter } from "next/navigation";
 import { useRegisterMutation, setCredentials } from "@/redux/slice/auth.slice";
 import { useDispatch } from "react-redux";
@@ -119,14 +118,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container className={registerStyles.container}>
-      <Box className={registerStyles.leftSection}>
-        <Box className={registerStyles.formWrapper}>
+    <Container className='container'>
+      <Box className='leftSection'>
+        <Box className='formWrapper'>
           <Tabs
             value={currentTab}
             onChange={(_, newValue) => handleTabChange(newValue)}
             centered
-            TabIndicatorProps={{ className: registerStyles.tabIndicator }}
+            TabIndicatorProps={{ className: 'tabIndicator' }}
           >
             <Tab label="Step 1" />
             <Tab label="Step 2" />
@@ -135,7 +134,7 @@ export default function RegisterPage() {
           <Fade in={true}>
             <div>{renderStepContent()}</div>
           </Fade>
-          <Box className={registerStyles.actions}>
+          <Box className='actions'>
             {currentTab > 0 && (
               <Button
                 startIcon={<ArrowBackIcon />}
@@ -174,16 +173,16 @@ export default function RegisterPage() {
           </Box>
         </Box>
       </Box>
-      <Box className={registerStyles.rightSection}>
+      <Box className='rightSection'>
         <Box className="overlay"></Box>
-        <Box className={registerStyles.animatedText}>
-          <Typography variant="h4" className={registerStyles.text}>
+        <Box className='animatedText'>
+          <Typography variant="h4" className='text'>
             Join Our Community
           </Typography>
-          <Typography variant="h4" className={registerStyles.text}>
+          <Typography variant="h4" className='text'>
             Build Connections
           </Typography>
-          <Typography variant="h4" className={registerStyles.text}>
+          <Typography variant="h4" className='text'>
             Grow Together
           </Typography>
         </Box>

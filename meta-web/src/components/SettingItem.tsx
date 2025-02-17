@@ -104,7 +104,6 @@ const SettingItem: React.FC = () => {
                                 mx: 1,
                                 mb: 1,
                                 transition: "all 0.3s ease",
-                                bgcolor: activeItem === item.text ? "primary.light" : "transparent",
                                 "&:hover": {
                                     bgcolor: "primary.light",
                                     transform: "translateX(5px)",
@@ -113,9 +112,7 @@ const SettingItem: React.FC = () => {
                         >
                             <ListItemIcon
                                 sx={{
-                                    minWidth: 48,
-                                    // bgcolor: activeItem === item.text ? "primary.main" : "primary.light",
-                                    color: activeItem === item.text ? "white" : "primary.main",
+                                    minWidth: 40,
                                     p: 1,
                                     borderRadius: "50%",
                                     display: "flex",
@@ -123,6 +120,7 @@ const SettingItem: React.FC = () => {
                                     justifyContent: "center",
                                     transition: "all 0.3s ease",
                                     boxShadow: activeItem === item.text ? theme.shadows[4] : "none",
+                                    mr: 1
                                 }}
                             >
                                 {item.icon}
@@ -133,7 +131,6 @@ const SettingItem: React.FC = () => {
                                     sx: {
                                         fontWeight: activeItem === item.text ? 700 : 500,
                                         fontSize: "1rem",
-                                        color: activeItem === item.text ? "primary.main" : "text.primary",
                                         transition: "all 0.3s ease",
                                     },
                                 }}
@@ -141,7 +138,6 @@ const SettingItem: React.FC = () => {
                             {activeItem === item.text && (
                                 <ExpandMore
                                     sx={{
-                                        color: "primary.main",
                                         transition: "all 0.3s ease",
                                         transform: "rotate(-90deg)",
                                     }}

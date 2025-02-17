@@ -1,6 +1,4 @@
 'use client';
-import '@/styles/messenger/message-list.scss';
-import '@/styles/messenger/message-box.scss';
 import { useState } from 'react';
 import { useColorScheme } from '@mui/material/styles';
 import { Paper, Box, CircularProgress } from '@mui/material';

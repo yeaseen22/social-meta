@@ -7,6 +7,7 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 // import { ModeSwitch } from '@/components/widgets';
 import ReduxProvider from '@/redux/ReduxProvider';
 import { Toaster } from 'react-hot-toast';
+import '../styles/main.scss';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (

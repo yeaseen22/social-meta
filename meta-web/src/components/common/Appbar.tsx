@@ -21,7 +21,6 @@ import { Container, Fab, Fade } from '@mui/material';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ModeSwitch } from '@/components/widgets';
-import appbarStyles from '@/styles/components/appbar.module.scss';
 import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/redux/slice/auth.slice';
 import { clearCredentials } from '@/redux/slice/auth.slice';
@@ -239,7 +238,7 @@ export default function PrimarySearchAppBar(props: any) {
     // region AppBar
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed" className={appbarStyles.appbar}>
+            <AppBar position="fixed" className='appbar'>
                 <Toolbar>
                     {/* Home Icon to Home Page */}
                     <IconButton
