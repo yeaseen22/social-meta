@@ -6,9 +6,25 @@ import ActiveFriends from "@/components/common/ActiveSidebar";
 const HomeLayout = (props: { children: React.ReactNode }) => {
   return (
     <AppBarComponent>
-      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-        {/* Sidebar on the left */}
-        <Box sx={{ width: 200, p: 1, borderRight: "1px solid #ddd", flexShrink: 0 }}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "calc(100vh - 64px)",
+          overflow: "hidden"
+        }}
+      >
+        {/* Sidebar on the left (Non-Scrollable) */}
+        <Box
+          sx={{
+            width: 200,
+            p: 1,
+            borderRight: "1px solid #ddd",
+            flexShrink: 0,
+            height: "100vh", // Ensures full height
+            position: 'relative',
+            left: '45px'
+          }}
+        >
           <ActiveFriends />
         </Box>
 
@@ -17,15 +33,24 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
           sx={{
             flex: 1,
             p: 2,
-            overflowY: "auto",
             height: "100vh",
+            overflowY: "auto",
           }}
         >
           {props.children}
         </Box>
 
-        {/* Sidebar on the right */}
-        <Box sx={{ width: 380, p: 2, borderLeft: "1px solid #ddd", flexShrink: 0 }}>
+        {/* Sidebar on the right (Non-Scrollable) */}
+        <Box
+          sx={{
+            width: 380,
+            p: 2,
+            borderLeft: "1px solid #ddd",
+            flexShrink: 0,
+            height: "100vh", // Ensures full height
+            overflow: "hidden", // Prevents scrolling in sidebar
+          }}
+        >
           <Sidebar />
         </Box>
       </Box>

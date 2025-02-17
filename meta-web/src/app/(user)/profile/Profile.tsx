@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { TweetCard } from '@/components/common';
 
-export default function ProfilePage() {
+export default function Profile() {
   // Sample data for the profile and tweets
   const userProfile = {
     firstName: 'Ken',
@@ -96,7 +96,7 @@ export default function ProfilePage() {
         <Typography variant="h6" className='tweetsTitle'>
           My Tweets
         </Typography>
-        {/* {tweets.map((tweet) => (
+        {tweets.map((tweet) => (
           <Box key={tweet.id} mt={2}>
             <TweetCard post={{
               body: '',
@@ -112,7 +112,7 @@ export default function ProfilePage() {
               }
             }} />
           </Box>
-        ))} */}
+        ))}
       </Box>
     </Container>
   );

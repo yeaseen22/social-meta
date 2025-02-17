@@ -89,7 +89,7 @@ export default function InstagramSuggestions() {
                 {/* Suggestions Header */}
                 <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
                     <Typography sx={{ fontWeight: "bold", fontSize: "0.875rem" }}>Suggested for you</Typography>
-                    <Typography sx={{ color: "primary.main",paddingRight: "10px", cursor: "pointer", fontSize: "0.8125rem", fontWeight: 500 }}>
+                    <Typography sx={{ color: "primary.main", paddingRight: "10px", cursor: "pointer", fontSize: "0.8125rem", fontWeight: 500 }}>
                         See All
                     </Typography>
                 </Box>
@@ -98,7 +98,7 @@ export default function InstagramSuggestions() {
                 <Box>
                     {suggestions.map((suggestion) => (
                         <Box key={suggestion.username} sx={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
-                            <Box sx={{ position: "relative", width: 32, marginRight:"10px", height: 32, borderRadius: "50%", overflow: "hidden" }}>
+                            <Box sx={{ position: "relative", width: 32, marginRight: "10px", height: 32, borderRadius: "50%", overflow: "hidden" }}>
                                 <Image src={suggestion.avatar} alt={suggestion.username} width={32} height={32} />
                             </Box>
                             <Box sx={{ flexGrow: 1 }}>
