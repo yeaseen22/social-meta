@@ -119,8 +119,6 @@ class PostController {
     }
     
     try {
-      console.log('POST IMAGE HERE CONTROLLER - ', post);
-
       await this.postService.createPost(post);
 
       res.status(200).json({
@@ -145,7 +143,7 @@ class PostController {
     // if there is new post image update file to make it up..
     // and if no new update image file so don't need update extra..
     if (req.file !== undefined) {
-      post.image = req.file.originalname;
+      post.image = req.file;
     }
 
     try {

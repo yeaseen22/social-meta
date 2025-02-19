@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { postUpload } from '../middlewares';
+import { imageUpload } from '../middlewares';
 import { PostController } from '../controllers';
 
 const router = Router();
@@ -30,12 +30,12 @@ router.get('/user_posts', postController.specificUserPosts);
 /**
  * ----- Create new Post ----
  */
-router.post('/post_create', postUpload.single("file"), postController.createPost);
+router.post('/post_create', imageUpload.single("file"), postController.createPost);
 
 /**
  * ----- Update Post ----
  */
-router.post('/post_update', postUpload.single("file"), postController.updatePost);
+router.post('/post_update', imageUpload.single("file"), postController.updatePost);
 
 /**
  * ---- Delete Post ----

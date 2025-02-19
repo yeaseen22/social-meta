@@ -247,13 +247,11 @@ class PostService {
   public async createPost(post: any): Promise<any> {
     try {
       if (post.image) {
-        const uploadedImageUrl = await this.uploadImage(post.image);
+        const uploadedImageUrl = await this.uploadImage<string>(post.image);
         post.image = uploadedImageUrl;
       } else {
         delete post.image;
       }
-
-      console.log('POST IMAGE HERE - ', post);
 
       const newPost = await this.postModelRepository.create(post);
       return await newPost.save();
@@ -273,11 +271,14 @@ class PostService {
   // region Update Post
   public async updatePost(postId: string, postData: any): Promise<any> {
     try {
-      const updatedPost = await this.postModelRepository.findByIdAndUpdate(
-        { _id: postId },
-        postData,
-        { new: true }
-      );
+      if (postData.image) {
+        const uploadedImageUrl = await this.uploadImage<string>(postData.image);
+        postData.image = uploadedImageUrl;
+      } else {
+        delete postData.image;
+      }
+
+      const updatedPost = await this.postModelRepository.findByIdAndUpdate({ _id: postId }, postData, { new: true });
       if (!updatedPost) throw new Error("Post not found!");
       return updatedPost;
 
