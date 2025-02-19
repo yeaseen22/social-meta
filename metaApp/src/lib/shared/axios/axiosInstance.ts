@@ -12,7 +12,7 @@ declare global {
   };
 }
 
-const API_URL = 'http://localhost:8080/api/v1'; // Replace with your server URL
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.106:8080/api/v1'; // Replace with your server URL
 
 
 // Create Axios instance
@@ -58,6 +58,7 @@ axiosInstance.interceptors.response.use(
         }
 
         // Attempt to refresh the token
+        // region Refresh Token
         const refreshResponse = await axios.post(
           `${API_URL}/auth/refresh_token`,
           { refreshToken },

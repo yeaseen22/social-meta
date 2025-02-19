@@ -96,11 +96,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
     // region Handle Login
     const handleLogin = async () => {
         try {
-            console.log('DATA - ', data);
-
             // sending data to API
             const response = await loginMutation({ email: data.email, password: data.password }).unwrap();
-            console.log('RESPONSE - ', response);
             dispatch(setCredentials(response.data));
 
             Toast.show({

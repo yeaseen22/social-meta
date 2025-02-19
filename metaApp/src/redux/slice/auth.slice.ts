@@ -5,7 +5,7 @@ import { axiosInstance } from '../../lib/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Base API URL
-const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://localhost:8080/api/v1';
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.106:8080/api/v1'; // 192.168.0.106 // localhost
 
 console.log('API_URL - ', API_URL);
 
