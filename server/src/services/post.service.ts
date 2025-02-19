@@ -1,4 +1,5 @@
 import { Post } from "../models";
+import { BlobStorageUtils } from '../lib/shared';
 
 
 class PostService {
@@ -6,6 +7,24 @@ class PostService {
 
   constructor(userModelRepository: typeof Post = Post) {
     this.postModelRepository = userModelRepository;
+  }
+
+  /**
+   * UPLOAD IMAGE FOR POST SERVICE
+   * This is for post service upload and internal function.
+   * @param file 
+   * @param dirName 
+   * @returns 
+   */
+  private async uploadImage<T>(file: any, dirName: string = "post_upload"): Promise<T> {
+    try {
+      const uploaded_secure_url = await BlobStorageUtils.uploadImage(file, dirName);
+      return uploaded_secure_url as T;
+
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to upload image!");
+    }
   }
 
   /**
@@ -156,6 +175,7 @@ class PostService {
         page,
         limit,
       };
+
     } catch (error) {
       console.error("Failed to read all posts:", error);
       throw new Error("Failed to read all posts");
@@ -191,6 +211,7 @@ class PostService {
         .exec();
 
       return posts;
+
     } catch (error) {
       console.error("Failed to read current user posts:", error);
       throw new Error("Failed to read current user posts");
@@ -210,6 +231,7 @@ class PostService {
         .exec();
 
       return posts;
+
     } catch (error) {
       console.error("Failed to read specific user posts:", error);
       throw new Error("Failed to read specific user posts");
@@ -221,11 +243,21 @@ class PostService {
    * This is for creating a new post
    * @param post
    */
-  //  region Create Post
+  // region Create Post
   public async createPost(post: any): Promise<any> {
     try {
+      if (post.image) {
+        const uploadedImageUrl = await this.uploadImage(post.image);
+        post.image = uploadedImageUrl;
+      } else {
+        delete post.image;
+      }
+
+      console.log('POST IMAGE HERE - ', post);
+
       const newPost = await this.postModelRepository.create(post);
       return await newPost.save();
+
     } catch (error) {
       console.error("Failed to create post:", error);
       throw new Error("Failed to create post");
@@ -248,6 +280,7 @@ class PostService {
       );
       if (!updatedPost) throw new Error("Post not found!");
       return updatedPost;
+
     } catch (error) {
       console.error("Failed to update post:", error);
       throw new Error("Failed to update post");
@@ -267,6 +300,7 @@ class PostService {
       );
       if (!deletedPost) throw new Error("Post not found!");
       return deletedPost;
+
     } catch (error) {
       console.error("Failed to delete post:", error);
       throw new Error("Failed to delete post");
