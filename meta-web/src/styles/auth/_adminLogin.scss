@@ -31,9 +31,6 @@
   background: white;
   color: black;
   filter: blur(0px);
-  // box-shadow: rgba(241, 240, 240, 0.952) 0px 2px 4px,
-  //   rgba(252, 251, 251, 0.856) 0px 7px 13px -3px,
-  //   rgba(248, 244, 244, 0.952) 0px -3px 0px inset;
 }
 
 .form-container {
@@ -44,12 +41,12 @@
   min-height: 580px;
   max-height: 860px;
   .bg {
-    background: url(https://images.unsplash.com/photo-1499750310107-5fef28a66643?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGRlc2t0b3B8ZW58MHx8MHx8fDA%3D)
-      no-repeat center center fixed;
-    filter: blur(1px);
+    background: url("/img/form-bg.jpeg") no-repeat center center fixed;
+    filter: blur(5px);
     background-size: cover;
     min-height: 580px;
     max-height: 860px;
+    width: 100%;
   }
 }
 
@@ -63,7 +60,7 @@
   padding-bottom: 8px;
   padding-left: 2.5%;
   background: #eeeeee;
-  color: #7a7d80;
+  color: #000000;
   font-size: 11px;
   border: 0px solid whitesmoke;
   border-radius: 4px;
