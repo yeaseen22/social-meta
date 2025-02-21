@@ -3,6 +3,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authSliceReducer, { authAPI } from './slice/auth.slice';
 
+// region Persist-Config
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,

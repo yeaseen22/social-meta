@@ -13,9 +13,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 // import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
-import { useLoginMutation, setCredentials } from '../../redux/slice/auth.slice';
-import { useDispatch } from 'react-redux';
-import Toast from 'react-native-toast-message';
+import { useLogin } from '../../hooks';
 
 type LoginProps = {
     navigation: any;
@@ -24,8 +22,7 @@ type LoginProps = {
 const Login: React.FC<LoginProps> = ({ navigation }) => {
     // const router = useRouter(); // Use the router from expo-router
     // console.log('MY NAVIGATION HERE - ', navigation);
-    const dispatch = useDispatch();
-    const [loginMutation] = useLoginMutation();
+    const { loginAction, loginLoading } = useLogin();
 
     const [data, setData] = useState({
         email: '',
@@ -93,22 +90,9 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
         });
     };
 
-    // region Handle Login
+    // region Handle Login API Call
     const handleLogin = async () => {
-        try {
-            // sending data to API
-            const response = await loginMutation({ email: data.email, password: data.password }).unwrap();
-            dispatch(setCredentials(response.data));
-
-            Toast.show({
-                type: 'success',
-                text1: 'Hello',
-                text2: 'This is some something 👋',
-            });
-
-        } catch (error) {
-            console.error('error - ', error);
-        }
+        await loginAction({ email: data.email, password: data.password });
     };
 
     // region UI
@@ -164,6 +148,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                         textColor="white"
                         height={50}
                         onPress={handleLogin}
+                        isLoading={loginLoading}
                     />
 
                     <View style={{ marginTop: 20 }}>

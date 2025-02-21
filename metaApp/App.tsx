@@ -31,6 +31,7 @@ const App = () => {
    * @param route
    * @returns
    */
+  // region Dynamic Title for Tabs
   const getHeaderTitle = (route: any) => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
     const titleMap: { [key: string]: string } = {
@@ -45,6 +46,7 @@ const App = () => {
     return titleMap[routeName as keyof typeof titleMap] || routeName;
   };
 
+  // region Navigations
   return (
     <Provider store={store}>
       <GestureHandlerRootView>
@@ -99,13 +101,13 @@ const App = () => {
                 headerShown: false,
               }}
             />
+
+            {/* TAB SCREENS */}
             <Stack.Screen
               name="Tabs"
               component={Tabs}
               options={({ route, navigation }: any) => {
-                const focusedRouteName =
-                  getFocusedRouteNameFromRoute(route) ?? 'Home';
-
+                const focusedRouteName = getFocusedRouteNameFromRoute(route) ?? 'Home';
                 return {
                   headerShown: true,
                   headerTitle: getHeaderTitle(route) || 'Home',

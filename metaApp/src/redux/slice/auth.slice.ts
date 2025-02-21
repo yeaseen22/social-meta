@@ -4,11 +4,6 @@ import Toast from 'react-native-toast-message';
 import { axiosInstance } from '../../lib/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Base API URL
-const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.106:8080/api/v1'; // 192.168.0.106 // localhost
-
-console.log('API_URL - ', API_URL);
-
 /**
  * The Custom Base query for Axios Interceptor
  * @param param0
@@ -43,18 +38,8 @@ export const authAPI = createApi({
           const { accessToken, refreshToken, user } = data;
           dispatch(setCredentials({ accessToken, refreshToken, user }));
 
-          Toast.show({
-            type: 'success',
-            text1: 'Login Successful!',
-          });
-
         } catch (error) {
           console.error('Login failed: ', error);
-          Toast.show({
-            type: 'error',
-            text1: 'Login failed',
-            text2: 'Please check your credentials.',
-          });
         }
       },
     }),

@@ -12,7 +12,9 @@ declare global {
   };
 }
 
-const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.106:8080/api/v1'; // Replace with your server URL
+// Asad MacBook IP - 192.168.0.101
+// Asad Desktop IP - 192.168.0.106
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.101:8080/api/v1'; // Replace with your server URL
 
 
 // Create Axios instance

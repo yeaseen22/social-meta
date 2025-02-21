@@ -13,7 +13,9 @@ export type ButtonType = {
     width?: number;
     height?: number;
     onPress?: (event: any) => void;
-    children?: React.ReactNode
+    children?: React.ReactNode;
+    isLoading?: boolean;
+    disabled?: boolean;
 };
 
 export type RootStackParamList = {

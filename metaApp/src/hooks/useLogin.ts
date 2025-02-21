@@ -1,29 +1,49 @@
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { useLoginMutation } from '../redux/slice/auth.slice';
+import { useNavigation } from '@react-navigation/native';
 
 const useLogin = () => {
-    const dispatch = useDispatch();
-    const [loginMutation] = useLoginMutation();
+    const navigation = useNavigation();
+    const [loginMutation, { data: loginData, isLoading: loginLoading, error: loginError }] = useLoginMutation();
 
-    const login = async (userInfo: { email: string, password: string }) => {
+    // region Mutation Error
+    useEffect(() => {
+        if (loginError && !loginLoading) {
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Somethiing went wrong',
+            });
+        }
+    }, [loginError, loginLoading]);
+
+    // region Mutation Success
+    useEffect(() => {
+        if (loginData && !loginLoading) {
+            navigation.navigate('Home' as never);
+        }
+
+    }, [loginData, loginLoading, navigation]);
+
+    // region Mutation Login
+    const loginAction = async (userInfo: { email: string, password: string }) => {
         try {
             // sending data to API
-            const response = await loginMutation({ email: data.email, password: data.password }).unwrap();
-            dispatch(setCredentials(response.data));
+            await loginMutation({ email: userInfo.email, password: userInfo.password }).unwrap();
 
             Toast.show({
                 type: 'success',
-                text1: 'Hello',
-                text2: 'This is some something 👋',
+                text1: 'Logged-In',
+                text2: 'You are welcome to Social-Meta',
             });
 
         } catch (error) {
             console.error('USER LOGIN: issue - ', error);
         }
-    }
+    };
 
-    return { login };
+    return { loginAction, loginLoading };
 };
 
 export default useLogin;

@@ -5,7 +5,17 @@ import { FollowButtonType, ButtonType } from '../../types';
 
 // Button Component..
 // region Normal Button
-export const Button = ({ title, bgColor, size, textColor, width, height, onPress, children }: ButtonType) => {
+export const Button = ({
+    title,
+    bgColor,
+    size,
+    textColor,
+    width,
+    height,
+    onPress,
+    children,
+    isLoading,
+}: ButtonType) => {
     // Styles..
     const styles = StyleSheet.create({
         signIn: {
@@ -24,7 +34,7 @@ export const Button = ({ title, bgColor, size, textColor, width, height, onPress
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.signIn}>
-            <Text style={[styles.textSign, { color: textColor ?? 'white' }]}>{title}</Text>
+            <Text style={[styles.textSign, { color: textColor ?? 'white' }]}>{!isLoading ? title : 'Loading..'}</Text>
             {children}
         </TouchableOpacity>
 
