@@ -1,23 +1,29 @@
-import * as React from 'react';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/components/theme';
-import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-// import { ModeSwitch } from '@/components/widgets';
-import ReduxProvider from '@/redux/ReduxProvider';
-import { Toaster } from 'react-hot-toast';
-import '../styles/main.scss';
+import * as React from "react";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "@/components/theme";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import ReduxProvider from "@/redux/ReduxProvider";
+import { Toaster } from "react-hot-toast";
+import "../styles/main.scss";
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <head>
+        {/* Move InitColorSchemeScript inside head */}
         <InitColorSchemeScript attribute="class" />
+        {/* Move Google Fonts to head */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body suppressHydrationWarning>
         <ReduxProvider>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon.author */}
               <CssBaseline />
               <Toaster
                 position="top-center"
@@ -27,9 +33,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                 containerStyle={{
                   top: 80,
                 }}
-              // containerClassName="toast-container"
               />
-              {/* <ModeSwitch /> */}
               {props.children}
             </ThemeProvider>
           </AppRouterCacheProvider>

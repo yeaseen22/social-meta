@@ -1,11 +1,7 @@
-import { Box } from "@mui/material";
+import AdminLoginPage from "./page";
 
 const AdminLoginLayout = (props: { children: React.ReactNode }) => {
-  return (
-    <Box>
-        Hello Admin
-    </Box>
-  );
+  return <AdminLoginPage />;
 };
 
 export default AdminLoginLayout;

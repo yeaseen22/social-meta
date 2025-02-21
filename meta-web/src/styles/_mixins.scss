@@ -1,9 +1,13 @@
 @mixin center-horizontal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @mixin shadow-effect($color) {
-    box-shadow: 0 2px 4px rgba($color, 0.2);
+  box-shadow: 0 2px 4px rgba($color, 0.2);
+}
+
+@mixin margin-bottom($marginBottom) {
+  margin-bottom: ($marginBottom);
 }
