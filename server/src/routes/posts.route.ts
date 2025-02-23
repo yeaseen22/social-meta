@@ -26,11 +26,6 @@ router.route('/:postId')
     .delete(postController.deletePost);
 
 /**
- * ----- Current User Posts -----
- */
-router.get('/own', postController.currentUserPosts);
-
-/**
  * ---- Showing specific User Posts ----
  */
 router.get('/:userId/posts', postController.specificUserPosts);

@@ -36,8 +36,9 @@ class PostService {
   // region Read Post
   public async readPost(postId: string): Promise<any> {
     try {
+      console.log('POST ID - ', postId);
       const post = await this.postModelRepository
-        .find({ _id: postId })
+        .findById(postId)
         .populate(
           "user",
           "firstname lastname profilePhoto title themeMode colorMode email"
@@ -183,54 +184,78 @@ class PostService {
   }
 
   /**
-   * READ CURRENT USER POSTS SERVICE
-   * This is for reading all posts of the current user
-   * @param userId
-   */
-  // region Current User Posts
-  public async currentUserPosts(userId: string): Promise<any> {
-    try {
-      const posts = await this.postModelRepository
-        .find({ ownerId: userId })
-        .populate({
-          path: "comments",
-          model: "Comment",
-          options: {
-            sort: {
-              createdAt: -1,
-            },
-          },
-          populate: {
-            path: "user",
-            model: "User",
-            select:
-              "firstname lastname profilePhoto title themeMode colorMode email",
-          },
-        })
-        .sort([["createdAt", -1]])
-        .exec();
-
-      return posts;
-
-    } catch (error) {
-      console.error("Failed to read current user posts:", error);
-      throw new Error("Failed to read current user posts");
-    }
-  }
-
-  /**
    * READ SPECIFIC USER POSTS SERVICE
    * This is for reading all posts of a specific user
    * @param userId
    */
   // region Specific User Posts
-  public async specificUserPosts(userId: string): Promise<any> {
+  public async specificUserPosts(userId: string, page: number = 1, limit: number = 5): Promise<any> {
     try {
-      const posts = await Post.find({ ownerId: userId })
-        .populate("comments")
-        .exec();
+      const skip = (page - 1) * limit;
+      const [result] = await this.postModelRepository.aggregate([
+        {
+          $match: {
+            ownerId: { $eq: userId }, // Filter by userId
+          }
+        },
+        {
+          $addFields: { ownerId: { $toObjectId: "$ownerId" } } // Convert ownerId to ObjectId
+        },
+        {
+          $facet: {
+            metadata: [ // facet for grouping multiple pipelines
+              { $count: "total" } // Count total documents
+            ],
+            posts: [
+              { $sort: { createdAt: -1 } },
+              { $skip: skip },
+              { $limit: limit },
+              {
+                $lookup: { // Populate/Join user model
+                  from: 'users',
+                  localField: 'ownerId',
+                  foreignField: '_id',
+                  pipeline: [
+                    {
+                      $project: { // Select fields from user
+                        firstname: 1,
+                        lastname: 1,
+                        email: 1,
+                        title: 1,
+                        profilePhoto: 1,
+                      }
+                    }
+                  ],
+                  as: 'owner'
+                }
+              },
+              {
+                $unwind: { // Unwind owner array
+                  path: "$owner",
+                  preserveNullAndEmptyArrays: true // Prevents filtering out posts without an owner
+                }
+              }
+            ]
+          }
+        }
+      ]);
 
-      return posts;
+      // Calculate pagination metadata
+      const total = result.metadata[0]?.total || 0;
+      const totalPages = Math.ceil(total / limit);
+      const hasNextPage = page < totalPages;
+      const hasPreviousPage = page > 1;
+
+      return {
+        success: true,
+        posts: result.posts,
+        total,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage,
+        page,
+        limit,
+      };
 
     } catch (error) {
       console.error("Failed to read specific user posts:", error);
@@ -278,7 +303,9 @@ class PostService {
         delete postData.image;
       }
 
-      const updatedPost = await this.postModelRepository.findByIdAndUpdate({ _id: postId }, postData, { new: true });
+      console.log('POST DATA - ', postData);
+
+      const updatedPost = await this.postModelRepository.findByIdAndUpdate(postId, postData, { new: true });
       if (!updatedPost) throw new Error("Post not found!");
       return updatedPost;
 
@@ -296,9 +323,7 @@ class PostService {
   // region Delete Post
   public async deletePost(postId: string): Promise<any> {
     try {
-      const deletedPost = await this.postModelRepository.findByIdAndDelete(
-        postId
-      );
+      const deletedPost = await this.postModelRepository.findByIdAndDelete(postId);
       if (!deletedPost) throw new Error("Post not found!");
       return deletedPost;
 

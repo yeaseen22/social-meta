@@ -1,14 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import Post from "../models/Post";
 import { Types } from "mongoose";
-import { LikeService, PostService } from '../services';
+import { PostService } from '../services';
 
 class PostController {
-  private readonly likeService: LikeService;
   private readonly postService: PostService;
 
   constructor() {
-    this.likeService = new LikeService();
     this.postService = new PostService();
   }
 
@@ -18,7 +15,7 @@ class PostController {
    * @param res
    * @returns
    */
-  public async readPost(req: Request | any, res: Response | any, next: NextFunction) {
+  public readPost = async (req: Request | any, res: Response | any, next: NextFunction) => {
     const postId = req.params.postId;
 
     // find Post by PostId.
@@ -42,7 +39,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public readAllPosts = async (req: Request, res: Response) => {
+  public readAllPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { page = 1, limit = 5 } = req.query;
       const pageNumber = Math.max(1, Number(page));
@@ -58,25 +55,8 @@ class PostController {
         posts,
       });
     } catch (error) {
-      res.status(500).json({ success: false, error });
-    }
-  }
-
-  /**
-   * CURRENT USER POSTS CONTROLLER
-   * @param req
-   * @param res
-   */
-  public async currentUserPosts(req: Request, res: Response) {
-    const currentLoggedInUserId = String((req as any).user?._id);
-
-    try {
-      const posts = await this.postService.currentUserPosts(currentLoggedInUserId);
-      if (!posts?.length) res.status(400).json({ ...posts, success: false });
-      res.status(200).send(posts);
-
-    } catch (error) {
-      res.status(400).send(error);
+      console.error(`Error in readAllPosts controller: ${error}`);
+      next(error);
     }
   }
 
@@ -85,7 +65,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public async specificUserPosts(req: Request, res: Response) {
+  public specificUserPosts = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.userId;
 
     try {
@@ -94,7 +74,8 @@ class PostController {
       res.status(200).send(posts);
 
     } catch (error) {
-      res.status(400).send(error);
+      console.error(`Error in readPost controller: ${error}`);
+      next(error);
     }
   }
 
@@ -106,7 +87,7 @@ class PostController {
   public createPost = async (req: Request, res: Response) => {
     const currentLoggedInUserId = String((req as any).user._id);
     const post: any = {
-      body: req.body.content,
+      content: req.body.content,
       // image: req.file?.originalname,
       ownerId: currentLoggedInUserId,
       user: new Types.ObjectId(currentLoggedInUserId),
@@ -117,7 +98,7 @@ class PostController {
     if (req.file !== undefined) {
       post.image = req.file;
     }
-    
+
     try {
       await this.postService.createPost(post);
 
@@ -136,7 +117,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public async updatePost(req: Request, res: Response) {
+  public updatePost = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.postId;
     const post = { ...req.body };
 
@@ -155,11 +136,9 @@ class PostController {
         docs,
       });
 
-    } catch (err) {
-      res.status(400).json({
-        success: false,
-        err,
-      });
+    } catch (error) {
+      console.error(`Error when update post: ${error}`);
+      next(error);
     }
   }
 
@@ -168,7 +147,7 @@ class PostController {
    * @param req
    * @param res
    */
-  public async deletePost(req: Request, res: Response) {
+  public deletePost = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.postId;
 
     try {
@@ -180,8 +159,9 @@ class PostController {
         docs,
       });
 
-    } catch (err) {
-      res.status(400).json({ deleted: false, err });
+    } catch (error) {
+      console.error(`Error when update post: ${error}`);
+      next(error);
     }
   }
 }
