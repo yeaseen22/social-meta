@@ -30,7 +30,7 @@ const useLogin = () => {
     const loginAction = async (userInfo: { email: string, password: string }) => {
         try {
             // sending data to API
-            await loginMutation({ email: userInfo.email, password: userInfo.password }).unwrap();
+            await loginMutation({ email: userInfo.email, password: userInfo.password });
 
             Toast.show({
                 type: 'success',

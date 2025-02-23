@@ -8,38 +8,31 @@ const router = Router();
 const postController = new PostController();
 
 /**
- * ---- Read Post ----
+ * ----- READ POSTS -----
+ * ----- CREATE POST -----
  */
-router.get('/post_read', postController.readPost);
+router.route('/')
+    .get(postController.readAllPosts)
+    .post(imageUpload.single("file"), postController.createPost);
 
 /**
- * ---- Get all Posts ----
+ * ----- READ POST -----
+ * ----- UPDATE POST -----
+ * ----- DELETE POST -----
  */
-router.get('/read_all_posts', postController.readAllPosts);
+router.route('/:postId')
+    .get(postController.readPost)
+    .put(imageUpload.single("file"), postController.updatePost)
+    .delete(postController.deletePost);
 
 /**
  * ----- Current User Posts -----
  */
-router.get('/current_user_posts', postController.currentUserPosts);
+router.get('/own', postController.currentUserPosts);
 
 /**
  * ---- Showing specific User Posts ----
  */
-router.get('/user_posts', postController.specificUserPosts);
-
-/**
- * ----- Create new Post ----
- */
-router.post('/post_create', imageUpload.single("file"), postController.createPost);
-
-/**
- * ----- Update Post ----
- */
-router.post('/post_update', imageUpload.single("file"), postController.updatePost);
-
-/**
- * ---- Delete Post ----
- */
-router.delete('/post_delete', postController.deletePost);
+router.get('/:userId/posts', postController.specificUserPosts);
 
 export default router;

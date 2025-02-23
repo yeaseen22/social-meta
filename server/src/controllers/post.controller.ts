@@ -19,7 +19,7 @@ class PostController {
    * @returns
    */
   public async readPost(req: Request | any, res: Response | any, next: NextFunction) {
-    const postId = req.query.postId;
+    const postId = req.params.postId;
 
     // find Post by PostId.
     try {
@@ -86,7 +86,7 @@ class PostController {
    * @param res
    */
   public async specificUserPosts(req: Request, res: Response) {
-    const userId = req.query.userId;
+    const userId = req.params.userId;
 
     try {
       const posts = await this.postService.specificUserPosts(userId as string);
@@ -137,7 +137,7 @@ class PostController {
    * @param res
    */
   public async updatePost(req: Request, res: Response) {
-    const id = req.body._id;
+    const id = req.params.postId;
     const post = { ...req.body };
 
     // if there is new post image update file to make it up..
@@ -169,7 +169,7 @@ class PostController {
    * @param res
    */
   public async deletePost(req: Request, res: Response) {
-    const id = req.query.id;
+    const id = req.params.postId;
 
     try {
       const docs = await this.postService.deletePost(id as string);

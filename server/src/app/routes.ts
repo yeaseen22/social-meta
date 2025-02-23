@@ -19,12 +19,12 @@ const router: Router = Router();
  * Now moved API Rutes from /api/v1/ to /api/
  */
 router.use('/api/v1/auth', authRoutes);
-router.use('/api/v1/user', AuthMiddleware.verifyUser, userRoutes);
-router.use('/api/v1/post', AuthMiddleware.verifyUser, postRoutes);
-router.use('/api/v1/comment', AuthMiddleware.verifyUser, commentRoutes);
+router.use('/api/v1/users', AuthMiddleware.verifyUser, userRoutes);
+router.use('/api/v1/posts', AuthMiddleware.verifyUser, postRoutes);
+router.use('/api/v1/comments', AuthMiddleware.verifyUser, commentRoutes);
 router.use('/api/v1/likes', AuthMiddleware.verifyUser, likeRoutes);
 router.use('/api/v1/notifications', AuthMiddleware.verifyUser, notificationRoutes);
-router.use('/api/v1/follow', AuthMiddleware.verifyUser, followRoutes);
+router.use('/api/v1/follows', AuthMiddleware.verifyUser, followRoutes);
 
 router.use('/api', AuthMiddleware.verifyUser, conversationRoutes);
 router.use('/api', AuthMiddleware.verifyUser, messageRoutes);

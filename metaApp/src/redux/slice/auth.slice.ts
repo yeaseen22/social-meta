@@ -1,6 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
-import Toast from 'react-native-toast-message';
 import { axiosInstance } from '../../lib/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -55,19 +54,10 @@ export const authAPI = createApi({
         try {
           const { data } = await queryFulfilled;
           const { accessToken, refreshToken, user } = data;
-
           dispatch(setCredentials({ accessToken, refreshToken, user }));
-          Toast.show({
-            type: 'success',
-            text1: 'Registration Successful!',
-          });
 
         } catch (error) {
           console.error('Registration failed: ', error);
-          Toast.show({
-            type: 'error',
-            text1: 'Registration failed',
-          });
         }
       },
     }),
@@ -82,16 +72,9 @@ export const authAPI = createApi({
         try {
           await queryFulfilled;
           dispatch(clearCredentials());
-          Toast.show({
-            type: 'success',
-            text1: 'Logout Successful!',
-          });
+
         } catch (error) {
           console.error('Logout failed: ', error);
-          Toast.show({
-            type: 'error',
-            text1: 'Logout failed',
-          });
         }
       },
     }),
