@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditPostDialog from './EditModel';
 import { useMediaQuery } from '@mui/material';
-import { useDeletePostMutation } from '@/redux/slice/post.slice'; // Import RTK mutation
+import { useDeletePostMutation } from '@/redux/slice/post.slice'; 
 
 interface TweetCardProps {
     post: {
@@ -53,7 +53,6 @@ export default function TweetCard({ post }: TweetCardProps) {
         try {
             const data = await deletePost(post._id).unwrap();
 
-            console.log("Post deleted:", data);
         } catch (err) {
             console.error("Error deleting post:", err);
         }
