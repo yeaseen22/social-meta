@@ -14,8 +14,9 @@ import { useDeletePostMutation } from '@/redux/slice/post.slice';
 
 interface TweetCardProps {
     post: {
-        body: string;
+        content: string;
         _id: string;
+        body: string;
         createdAt: string;
         likes_count: number;
         comments_count: number;
@@ -62,7 +63,7 @@ export default function TweetCard({ post }: TweetCardProps) {
     // Create a new post object for editing
     const editPost = {
         ...post,
-        content: post.body,
+        content: post.content, // Add content property
         privacy: 'public', // Default value, can be changed
     };
 
@@ -123,7 +124,7 @@ export default function TweetCard({ post }: TweetCardProps) {
                     {post?.owner?.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {post?.body}
+                    {post?.content || post.body}
                 </Typography>
             </CardContent>
 

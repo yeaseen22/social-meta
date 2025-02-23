@@ -39,7 +39,7 @@ export const postsApi = createApi({
       map(arg0: (post: Post) => JSX.Element): import("react").ReactNode; posts: Post[]; hasNextPage: boolean
     }, { page: number; limit: number }>({
       query: ({ page, limit }) => ({
-        url: `/post/read_all_posts?page=${page}&limit=${limit}`,
+        url: `/posts?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       transformResponse: (response) => {
@@ -49,7 +49,7 @@ export const postsApi = createApi({
     // Create a new post
     createPost: builder.mutation({
       query: (postData) => ({
-        url: "/post/post_create",
+        url: "/posts",
         method: "POST",
         data: postData,
       }),
@@ -92,8 +92,8 @@ export const postsApi = createApi({
     }),
     updatePost: builder.mutation<Post, { id: string; postData: FormData }>({
       query: ({ id, postData }) => ({
-        url: `post/post_update`,
-        method: "POST",
+        url: `/posts/${id}`,
+        method: "PUT",
         data: postData,
       }),
       async onQueryStarted({ id, postData }, { dispatch, queryFulfilled }) {
@@ -111,7 +111,7 @@ export const postsApi = createApi({
     // Delete a post
     deletePost: builder.mutation<{ id: string }, string>({
       query: (id) => ({
-        url: `/post/post_delete`,
+        url: `/posts/${id}`,
         method: "DELETE",
       }),
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
@@ -132,7 +132,7 @@ export const postsApi = createApi({
   }),
 });
 
-export const { useFetchPostsQuery, useCreatePostMutation, useUpdatePostMutation,useDeletePostMutation } = postsApi;
+export const { useFetchPostsQuery, useCreatePostMutation, useUpdatePostMutation, useDeletePostMutation } = postsApi;
 
 // Redux Slice for storing posts (to be used with useSelector)
 interface PostState {

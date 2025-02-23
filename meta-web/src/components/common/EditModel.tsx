@@ -14,8 +14,9 @@ import {
   Stack,
 } from "@mui/material";
 import { Close, PhotoLibrary } from "@mui/icons-material";
-import { useUpdatePostMutation } from "@/redux/slice/post.slice";
+import { useUpdatePostMutation, useFetchPostsQuery } from "@/redux/slice/post.slice";
 import toaster from "react-hot-toast";
+
 
 interface Post {
   _id: string;
@@ -44,6 +45,7 @@ export default function EditPostDialog({ open, setOpen, post, onPostUpdated }: E
   const [content, setContent] = useState(post.content);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(post.image || null);
+  const { refetch } = useFetchPostsQuery({ page: 1, limit: 5 });
 
   const [updatePost, { isLoading }] = useUpdatePostMutation();
 
@@ -74,26 +76,31 @@ export default function EditPostDialog({ open, setOpen, post, onPostUpdated }: E
   };
 
   const handleUpdate = async () => {
-    if (!content.trim() || (content === post.content && !image)) {
-      toaster.error("No changes detected.");
+    if (!content.trim()) {
+      toaster.error("Content cannot be empty.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("id", post._id);
-    formData.append("content", content);
+    const postData = new FormData();
+    postData.append('content', content);
+
     if (image) {
-      formData.append("file", image);
+      postData.append('image', image);
     }
 
     try {
-      await updatePost({ id: post._id, postData: formData }).unwrap();
+      const updatedPost = await updatePost({ id: post._id, postData }).unwrap();
+      refetch();
+      console.log("Updated post:", updatedPost);
+
       toaster.success("Post updated successfully!");
-      if (onPostUpdated) {
-        onPostUpdated();
-      }
+
+      // Call the update function to refresh UI state
+      onPostUpdated?.();
+
       setOpen(false);
     } catch (error) {
+      console.error("Update error:", error);
       toaster.error("Failed to update post. Try again.");
     }
   };

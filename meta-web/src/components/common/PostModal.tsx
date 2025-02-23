@@ -51,7 +51,7 @@ export default function CreatePostDialog({ avatarSrc, open, setOpen, onPostCreat
     if (!body.trim()) return;
 
     const postData = new FormData();
-    postData.append("content", body);
+    postData.append("body", body);
     if (image) postData.append("file", image);
 
     try {

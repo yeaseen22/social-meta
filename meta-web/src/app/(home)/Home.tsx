@@ -9,6 +9,7 @@ import { NotFound } from "@/components/widgets";
 import { useFetchPostsQuery } from "@/redux/slice/post.slice";
 
 interface Post {
+  content: string;
   _id: string;
   body: string;
   createdAt: string;
@@ -74,7 +75,7 @@ const Home = () => {
       <CreateInput userProfileImage="https://via.placeholder.com/150" onPostCreated={refreshPosts} />
 
       {accumulatedPosts.length > 0 ? (
-        accumulatedPosts.map((post: Post) => <TweetCard key={post._id} post={post} />)
+        accumulatedPosts.map((post: Post) => <TweetCard key={post._id} post={{ ...post, content: post.content || '' }} />)
       ) : (
         !isLoading && <NotFound label="No Post available" />
       )}
