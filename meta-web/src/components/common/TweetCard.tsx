@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { 
-    Card, CardHeader, CardMedia, CardContent, CardActions, Collapse, Avatar, IconButton, Typography, Menu, MenuItem, 
+import {
+    Card, CardHeader, CardMedia, CardContent, CardActions, Collapse, Avatar, IconButton, Typography, Menu, MenuItem,
     Box
 } from '@mui/material';
 import { red } from '@mui/material/colors';
@@ -10,13 +10,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditPostDialog from './EditModel';
 import { useMediaQuery } from '@mui/material';
-import { useDeletePostMutation } from '@/redux/slice/post.slice'; 
+import { useDeletePostMutation } from '@/redux/slice/post.slice';
 
 interface TweetCardProps {
     post: {
         content: string;
         _id: string;
-        body: string;
         createdAt: string;
         likes_count: number;
         comments_count: number;
@@ -63,21 +62,24 @@ export default function TweetCard({ post }: TweetCardProps) {
     // Create a new post object for editing
     const editPost = {
         ...post,
-        content: post.content, // Add content property
-        privacy: 'public', // Default value, can be changed
+        content: post.content,
     };
 
     return (
         <Card
             sx={{
-                maxWidth: isMobile ? "100%" : 600, // Full width on mobile, 500px on desktop
+                width: "100%", // Full width for all screens
+                maxWidth: 499, // Prevents card from being too wide
+                minWidth: 320, // Ensures the card doesn't shrink too much
                 margin: "auto",
                 my: 2,
                 boxShadow: 3,
                 borderRadius: 2,
-                padding: isMobile ? 1 : 2, // Less padding on mobile
+                padding: "8px", // Adjust padding for smaller screens
+                overflow: "hidden", // Prevents scroll issues
             }}
         >
+
             {/* HEADER */}
             <CardHeader
                 avatar={
@@ -107,8 +109,11 @@ export default function TweetCard({ post }: TweetCardProps) {
             <CardMedia
                 component="img"
                 sx={{
-                    height: isMobile ? 180 : 250, // Smaller height on mobile
+                    height: "auto",
+                    maxHeight: 220, // Adjust height within the range
                     objectFit: "cover",
+                    width: "100%", // Prevents overflow issues
+                    maxWidth: "100%",
                 }}
                 image={
                     post.owner?.profilePhoto === "avatar" || !post.owner?.profilePhoto?.trim()
@@ -118,13 +123,14 @@ export default function TweetCard({ post }: TweetCardProps) {
                 alt={post?.owner?.title || "Default Image"}
             />
 
+
             {/* CONTENT */}
             <CardContent>
                 <Typography variant={isMobile ? "h6" : "h5"} color="text.primary">
                     {post?.owner?.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {post?.content || post.body}
+                    {post.content}
                 </Typography>
             </CardContent>
 
@@ -155,13 +161,14 @@ export default function TweetCard({ post }: TweetCardProps) {
 
             {/* COLLAPSIBLE SECTION */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
+                <CardContent sx={{ maxHeight: "200px", overflowY: "auto" }}>
                     <Typography paragraph>Post created on: {new Date(post?.createdAt).toLocaleDateString()}</Typography>
                     <Typography paragraph>
                         This is an additional expandable section. You can modify this text to display more details.
                     </Typography>
                 </CardContent>
             </Collapse>
+
 
             {/* EDIT POST DIALOG */}
             {isEditOpen && (
