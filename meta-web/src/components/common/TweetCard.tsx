@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import {
     Card, CardHeader, CardMedia, CardContent, CardActions, Collapse, Avatar, IconButton, Typography, Menu, MenuItem,

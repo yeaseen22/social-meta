@@ -7,10 +7,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 
 const HomeLayout = (props: { children: React.ReactNode }) => {
-  const isUltraWide = useMediaQuery("(min-width: 1920px)"); // Ultra-wide screens
-  const isTabletOrMobile = useMediaQuery("(max-width: 1024px)"); // Tablet & Mobile
-  const isMobile = useMediaQuery("(max-width: 768px)"); // Mobile
-  const isSmallMobile = useMediaQuery("(max-width: 320px)"); // Tiny screens
+  const isUltraWide = useMediaQuery("(min-width: 1920px)"); 
+  const isTabletOrMobile = useMediaQuery("(max-width: 1024px)"); 
+  const isMobile = useMediaQuery("(max-width: 768px)"); 
+  const isSmallMobile = useMediaQuery("(max-width: 320px)");
 
   const [openLeftSidebar, setOpenLeftSidebar] = useState(false);
   const [openRightSidebar, setOpenRightSidebar] = useState(false);
@@ -38,7 +38,6 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
               left: 0,
               right: 0,
               zIndex: 1200,
-              // px: isSmallMobile ? 1 : 2, // Reduce padding for tiny screens
             }}
           >
             <IconButton 
@@ -49,7 +48,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
             </IconButton>
             <IconButton 
               onClick={() => setOpenRightSidebar(true)} 
-              sx={{ bgcolor: "white", boxShadow: 2, width: isSmallMobile ? 30 : 40, height: isSmallMobile ? 30 : 40 }}
+              sx={{ bgcolor: "white", boxShadow: 2, position: 'relative', right: 10, height: isSmallMobile ? 30 : 40, }}
             >
               <MenuIcon sx={{ fontSize: isSmallMobile ? 18 : 24 }} />
             </IconButton>
@@ -66,7 +65,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
         ) : (
           <Box
             sx={{
-              width: isUltraWide ? 300 : 250, // Wider on ultra-wide screens
+              width: isUltraWide ? 300 : 250, 
               p: 1,
               borderRight: "1px solid #ddd",
               flexShrink: 0,
@@ -82,7 +81,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
         <Box
           sx={{
             flex: 1,
-            maxWidth: isUltraWide ? 1200 : "100%", // Limit width on ultra-wide screens
+            maxWidth: isUltraWide ? 1200 : "100%", 
             height: "90vh",
             overflowY: "auto",
           }}
@@ -93,7 +92,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
         {/* Right Sidebar - Drawer for Small Screens */}
         {isTabletOrMobile ? (
           <Drawer anchor="right" open={openRightSidebar} onClose={() => setOpenRightSidebar(false)}>
-            <Box sx={{ width: isSmallMobile ? 220 : 300, p: 2 }}>
+            <Box sx={{ width: isSmallMobile ? 220 : 'none', p: 2 }}>
               <Sidebar />
             </Box>
           </Drawer>
