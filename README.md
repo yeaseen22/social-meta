@@ -1,3 +1,5 @@
+![Free-Palestine](./readme_assets/free-palestine-1.png)
+
 # Social Meta (Software)
 React (Web), React-Native (Android/iOS), Node-JS (Backend - Express) &amp; MongoDB Application. 
 
