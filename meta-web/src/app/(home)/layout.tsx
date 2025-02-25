@@ -38,7 +38,7 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
               left: 0,
               right: 0,
               zIndex: 1200,
-              px: isSmallMobile ? 1 : 2, // Reduce padding for tiny screens
+              // px: isSmallMobile ? 1 : 2, // Reduce padding for tiny screens
             }}
           >
             <IconButton 
@@ -82,7 +82,6 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
         <Box
           sx={{
             flex: 1,
-            p: 2,
             maxWidth: isUltraWide ? 1200 : "100%", // Limit width on ultra-wide screens
             height: "90vh",
             overflowY: "auto",
@@ -101,10 +100,10 @@ const HomeLayout = (props: { children: React.ReactNode }) => {
         ) : (
           <Box
             sx={{
-              width: isUltraWide ? 400 : 380, // Wider on ultra-wide screens
-              p: 2,
+              width: isUltraWide ? 400 : 380, 
+              // p: 2,
               borderLeft: "1px solid #ddd",
-              flexShrink: 0,
+              flexShrink: 1,
               height: "100vh",
               overflow: "hidden",
             }}
