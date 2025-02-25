@@ -102,23 +102,19 @@ export default function RegisterPage() {
       }
     }
   };
-  
-  
 
   const renderStepContent = () => {
     return (
-
       <RenderStepForms
         formData={formData}
         handleChange={handleChange}
         handleBlur={handleBlur}
         errors={errors} currentTab={currentTab} />
-
     )
   };
 
   return (
-    <Container className='container'>
+    <Container className='register-container'>
       <Box className='leftSection'>
         <Box className='formWrapper'>
           <Tabs

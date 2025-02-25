@@ -1,7 +1,6 @@
-.container {
+.register-container {
     display: flex;
     height: 100vh;
-    // background: url("https://static.wixstatic.com/media/bb1bd6_686e292a9ff740d39c4e60479dcdf319~mv2.gif") center center / cover no-repeat, linear-gradient(to bottom right, #f5f5f5, #eaeaea);
     padding: 1rem;
 
     @media (max-width: 768px) {
@@ -90,7 +89,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.124);
             z-index: 1;
         }
 

@@ -1,7 +1,5 @@
 import React from 'react';
-import { Avatar, Box, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import registerStyles from "@/styles/auth/register.module.scss";
+import { FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 
 
 // TYPE FOR STEP FORM 1
@@ -179,7 +177,8 @@ export const StepForm2 = ({ formData, handleChange, handleBlur, errors }: TStepF
 type TStepForm3Props = {
     formData: {
         password: string;
-        confirmPassword: string;    };
+        confirmPassword: string;
+    };
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
     errors: {
@@ -218,7 +217,7 @@ export const StepForm3 = ({ formData, handleChange, handleBlur, errors }: TStepF
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
             />
-    
+
         </>
     );
 }
