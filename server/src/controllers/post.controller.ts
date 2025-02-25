@@ -156,7 +156,7 @@ class PostController {
 
       res.status(200).json({
         success: true,
-        docs,
+        message: 'Post Deleted Successfully!',
       });
 
     } catch (error) {
