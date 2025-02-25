@@ -21,7 +21,6 @@ import toaster from "react-hot-toast";
 interface Post {
   _id: string;
   content: string;
-  privacy: string;
   createdAt: string;
   likes_count: number;
   comments_count: number;
