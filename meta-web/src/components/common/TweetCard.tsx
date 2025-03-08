@@ -1,17 +1,27 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card, CardHeader, CardMedia, CardContent, CardActions, Collapse, Avatar, IconButton, Typography, Menu, MenuItem,
-    Box
+    Box,
+    List,
+    ListItem,
+    ListItemText,
+    Divider,
+    TextField,
+    Button
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import EditPostDialog from './EditModel';
 import { useMediaQuery } from '@mui/material';
-import { useDeletePostMutation } from '@/redux/slice/post.slice';
+import { useDeletePostMutation, useToggleLikeMutation } from '@/redux/slice/post.slice';
+import { useAddCommentMutation } from '@/redux/slice/comment.slice';
+import CommentSection from '../CommentSection';
+import { socket } from '@/lib/socket';
 
 interface TweetCardProps {
     post: {
@@ -20,7 +30,9 @@ interface TweetCardProps {
         createdAt: string;
         likes_count: number;
         comments_count: number;
+        dislikes_count: number;
         owner: {
+            _id: any;
             firstname: string;
             lastname: string;
             profilePhoto?: string;
@@ -34,9 +46,16 @@ export default function TweetCard({ post }: TweetCardProps) {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const [likes, setLikes] = useState(post.likes_count);
+    const [dislikes, setDislikes] = useState(post.dislikes_count);
+    const [comments, setComments] = useState<any[]>([]);
+    const [newComment, setNewComment] = useState("");
 
     // Use the deletePost mutation from RTK Query
     const [deletePost] = useDeletePostMutation();
+    const [likePost] = useToggleLikeMutation();
+    // const [dislikePost] = useDislikePostMutation();
+    const [addComment] = useAddCommentMutation();
 
     // Detect screen size
     const isMobile = useMediaQuery("(max-width: 600px)");
@@ -45,6 +64,11 @@ export default function TweetCard({ post }: TweetCardProps) {
     const handleClick = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
+    useEffect(() => {
+        setLikes(post.likes_count);
+        setDislikes(post.dislikes_count);
+        setComments([]); // Initialize comments as an empty array
+    }, [post]);
     const handleEdit = () => {
         setIsEditOpen(true);
         handleClose();
@@ -60,7 +84,49 @@ export default function TweetCard({ post }: TweetCardProps) {
         handleClose();
     };
 
-    // Create a new post object for editing
+    const handleLike = async () => {
+        try {
+            const isAlreadyLiked = likes > post.likes_count;
+            setLikes((prev) => (isAlreadyLiked ? prev - 1 : prev + 1));
+    
+            await likePost({ postId: post._id }).unwrap();
+    
+            if (!isAlreadyLiked) {
+                socket.emit("sendNotification", {
+                    recipientId: post.owner._id,
+                    senderId: post.owner._id, // Use post.owner._id instead of user._id
+                    postId: post._id,
+                    type: "like",
+                    message: `Someone liked your post.`, // Remove reference to user.firstname
+                });
+            }
+        } catch (err) {
+            console.error("Error liking post:", err);
+            setLikes(post.likes_count);
+        }
+    };    
+
+
+    const handleDislike = async () => {
+        try {
+            // await dislikePost(post._id).unwrap();
+            setDislikes((prev) => prev + 1);
+        } catch (err) {
+            console.error("Error disliking post:", err);
+        }
+    };
+
+    const handleAddComment = async () => {
+        if (newComment.trim()) {
+            try {
+                const response = await addComment({ postId: post._id, commment: newComment }).unwrap();
+                setComments((prev) => [...prev, response]); // Add the new comment to the list
+                setNewComment(""); // Clear the input field
+            } catch (err) {
+                console.error("Error adding comment:", err);
+            }
+        }
+    };    // Create a new post object for editing
     const editPost = {
         ...post,
         content: post.content,
@@ -136,29 +202,32 @@ export default function TweetCard({ post }: TweetCardProps) {
             </CardContent>
 
             {/* ACTIONS */}
-            <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <Typography>{post.likes_count} Likes</Typography>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <IconButton aria-label="share">
-                        <ShareIcon />
-                    </IconButton>
-                    <Typography>{post?.comments_count} Comments</Typography>
-                </Box>
-
-                <IconButton
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                >
-                    <ExpandMoreIcon />
-                </IconButton>
+            <CardActions>
+                <IconButton onClick={handleLike}><FavoriteIcon color={likes > post.likes_count ? "primary" : "inherit"} /></IconButton>
+                <Typography>{likes} Likes</Typography>
+                <IconButton onClick={handleExpandClick}><ExpandMoreIcon /></IconButton>
             </CardActions>
+            {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                    <Typography paragraph>Comments</Typography>
+                    <List>
+                        {Array.isArray(comments) && comments.map((comment, index) => (
+                            <React.Fragment key={index}>
+                                <ListItem>
+                                    <ListItemText primary={comment.text} secondary={comment.user} />
+                                </ListItem>
+                                <Divider />
+                            </React.Fragment>
+                        ))}
+                    </List>
+                    <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                        <TextField fullWidth label="Write a comment..." value={newComment} onChange={(e) => setNewComment(e.target.value)} />
+                        <Button variant="contained" onClick={handleAddComment}>Post</Button>
+                    </Box>
+                </CardContent>
+            </Collapse> */}
+            <CommentSection postId={post._id} initialComments={comments} />
+
 
             {/* COLLAPSIBLE SECTION */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -181,5 +250,5 @@ export default function TweetCard({ post }: TweetCardProps) {
                 />
             )}
         </Card>
-    );
+    )
 }
