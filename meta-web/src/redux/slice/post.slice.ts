@@ -1,8 +1,37 @@
-// redux/slice/post.slice.ts
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/axios.interceptor";
 import { JSX } from "react";
+import { io } from "socket.io-client";
+
+// Initialize WebSocket Connection
+const socket = io("http://localhost:8080"!, {
+  withCredentials: true,
+  transports: ["websocket", "polling"],
+});
+
+interface LikeResponse {
+  success: boolean;
+  message: string;
+  likeStatus: boolean;
+}
+
+export interface Post {
+  id: string;
+  comments: any;
+  likedByCurrentUser: any;
+  _id: string;
+  content: string;
+  privacy: string;
+  createdAt: string;
+  likes_count?: number;
+  owner: {
+    firstname: string;
+    lastname: string;
+    profilePhoto?: string;
+    title: string;
+  };
+}
 
 // Custom Base Query using Axios
 const customBaseQuery = async ({ url, method, data }: any) => {
@@ -14,20 +43,6 @@ const customBaseQuery = async ({ url, method, data }: any) => {
   }
 };
 
-// Post Interface
-export interface Post {
-  _id: string;
-  content: string;
-  privacy: string;
-  createdAt: string;
-  owner: {
-    firstname: string;
-    lastname: string;
-    profilePhoto?: string;
-    title: string;
-  };
-}
-
 // Define the API using RTK Query
 export const postsApi = createApi({
   reducerPath: "postsApi",
@@ -36,15 +51,14 @@ export const postsApi = createApi({
   endpoints: (builder) => ({
     // Fetch posts with pagination
     fetchPosts: builder.query<{
-      map(arg0: (post: Post) => JSX.Element): import("react").ReactNode; posts: Post[]; hasNextPage: boolean
+      posts: Post[];
+      hasNextPage: boolean;
     }, { page: number; limit: number }>({
       query: ({ page, limit }) => ({
         url: `/posts?page=${page}&limit=${limit}`,
         method: "GET",
       }),
-      transformResponse: (response) => {
-        return response.posts;
-      },
+      transformResponse: (response) => response.posts,
     }),
     // Create a new post
     createPost: builder.mutation({
@@ -69,14 +83,16 @@ export const postsApi = createApi({
 
         const patchResult = dispatch(
           postsApi.util.updateQueryData("fetchPosts", { page: 1, limit: 5 }, (draft) => {
-            draft.posts.unshift(tempPost);
+            draft.posts.unshift({
+              ...tempPost, likedByCurrentUser: false,
+              comments: undefined,
+              id: ""
+            });
           })
         );
 
         try {
-          // 3️⃣ Wait for API Response (Real Post)
           const { data: newPost } = await queryFulfilled;
-
           dispatch(
             postsApi.util.updateQueryData("fetchPosts", { page: 1, limit: 5 }, (draft) => {
               const index = draft.posts.findIndex((p) => p._id === tempPost._id);
@@ -90,6 +106,7 @@ export const postsApi = createApi({
         }
       },
     }),
+    // Update a post
     updatePost: builder.mutation<Post, { id: string; postData: FormData }>({
       query: ({ id, postData }) => ({
         url: `/posts/${id}`,
@@ -97,13 +114,11 @@ export const postsApi = createApi({
         data: postData,
       }),
       async onQueryStarted({ id, postData }, { dispatch, queryFulfilled }) {
-        // Optionally, create an optimistic update here.
-        // For simplicity, we'll wait for API response and then invalidate cache.
         try {
           await queryFulfilled;
           dispatch(postsApi.util.invalidateTags(["Post"]));
         } catch {
-          // Handle error if needed
+          // Optionally handle error
         }
       },
       invalidatesTags: ["Post"],
@@ -115,7 +130,6 @@ export const postsApi = createApi({
         method: "DELETE",
       }),
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        // Optimistically remove the post from the cache.
         const patchResult = dispatch(
           postsApi.util.updateQueryData("fetchPosts", { page: 1, limit: 5 }, (draft) => {
             draft.posts = draft.posts.filter((post) => post._id !== id);
@@ -129,10 +143,53 @@ export const postsApi = createApi({
       },
       invalidatesTags: ["Post"],
     }),
+    // Toggle Like/Dislike
+    // Toggle Like/Dislike mutation inside postsApi
+    toggleLike: builder.mutation<LikeResponse, { postId: string }>({
+      query: ({ postId }) => ({
+        url: `/likes/toggle`,
+        method: "POST",
+        data: { postId }, // Removed the extra "to" field
+      }),
+      async onQueryStarted({ postId }, { dispatch, queryFulfilled }) {
+        // Optimistically update the UI
+        const patchResult = dispatch(
+          postsApi.util.updateQueryData("fetchPosts", { page: 1, limit: 5 }, (draft) => {
+            const post = draft.posts.find((p) => p._id === postId);
+            if (post) {
+              const userAlreadyLiked = post.likedByCurrentUser;
+              // Toggle the like count based on the current state
+              post.likes_count = (post.likes_count ?? 0) + (userAlreadyLiked ? -1 : 1);
+              post.likedByCurrentUser = !userAlreadyLiked;
+            }
+          })
+        );
+
+        try {
+          const { data } = await queryFulfilled;
+          if (!data.success) throw new Error("Failed to like post");
+
+          // Only if the post was just liked, emit a notification
+          // (Assuming the backend handles the dislike case separately.)
+          if (data.likeStatus === true) {
+            socket.emit("likePost", { postId });
+          }
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+
   }),
 });
 
-export const { useFetchPostsQuery, useCreatePostMutation, useUpdatePostMutation, useDeletePostMutation } = postsApi;
+export const {
+  useFetchPostsQuery,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+  useToggleLikeMutation,
+} = postsApi;
 
 // Redux Slice for storing posts (to be used with useSelector)
 interface PostState {
@@ -151,12 +208,10 @@ const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    // Set posts data (replacing existing data)
     setPosts: (state, action: PayloadAction<{ posts: Post[]; hasNextPage: boolean }>) => {
       state.posts = action.payload.posts;
       state.hasNextPage = action.payload.hasNextPage;
     },
-    // Append additional posts (for infinite scroll)
     addPosts: (state, action: PayloadAction<{ posts: Post[]; hasNextPage: boolean }>) => {
       state.posts = [...state.posts, ...action.payload.posts];
       state.hasNextPage = action.payload.hasNextPage;
@@ -166,16 +221,15 @@ const postSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // When RTK Query's fetchPosts succeeds, update our local Redux state.
     builder.addMatcher(postsApi.endpoints.fetchPosts.matchFulfilled, (state, action) => {
       const { posts, hasNextPage } = action.payload;
-      // For page 1, we replace; for subsequent pages, we append:
       if (state.posts.length === 0) {
         state.posts = posts;
       } else {
-        state.posts = [...state.posts, ...posts.filter(
-          (newPost) => !state.posts.some((post) => post._id === newPost._id)
-        )];
+        state.posts = [
+          ...state.posts,
+          ...posts.filter((newPost) => !state.posts.some((post) => post._id === newPost._id)),
+        ];
       }
       state.hasNextPage = hasNextPage;
       state.isFetching = false;
