@@ -14,6 +14,7 @@ interface Post {
   body: string;
   createdAt: string;
   likes_count: number;
+  dislikes_count: number;
   comments_count: number;
   image: string; 
   owner: {
