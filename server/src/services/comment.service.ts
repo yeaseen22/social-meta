@@ -154,7 +154,7 @@ class CommentService {
                     postId,
                     message: 'Someone commented on your post.',
                     comment: newComment,
-                });
+                }); 
             }
 
             return { success: true, message: "Comment created.", comment: newComment };
