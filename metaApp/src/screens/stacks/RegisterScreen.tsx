@@ -157,14 +157,13 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
                 <View style={{ marginTop: 30 }}>
                     <Button
                         title="Next"
-                        color1st="royalblue"
-                        color2nd="blue"
+                        bgColor="royalblue"
                         size={18}
                         textColor="white"
-                        width="100%"
                         height={50}
                         onPress={handleOnNextPress}
                     />
+
                     <View style={{ marginTop: 20 }}>
                         <OutlineButton
                             title="Sign In"

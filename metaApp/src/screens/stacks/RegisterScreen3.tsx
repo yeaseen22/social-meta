@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 // import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -7,12 +7,12 @@ import {
   ImageBackground,
   Platform,
   TextInput,
-} from "react-native";
-import * as Animatable from "react-native-animatable";
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
 // import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 // import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Button, OutlineButton } from "../../components/widgets/Button";
+// import { useNavigation, useRoute } from '@react-navigation/native';
+import { Button, OutlineButton } from '../../components/widgets/Button';
 // import { useLocalSearchParams, useRouter } from "expo-router";
 
 type Register3Props = {
@@ -38,21 +38,22 @@ const Register3: React.FC<Register3Props> = () => {
 //   const route = useRouter(); // Keep the useRoute hook for accessing params
   const [data, setData] = useState<DataState>({
     // ...(params as any),
-    bio: "",
-    title: "",
-    birthDate: "",
+    bio: '',
+    title: '',
+    birthDate: '',
   });
 
-  const [date, setDate] = useState<Date>(new Date());
-  const [dateModalOpen, setDateModalOpen] = useState<boolean>(false);
+  // const [date, setDate] = useState<Date>(new Date());
+  const [_dateModalOpen, setDateModalOpen] = useState<boolean>(false);
 
-  const handleOnDateChange = (event: Event, selectedDate?: Date) => {
-    const currentDate = selectedDate || date;
-    setDateModalOpen(Platform.OS === "ios");
-    setDate(currentDate);
-    setData({ ...data, birthDate: currentDate.toISOString().split("T")[0] });
-  };
+  // const handleOnDateChange = (event: Event, selectedDate?: Date) => {
+  //   const currentDate = selectedDate || date;
+  //   setDateModalOpen(Platform.OS === "ios");
+  //   setDate(currentDate);
+  //   setData({ ...data, birthDate: currentDate.toISOString().split("T")[0] });
+  // };
 
+  // region onChange Input
   const textInputChange = (value: string, type: keyof DataState) => {
     setData((prevData) => ({
       ...prevData,
@@ -60,10 +61,11 @@ const Register3: React.FC<Register3Props> = () => {
     }));
   };
 
+  // region UI
   return (
     <ImageBackground
       style={styles.container}
-      source={require("../../assets/images/post1.jpg")}
+      source={require('../../assets/images/post1.jpg')}
     >
       {/* <StatusBar style="light" /> */}
 
@@ -78,7 +80,7 @@ const Register3: React.FC<Register3Props> = () => {
           <TextInput
             placeholder="I am Simple Human"
             style={styles.textInput}
-            onChangeText={(value) => textInputChange(value, "bio")}
+            onChangeText={(value) => textInputChange(value, 'bio')}
             value={data.bio}
           />
         </View>
@@ -93,7 +95,7 @@ const Register3: React.FC<Register3Props> = () => {
           <TextInput
             placeholder="Doctor"
             style={styles.textInput}
-            onChangeText={(value) => textInputChange(value, "title")}
+            onChangeText={(value) => textInputChange(value, 'title')}
             value={data.title}
           />
         </View>
@@ -125,11 +127,9 @@ const Register3: React.FC<Register3Props> = () => {
         <View style={{ marginTop: 30 }}>
           <Button
             title="Register"
-            color1st="lightgreen"
-            color2nd="green"
+            bgColor="lightgreen"
             size={18}
             textColor="white"
-            width="100%"
             height={50}
             // onPress={() => route.push("/auth/UploadProfile" as never)}
           />
@@ -149,51 +149,53 @@ const Register3: React.FC<Register3Props> = () => {
     </ImageBackground>
   );
 };
+
+// region Style Sheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   header: {
     flex: 3,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footer: {
     flex: 3,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 30,
     paddingHorizontal: 20,
   },
   text_header: {
-    color: "#05375a",
-    fontWeight: "bold",
+    color: '#05375a',
+    fontWeight: 'bold',
     fontSize: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 5,
     opacity: 0.7,
   },
   text_footer: {
-    color: "#05375a",
+    color: '#05375a',
     fontSize: 18,
   },
   action: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#f2f2f2",
+    borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === "ios" ? 0 : -12,
+    marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 10,
-    color: "#05375a",
+    color: '#05375a',
   },
   errorMsg: {
-    color: "red",
-    fontWeight: "bold",
+    color: 'red',
+    fontWeight: 'bold',
     fontSize: 13,
     marginTop: 5,
   },

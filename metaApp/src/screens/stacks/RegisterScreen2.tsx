@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 // import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Button, OutlineButton } from '../../components/widgets/Button';
+import { Button } from '../../components/widgets/Button';
 // import { useLocalSearchParams } from 'expo-router';
 // import { useRouter } from 'expo-router';
 
@@ -70,6 +70,7 @@ const Register2: React.FC<Register2Props> = () => {
     });
 
     // Display error messages
+    // region Display Error Msg
     const displayErrorMessage = (msg: string) => (
         <Animatable.View animation="fadeInLeft" duration={500}>
             <Text style={styles.errorMsg}>{msg}</Text>
@@ -77,6 +78,7 @@ const Register2: React.FC<Register2Props> = () => {
     );
 
     // Handle valid email
+    // region Valid Email Handle
     const handleValidEmail = (event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
         const value = event.nativeEvent.text.trim();
         const emailTest = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
@@ -98,6 +100,7 @@ const Register2: React.FC<Register2Props> = () => {
     };
 
     // Handle text changes
+    // region onChange Input
     const textInputChange = (value: string, type: 'EMAIL' | 'PASSWORD' | 'RETYPE-PASSWORD') => {
         if (type === 'EMAIL') {
             setData((prev) => ({ ...prev, email: value, check_textInputChange: value.length > 0 }));
@@ -131,6 +134,7 @@ const Register2: React.FC<Register2Props> = () => {
     };
 
     // Handle next button press
+    // region Handle Next Press
     const handleOnNextPress = () => {
         if (error.isValidEmail && error.isValidPassword && error.isValidRePassword) {
             // Navigate..
@@ -150,6 +154,7 @@ const Register2: React.FC<Register2Props> = () => {
         setData((prev) => ({ ...prev, secureTextEntry: !prev.secureTextEntry }));
     };
 
+    // region UI
     return (
         <ImageBackground style={styles.container} source={require('../../assets/images/post1.jpg')}>
             {/* <StatusBar style="light" /> */}
@@ -215,7 +220,15 @@ const Register2: React.FC<Register2Props> = () => {
 
                 {/* Buttons */}
                 <View style={{ marginTop: 30 }}>
-                    <Button title="Next" color1st="royalblue" color2nd="blue" textColor="white" onPress={handleOnNextPress} />
+                    <Button
+                        title="Next"
+                        bgColor="royalblue"
+                        size={18}
+                        textColor="white"
+                        height={50}
+                        onPress={handleOnNextPress}
+                    />
+
                     <View style={{ marginTop: 20 }}>
                         {/* <OutlineButton title="Back" color="red" onPress={() => router.back()} /> */}
                     </View>
@@ -225,6 +238,7 @@ const Register2: React.FC<Register2Props> = () => {
     );
 };
 
+// region Style Sheet
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -234,7 +248,7 @@ const styles = StyleSheet.create({
         flex: 3,
         justifyContent: 'center',
         alignItems: 'center',
-        color: 'black'
+        color: 'black',
     },
     footer: {
         flex: 3,
@@ -242,7 +256,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 30,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
     text_header: {
         color: '#05375a',
@@ -250,18 +264,18 @@ const styles = StyleSheet.create({
         fontSize: 30,
         backgroundColor: 'white',
         padding: 5,
-        opacity: 0.7
+        opacity: 0.7,
     },
     text_footer: {
         color: '#05375a',
-        fontSize: 18
+        fontSize: 18,
     },
     action: {
         flexDirection: 'row',
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        paddingBottom: 5,
     },
     textInput: {
         flex: 1,
@@ -274,7 +288,7 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 10,
     },
     textSign: {
         fontSize: 18,
@@ -285,6 +299,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 13,
         marginTop: 5,
-    }
+    },
 });
 export default Register2;
