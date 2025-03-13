@@ -1,14 +1,24 @@
 import { useEffect } from "react";
-import { socket } from "@/lib/socket"; // Import singleton socket instance
+import { socket } from "@/lib/socket";
+import { useDispatch } from "react-redux";
+import { addNotification } from "@/redux/slice/notificationSlice";
 
-const useSocket = (eventName: string, callback: (data: any) => void) => {
+const useSocket = (eventName: string) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    const callback = (data: any) => {
+      console.log(`📩 Received event "${eventName}" with data:`, data);
+      dispatch(addNotification(data));
+    };
+
     socket.on(eventName, callback);
 
     return () => {
+      console.log(`🔇 Stopping listener for "${eventName}"`);
       socket.off(eventName, callback);
     };
-  }, [eventName, callback]);
+  }, [dispatch, eventName]);
 
   return socket;
 };

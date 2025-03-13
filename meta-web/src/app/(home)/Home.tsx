@@ -18,6 +18,7 @@ interface Post {
   comments_count: number;
   image: string; 
   owner: {
+    _id: string;
     firstname: string;
     lastname: string;
     profilePhoto?: string;
@@ -77,7 +78,7 @@ const Home = () => {
       <CreateInput userProfileImage="https://via.placeholder.com/150" onPostCreated={refreshPosts} />
 
       {accumulatedPosts.length > 0 ? (
-        accumulatedPosts.map((post: Post) => <TweetCard key={post._id} post={{ ...post, content: post.content || '' }} />)
+        accumulatedPosts.map((post: Post) => <TweetCard key={post._id} post={{ ...post, content: post.content || '', owner: { ...post.owner, _id: post.owner._id || '' } }} />)
       ) : (
         !isLoading && <NotFound label="No Post available" />
       )}
