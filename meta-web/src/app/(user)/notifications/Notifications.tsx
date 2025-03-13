@@ -24,11 +24,19 @@ export default function NotificationsPage() {
   const notifications = useSelector((state: RootState) => state.notifications.notifications);
 
   useEffect(() => {
+    const handleNotification = (notification: any) => {
+      console.log(`🔊 Received Notification:`, notification);
+      dispatch(addNotification(notification));
+    };
+    
     socket.on("notification", (notification) => {
+      console.log(`🔊 Listening for event: ${notification}`);
+
       dispatch(addNotification(notification));
     });
 
     return () => {
+      console.log(`🔇 Stopping listener for: `);
       socket.off("notification");
     };
   }, [dispatch]);
@@ -44,9 +52,9 @@ export default function NotificationsPage() {
       </Typography>
       <List>
         {notifications.length > 0 ? (
-          notifications.map((notification) => (
+          notifications.map((notification: { id: React.Key | null | undefined; read: boolean | undefined; title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; content: any; timestamp: string | number | Date; }) => (
             <React.Fragment key={notification.id}>
-              <ListItem className={notification.read ? "read" : ""} onClick={() => dispatch(markAsRead(notification.id))}>
+              <ListItem className={notification.read ? "read" : ""} onClick={() => notification.id && dispatch(markAsRead(notification.id as string))}>
                 <ListItemAvatar>
                   <Badge color="primary" variant="dot" invisible={notification.read}>
                     <Avatar>
@@ -58,7 +66,7 @@ export default function NotificationsPage() {
                   primary={notification.title}
                   secondary={`${notification.content} • ${new Date(notification.timestamp).toLocaleString()}`}
                 />
-                <IconButton edge="end" onClick={() => handleDelete(notification.id)}>
+                <IconButton edge="end" onClick={() => notification.id && handleDelete(notification.id as string)}>
                   <DeleteIcon />
                 </IconButton>
               </ListItem>

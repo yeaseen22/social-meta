@@ -99,16 +99,18 @@ export default function Profile() {
         {tweets.map((tweet) => (
           <Box key={tweet.id} mt={2}>
             <TweetCard post={{
-              body: '',
+              content: '',
               _id: '',
               createdAt: '',
               likes_count: 0,
               comments_count: 0,
+              dislikes_count: 0,
               owner: {
                 firstname: '',
                 lastname: '',
                 profilePhoto: undefined,
-                title: ''
+                title: '',
+                _id: undefined
               }
             }} />
           </Box>
