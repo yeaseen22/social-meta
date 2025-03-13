@@ -16,6 +16,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { useRouter } from 'next/navigation';
 import EditPostDialog from './EditModel';
 import { useMediaQuery } from '@mui/material';
 import { useDeletePostMutation, useToggleLikeMutation } from '@/redux/slice/post.slice';
@@ -51,6 +52,9 @@ export default function TweetCard({ post }: TweetCardProps) {
     const [comments, setComments] = useState<any[]>([]);
     const [newComment, setNewComment] = useState("");
 
+    const router = useRouter(); // ✅ Initialize router
+
+
     // Use the deletePost mutation from RTK Query
     const [deletePost] = useDeletePostMutation();
     const [likePost] = useToggleLikeMutation();
@@ -74,10 +78,14 @@ export default function TweetCard({ post }: TweetCardProps) {
         handleClose();
     };
 
+    const handleTitleClick = () => {
+        console.log("Title clicked!");
+        router.push(`/post/${post._id}`);
+    };
+
     const handleDelete = async () => {
         try {
-            const data = await deletePost(post._id).unwrap();
-
+            await deletePost(post._id).unwrap();
         } catch (err) {
             console.error("Error deleting post:", err);
         }
@@ -88,9 +96,9 @@ export default function TweetCard({ post }: TweetCardProps) {
         try {
             const isAlreadyLiked = likes > post.likes_count;
             setLikes((prev) => (isAlreadyLiked ? prev - 1 : prev + 1));
-    
+
             await likePost({ postId: post._id }).unwrap();
-    
+
             if (!isAlreadyLiked) {
                 socket.emit("sendNotification", {
                     recipientId: post.owner._id,
@@ -104,8 +112,7 @@ export default function TweetCard({ post }: TweetCardProps) {
             console.error("Error liking post:", err);
             setLikes(post.likes_count);
         }
-    };    
-
+    };
 
     const handleDislike = async () => {
         try {
@@ -119,14 +126,16 @@ export default function TweetCard({ post }: TweetCardProps) {
     const handleAddComment = async () => {
         if (newComment.trim()) {
             try {
-                const response = await addComment({ postId: post._id, commment: newComment }).unwrap();
+                const response = await addComment({ postId: post._id, comment: newComment }).unwrap();
                 setComments((prev) => [...prev, response]); // Add the new comment to the list
                 setNewComment(""); // Clear the input field
             } catch (err) {
                 console.error("Error adding comment:", err);
             }
         }
-    };    // Create a new post object for editing
+    };
+
+    // Create a new post object for editing
     const editPost = {
         ...post,
         content: post.content,
@@ -193,7 +202,7 @@ export default function TweetCard({ post }: TweetCardProps) {
 
             {/* CONTENT */}
             <CardContent>
-                <Typography variant={isMobile ? "h6" : "h5"} color="text.primary">
+                <Typography variant={isMobile ? "h6" : "h5"} color="text.primary" onClick={handleTitleClick}>
                     {post?.owner?.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

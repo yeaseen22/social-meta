@@ -60,16 +60,16 @@ export const commentsApi = createApi({
     getComments: builder.query<Comment[], string>({
       query: (postId) => `/comments/${postId}`,
     }),
-    addComment: builder.mutation<Comment, { postId: string; commment: string }>({
-      query: ({ postId, commment }) => ({
-        url: `/comments`,
+    addComment: builder.mutation<Comment, { postId: string; comment: string }>({
+      query: ({ postId, comment }) => ({
+        url: `/comments/`,
         method: "POST",
-        body: { postId, commment }, // Ensure correct data is sent
+        body: { postId, comment }, // Ensure correct data is sent
       }),
-      async onQueryStarted({ postId, commment }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ postId, comment }, { dispatch, queryFulfilled }) {
         const tempComment = {
           id: Date.now().toString(),
-          comment: commment,
+          comment,
           postId,
           user: { name: "You" },
           createdAt: new Date().toISOString(),
@@ -90,7 +90,7 @@ export const commentsApi = createApi({
           if (!data.success) throw new Error("Failed to add comment");
     
           // Emit real-time update
-          socket.emit("newComment", { postId, comment: data.comment });
+          socket.emit("comment", { postId, comment: data.comment });
         } catch (error) {
           console.error("Error adding comment:", error);
           patchResult.undo();
