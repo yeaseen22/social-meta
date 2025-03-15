@@ -73,7 +73,7 @@ class UserController {
      * @param {Response} res
      */
     public async profileById(req: Request, res: Response | any) {
-        const userId = req.query.userId;
+        const userId = req.params.userId;
 
         try {
             const user = await User.findById(userId);
