@@ -189,7 +189,7 @@ class UserController {
      */
     public async uploadCoverPic(req: Request, res: Response | any) {
         try {
-            const userId = req.body.id;
+            const userId = (req as any).user?._id;
             if (!userId) {
                 return res
                     .status(400)
