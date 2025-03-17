@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/axios.interceptor";
 import { JSX } from "react";
 import { io } from "socket.io-client";
+import { url } from "inspector";
+import { UserInfo } from "os";
 
 // Initialize WebSocket Connection
 const socket = io("http://localhost:8080"!, {
@@ -71,6 +73,27 @@ export const postsApi = createApi({
         url: `/users/${userId}`,
         method: "GET",
       })
+    }),
+    getUserPosts: builder.query({
+      query: (userId) => ({
+        url: `/posts/${userId}/posts`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.posts || [],
+    }),
+    uploadProfilePhoto: builder.mutation({
+      query: ({ userId, formData }) => ({
+        url: `/upload/profile/${userId}`,
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    uploadCoverPhoto: builder.mutation({
+      query: ({ userId, formData }) => ({
+        url: `/upload/cover/${userId}`,
+        method: 'POST',
+        body: formData,
+      }),
     }),
     // Create a new post
     createPost: builder.mutation({
@@ -203,6 +226,9 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   useToggleLikeMutation,
+  useGetUserPostsQuery,
+  useUploadProfilePhotoMutation, 
+  useUploadCoverPhotoMutation
 } = postsApi;
 
 // Redux Slice for storing posts (to be used with useSelector)
