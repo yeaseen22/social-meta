@@ -70,7 +70,7 @@ class PostController {
 
     try {
       const posts = await this.postService.specificUserPosts(userId as string);
-      if (!posts?.length) res.status(400).json({ ...posts, success: false });
+      if (!posts) res.status(400).json({ success: false, posts });
       res.status(200).send(posts);
 
     } catch (error) {
