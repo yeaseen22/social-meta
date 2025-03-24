@@ -16,17 +16,29 @@ import { useParams } from 'next/navigation';
 import { CloudUpload } from '@mui/icons-material';
 
 
+type UserProfile = {
+  firstName: string;
+  lastName: string;
+  bio: string;
+  email: string;
+  dateOfBirth: string;
+  avatarUrl: string;
+  coverImageUrl: string;
+  followers: number;
+  following: number;
+};
+
 export default function Profile() {
   const { id } = useParams();
   const [uploadProfilePhoto] = useUploadProfilePhotoMutation();
   const [uploadCoverPhoto] = useUploadCoverPhotoMutation();
-  const [profilePreview, setProfilePreview] = useState(null);
-  const [coverPreview, setCoverPreview] = useState(null);
+  const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
   const { data: userData, isFetching: userFetching } = useGetCurrentUserQuery(id);
   const { data: userPosts, isFetching: postsFetching, isError, error } = useGetUserPostsQuery(id);
 
-  const userProfile = userData?.userById || {
+  const [userProfile, setUserProfile] = useState<UserProfile>(userData?.userById) || {
     firstName: 'Ken',
     lastName: 'Thompson',
     bio: 'Full-stack developer passionate about coding and creating amazing applications.',
@@ -43,16 +55,32 @@ export default function Profile() {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
 
     if (type === 'profile') {
-      setProfilePreview(URL.createObjectURL(file) as any);
-      await uploadProfilePhoto({ userId: id, formData });
+      setProfilePreview(URL.createObjectURL(file));
+      const response = await uploadProfilePhoto({ userId: id, formData });
+
+      // ✅ Update state if successful
+      if (response?.data?.profilePhoto) {
+        setUserProfile((prev) => ({
+          ...prev,
+          avatarUrl: response.data.profilePhoto,
+        }));
+      }
     } else {
-      setCoverPreview(URL.createObjectURL(file) as any);
-      await uploadCoverPhoto({ userId: id, formData });
+      setCoverPreview(URL.createObjectURL(file));
+      const response = await uploadCoverPhoto({ formData });
+
+      if (response?.data?.coverPhoto) {
+        setUserProfile((prev) => ({
+          ...prev,
+          coverImageUrl: response.data.coverPhoto,
+        }));
+      }
     }
   };
+
   return (
     <Container maxWidth="md" className="profileContainer">
       {/* Cover Image */}
@@ -60,7 +88,7 @@ export default function Profile() {
         <CardMedia
           component="img"
           height="200"
-          image={userProfile?.coverImageUrl || 'https://via.placeholder.com/1280x400'}
+          image={coverPreview || userProfile?.coverImageUrl || 'https://mycvcreator.com/administrator/postimages/66c080d1a7cc04.52686998.jpg'}
           alt="Cover"
           className="coverImage"
         />
@@ -73,7 +101,7 @@ export default function Profile() {
         <Box className="avatarSection">
           <Avatar
             alt={`${userProfile?.firstName} ${userProfile?.lastName}`}
-            src={userProfile?.avatarUrl || 'https://via.placeholder.com/150'}
+            src={profilePreview || userProfile?.avatarUrl}
             className="avatar"
           />
           <input type="file" accept="image/*" id="profile-upload" style={{ display: 'none' }} onChange={(e) => handleUpload(e, 'profile')} />

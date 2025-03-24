@@ -1,10 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/axios.interceptor";
-import { JSX } from "react";
 import { io } from "socket.io-client";
-import { url } from "inspector";
-import { UserInfo } from "os";
 
 // Initialize WebSocket Connection
 const socket = io("http://localhost:8080"!, {
@@ -83,16 +80,16 @@ export const postsApi = createApi({
     }),
     uploadProfilePhoto: builder.mutation({
       query: ({ userId, formData }) => ({
-        url: `/upload/profile/${userId}`,
-        method: 'POST',
-        body: formData,
+        url: `/users/update-photo`,
+        method: 'PATCH',
+        data: formData,
       }),
     }),
     uploadCoverPhoto: builder.mutation({
       query: ({ userId, formData }) => ({
-        url: `/upload/cover/${userId}`,
-        method: 'POST',
-        body: formData,
+        url: `/users/update-cover`,
+        method: 'PATCH',
+        data: formData,
       }),
     }),
     // Create a new post
