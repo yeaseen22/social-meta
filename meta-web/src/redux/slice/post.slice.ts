@@ -204,7 +204,8 @@ export const postsApi = createApi({
           // Only if the post was just liked, emit a notification
           // (Assuming the backend handles the dislike case separately.)
           if (data.likeStatus === true) {
-            socket.emit("likePost", { postId });
+            socket.emit("notification", { postId });
+            console.log('post id by like', postId)
           }
         } catch {
           patchResult.undo();
