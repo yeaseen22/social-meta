@@ -12,9 +12,28 @@ declare global {
   };
 }
 
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+
 // Asad MacBook IP - 192.168.0.101
 // Asad Desktop IP - 192.168.0.106
-const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.101:8080/api/v1'; // Replace with your server URL
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://localhost:8080/api/v1';
+
+
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+const waitForRefresh = () =>
+  new Promise<string | null>((resolve, reject) => {
+    const interval = setInterval(() => {
+      if (!isRefreshing) {
+        clearInterval(interval);
+        resolve(AsyncStorage.getItem('accessToken'));
+      }
+    }, 200);
+  });
 
 
 // Create Axios instance
@@ -29,7 +48,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
-      const accessToken = await AsyncStorage.getItem('accessToken');
+      const token = store.getState().auth.accessToken;
+
+      // Fallback to AsyncStorage if Redux token doesn't exist
+      const accessToken = token ?? await AsyncStorage.getItem('accessToken');
+
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -38,70 +61,106 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error: any) => Promise.reject(error)
+  (error) => Promise.reject(error)
 );
+
 
 
 // Handle Refresh Token Mechanism
 // region Response Interceptor
+
 axiosInstance.interceptors.response.use(
-  (response: any) => response,
-  async (error: { config: any; response: { status: number; }; }) => {
+  (response) => response,
+  async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      console.log('🔁 Attempting token refresh...');
 
-      try {
-        const refreshToken = await AsyncStorage.getItem('refreshToken');
 
-        if (!refreshToken) {
-          throw new Error('No refresh token found.');
+      // If already refreshing, wait for it to complete
+      if (isRefreshing) {
+        const newAccessToken = await waitForRefresh();
+        if (newAccessToken) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axiosInstance(originalRequest);
+        } else {
+          //  Refresh failed while waiting — treat as expired
+          Toast.show({
+            type: 'error',
+            text1: 'Session expired',
+            text2: 'Please login again.',
+          });
+
+          await AsyncStorage.clear();
+          store.dispatch(clearCredentials());
+
+          if ((global as any).navigationRef?.current) {
+            global.navigationRef.current.navigate('Login');
+          }
+
+          return Promise.reject(error);
         }
+      }
 
-        // Attempt to refresh the token
-        // region Refresh Token
-        const refreshResponse = await axios.post(
+
+      // Otherwise start refresh
+      isRefreshing = true;
+      try {
+        const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
+
+        if (!storedRefreshToken) throw new Error('No refresh token found');
+
+        const refreshResponse = await axiosInstance.post(
           `${API_URL}/auth/refresh_token`,
-          { refreshToken },
+          { refreshToken: storedRefreshToken },
           { headers: { 'Content-Type': 'application/json' } }
         );
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data.data;
+        console.log('access', newAccessToken);
+        console.log('refresh', newRefreshToken);
 
-        // Store the updated tokens in AsyncStorage
+
+
+        // Store new tokens
         await AsyncStorage.setItem('accessToken', newAccessToken);
         await AsyncStorage.setItem('refreshToken', newRefreshToken);
-
-        // Update Redux state (optional if still using it)
         store.dispatch(setCredentials({ accessToken: newAccessToken, refreshToken: newRefreshToken }));
 
-        // Retry the original request
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest);
-
-      } catch (refreshError) {
-        store.dispatch(clearCredentials());
-        await AsyncStorage.clear();
-
-        // Show a Toast notification
         Toast.show({
-          type: 'error',
-          text1: 'Session expired',
-          text2: 'Please login again.',
+          type: 'success',
+          text1: 'Token Refreshed',
+          text2: 'A new access token was issued.',
         });
 
-        // Navigate to login screen (assuming you use React Navigation)
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        await AsyncStorage.clear();
+        store.dispatch(clearCredentials());
+
+
+
         if ((global as any).navigationRef?.current) {
+          Toast.show({
+            type: 'error',
+            text1: 'Session expired',
+            text2: 'Please login again.',
+          });
           global.navigationRef.current.navigate('Login');
         }
 
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
     return Promise.reject(error);
   }
 );
+
 
 export default axiosInstance;

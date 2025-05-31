@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { StatusBar } from "expo-status-bar";
 import {
   View,
   Text,
@@ -7,19 +6,19 @@ import {
   ImageBackground,
   Platform,
   TextInput,
+  Button,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-// import DateTimePicker from "@react-native-community/datetimepicker";
-// import { useNavigation, useRoute } from '@react-navigation/native';
-import { Button, OutlineButton } from '../../components/widgets/Button';
-// import { useLocalSearchParams, useRouter } from "expo-router";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import useRegister from '../../hooks/useRegister';
+import { Button as CustomButton, OutlineButton } from '../../components/widgets/Button';
+import Toast from 'react-native-toast-message';
 
 type Register3Props = {
   navigation?: {
     navigate: any;
   };
-  push?: {
+  route?: {
     params: {
       [key: string]: any;
     };
@@ -33,25 +32,17 @@ interface DataState {
   [key: string]: any;
 }
 
-const Register3: React.FC<Register3Props> = () => {
-//     const {params} = useLocalSearchParams();
-//   const route = useRouter(); // Keep the useRoute hook for accessing params
+const Register3: React.FC<Register3Props> = ({ navigation, route }) => {
+
+  // Using the exact same pattern as the working example
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const { registerAction, registerLoading } = useRegister();
   const [data, setData] = useState<DataState>({
-    // ...(params as any),
+    ...(route?.params as any),
     bio: '',
     title: '',
-    birthDate: '',
+    birthdate: '',
   });
-
-  // const [date, setDate] = useState<Date>(new Date());
-  const [_dateModalOpen, setDateModalOpen] = useState<boolean>(false);
-
-  // const handleOnDateChange = (event: Event, selectedDate?: Date) => {
-  //   const currentDate = selectedDate || date;
-  //   setDateModalOpen(Platform.OS === "ios");
-  //   setDate(currentDate);
-  //   setData({ ...data, birthDate: currentDate.toISOString().split("T")[0] });
-  // };
 
   // region onChange Input
   const textInputChange = (value: string, type: keyof DataState) => {
@@ -61,14 +52,63 @@ const Register3: React.FC<Register3Props> = () => {
     }));
   };
 
+  // Exact same functions as the working example
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: Date) => {
+    console.warn("A date has been picked: ", date);
+    const formatted = date.toISOString().split('T')[0];
+    setData((prev) => ({
+      ...prev,
+      birthDate: formatted,
+    }));
+    hideDatePicker();
+  };
+
+  const handleRegister = async () => {
+    if (!route?.params) return;
+
+    const finalPayload = {
+      firstname: route.params.firstName, 
+      lastname: route.params.lastName,
+      email: route.params.email,
+      password: route.params.password,
+      birthdate: data.birthDate, 
+      bio: data.bio.trim(),
+      title: data.title.trim(),
+    };
+
+    console.log(finalPayload);
+
+    try {
+      
+      const res = await registerAction(finalPayload);
+      console.log('Registered:', res);
+      navigation?.navigate('UploadProfile', res);
+    } catch (err: any) {
+      console.error('Register error:', JSON.stringify(err, null, 2));
+      Toast.show({
+        type: 'error',
+        text1: 'Registration Failed',
+        text2: err?.data?.message || err?.message || "Something went wrong",
+      });
+    }
+
+  };
+
+
   // region UI
   return (
     <ImageBackground
       style={styles.container}
       source={require('../../assets/images/post1.jpg')}
     >
-      {/* <StatusBar style="light" /> */}
-
       <View style={styles.header}>
         <Text style={styles.text_header}>Sign Up</Text>
       </View>
@@ -76,7 +116,6 @@ const Register3: React.FC<Register3Props> = () => {
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
         <Text style={[styles.text_footer, { marginTop: 20 }]}>Bio</Text>
         <View style={styles.action}>
-          {/* <MaterialCommunityIcons name="bio" size={20} color="#05375a" /> */}
           <TextInput
             placeholder="I am Simple Human"
             style={styles.textInput}
@@ -87,11 +126,6 @@ const Register3: React.FC<Register3Props> = () => {
 
         <Text style={[styles.text_footer, { marginTop: 20 }]}>Title</Text>
         <View style={styles.action}>
-          {/* <MaterialCommunityIcons
-            name="subtitles-outline"
-            size={20}
-            color="#05375a"
-          /> */}
           <TextInput
             placeholder="Doctor"
             style={styles.textInput}
@@ -102,36 +136,34 @@ const Register3: React.FC<Register3Props> = () => {
 
         <Text style={[styles.text_footer, { marginTop: 20 }]}>Birth Date</Text>
         <View style={styles.action}>
-          {/* <FontAwesome name="birthday-cake" size={20} color="#05375a" /> */}
           <TextInput
-            placeholder="YYYY-MM-DD"
             style={styles.textInput}
             value={data.birthDate}
             editable={false}
+            placeholder="Select your birth date"
           />
-          <OutlineButton
-            title="Select Date"
-            onPress={() => setDateModalOpen(true)}
-          />
+          {/* Using native Button like in the working example */}
+          <Button title="Show Date Picker" onPress={showDatePicker} />
         </View>
 
-        {/* {dateModalOpen && (
-        //   <DateTimePicker
-        //     value={date}
-        //     mode="date"
-        //     display="default"
-        //     onChange={handleOnDateChange as any}
-        //   />
-        )} */}
+        {/* Exact same DateTimePickerModal as the working example */}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          display={Platform.OS === 'ios' ? 'inline' : 'default'}
+
+        />
 
         <View style={{ marginTop: 30 }}>
-          <Button
+          <CustomButton
             title="Register"
             bgColor="lightgreen"
             size={18}
             textColor="white"
             height={50}
-            // onPress={() => route.push("/auth/UploadProfile" as never)}
+            onPress={handleRegister}
           />
 
           <View style={{ marginTop: 20 }}>
@@ -141,7 +173,7 @@ const Register3: React.FC<Register3Props> = () => {
               size={18}
               width="100%"
               height={50}
-            //   onPress={() => route.push("/auth/register2" as never)}
+              onPress={() => navigation?.navigate('Register2' as never, data)}
             />
           </View>
         </View>
@@ -186,6 +218,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
+    alignItems: 'center',
   },
   textInput: {
     flex: 1,

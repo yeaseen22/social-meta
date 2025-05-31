@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authSliceReducer, { authAPI } from './slice/auth.slice';
+import postSliceReducer,{postAPI} from './slice/post.slice'
 
 // region Persist-Config
 const persistConfig = {
@@ -13,7 +14,9 @@ const persistConfig = {
 // region Reducers
 const rootReducer = combineReducers({
   auth: authSliceReducer,
+  post: postSliceReducer,
   [authAPI.reducerPath]: authAPI.reducer,
+  [postAPI.reducerPath]: postAPI.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -24,7 +27,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Required for Redux Persist
-    }).concat(authAPI.middleware),
+    }).concat(authAPI.middleware, postAPI.middleware),
 });
 
 export const persistor = persistStore(store);

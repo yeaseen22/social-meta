@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { StatusBar } from 'expo-status-bar';
 import {
     View,
     Text,
@@ -12,10 +11,8 @@ import {
     Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Button } from '../../components/widgets/Button';
-// import { useLocalSearchParams } from 'expo-router';
-// import { useRouter } from 'expo-router';
+import { Button, OutlineButton } from '../../components/widgets/Button';
+
 
 // Define Props for Register2
 type Register2Props = {
@@ -47,12 +44,13 @@ type ErrorState = {
     isValidRePassword: boolean;
 };
 
-const Register2: React.FC<Register2Props> = () => {
+const Register2: React.FC<Register2Props> = ({ navigation,route }) => {
+    console.log('navigation', navigation, route)
     // const { params } = useLocalSearchParams();
     // const router = useRouter();
 
     const [data, setData] = useState<DataState>({
-        // ...(params as any),
+        ...(route?.params as any),
         email: '',
         password: '',
         retypePassword: '',
@@ -137,15 +135,11 @@ const Register2: React.FC<Register2Props> = () => {
     // region Handle Next Press
     const handleOnNextPress = () => {
         if (error.isValidEmail && error.isValidPassword && error.isValidRePassword) {
-            // Navigate..
-            // router.push({
-            //     pathname: '/auth/register3' as const,
-            //     params: {
-            //         email: data.email,
-            //         password: data.password,
-            //         retypePassword: data.retypePassword,
-            //     },
-            // });
+            navigation?.navigate('Register3', {
+                email: data.email,
+                password: data.password,
+                retypePassword: data.retypePassword,
+            });
         }
     };
 
@@ -226,11 +220,18 @@ const Register2: React.FC<Register2Props> = () => {
                         size={18}
                         textColor="white"
                         height={50}
-                        onPress={handleOnNextPress}
+                        onPress={() => navigation?.navigate('Register3', data)}
                     />
 
                     <View style={{ marginTop: 20 }}>
-                        {/* <OutlineButton title="Back" color="red" onPress={() => router.back()} /> */}
+                        <OutlineButton
+                            title="Back"
+                            color="red"
+                            size={18}
+                            width="100%"
+                            height={50}
+                            onPress={() => navigation?.navigate('Register', data)}
+                        />
                     </View>
                 </View>
             </Animatable.View>

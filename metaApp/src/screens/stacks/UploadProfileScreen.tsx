@@ -1,195 +1,194 @@
-import React, { useState, useRef, useCallback } from "react";
-// import { StatusBar } from "expo-status-bar";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
+  Dimensions,
+  Image,
+  Pressable,
   Platform,
-  GestureResponderEvent,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Button } from "../../components/widgets/Button";
 import ImagePicker from "../../components/widgets/ImagePicker";
-// import BottomSheet from "@gorhom/bottom-sheet";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/Button.type";
+
 interface UploadProfileProps {
   navigation: NativeStackNavigationProp<RootStackParamList, "UploadProfile">;
 }
 
 interface DataState {
-  profilePhoto: string;
+  profilePhoto: string | null;
   check_textInputChange: boolean;
   secureTextEntry: boolean;
   email?: string;
   password?: string;
+  isLoading: boolean;
 }
 
-const UploadProfile: React.FC<UploadProfileProps> = ({ navigation }) => {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-//   const bottomSheetRef = useRef<BottomSheet>(null);
+const { width } = Dimensions.get("window");
 
+const UploadProfile: React.FC<UploadProfileProps> = ({ navigation }) => {
+  console.log('navigation data ',navigation,'')
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [data, setData] = useState<DataState>({
-    profilePhoto: "",
+    profilePhoto: null,
     check_textInputChange: false,
     secureTextEntry: true,
+    isLoading: false,
   });
 
   const handleBottomSheetOpen = useCallback(() => {
-    // bottomSheetRef.current?.expand();
     setIsBottomSheetOpen(true);
   }, []);
 
   const handleBottomSheetClose = useCallback(() => {
-    // bottomSheetRef.current?.close();
     setIsBottomSheetOpen(false);
   }, []);
-
-  const textInputChange = (value: string, type: "EMAIL" | "PASSWORD") => {
-    if (type === "EMAIL") {
-      setData((prevData) => ({
-        ...prevData,
-        email: value,
-        check_textInputChange: value.length !== 0,
-      }));
-    }
-    if (type === "PASSWORD") {
-      setData((prevData) => ({
-        ...prevData,
-        password: value,
-      }));
-    }
-  };
-
-  const updateSecureTextEntry = () => {
-    setData((prevData) => ({
-      ...prevData,
-      secureTextEntry: !prevData.secureTextEntry,
-    }));
-  };
 
   return (
     <ImageBackground
       style={styles.container}
       source={require("../../assets/images/post1.jpg")}
+      resizeMode="cover"
     >
-      {/* <StatusBar style="light" /> */}
-
-      {/* ---- Header ---- */}
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.text_header}>Select Profile Photo</Text>
+        <Text style={styles.textHeader}>Upload Profile Photo</Text>
       </View>
 
-      {/* ---- Footer ---- */}
+      {/* Footer Section */}
       <Animatable.View
-        style={[styles.footer, { opacity: !isBottomSheetOpen ? 1 : 0.25 }]}
+        style={[styles.footer, isBottomSheetOpen && { opacity: 0.3 }]}
         animation="fadeInUpBig"
+        duration={800}
       >
-        <View style={{ alignItems: "center" }}>
-          <ImagePicker
-            image={require("../../assets/images/avatar-male.png")}
-            height={200}
-            width={200}
-            onPress={() => handleBottomSheetOpen()}
+        <Pressable onPress={handleBottomSheetOpen}>
+          <Image
+            source={
+              data.profilePhoto
+                ? { uri: data.profilePhoto }
+                : require("../../assets/images/avatar-male.png")
+            }
+            style={styles.profileImage}
           />
-        </View>
+        </Pressable>
 
-        {/* ---- Buttons ---- */}
-        <View style={{ marginTop: 30 }}>
+        <View style={styles.continueButton}>
           <Button
             title="Continue"
-            color1st="lightgreen"
-            color2nd="green"
             size={18}
             textColor="white"
-            width="100%"
+            width={width * 0.6}
             height={50}
             onPress={() => navigation.navigate("MainTabs")}
           />
         </View>
       </Animatable.View>
 
-      {/* ---- The Bottom Sheet here ---- */}
-      {/* <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={["40%"]}
-        onChange={(index) => setIsBottomSheetOpen(index !== -1)}
-      > */}
-        <View style={{ padding: 20 }}>
-          <Text style={styles.title}>Upload Profile</Text>
-
-          <View style={{ marginTop: 20 }}>
+      {/* Bottom Sheet Area (custom simplified version) */}
+      {isBottomSheetOpen && (
+        <Animatable.View
+          animation="slideInUp"
+          duration={500}
+          style={styles.bottomSheet}
+        >
+          <Text style={styles.sheetTitle}>Choose an option</Text>
+          <View style={styles.sheetButtons}>
             <Button
               title="Take Photo"
-              color1st="yellow"
-              color2nd="orange"
-              size={20}
-              height={50}
-              width="100%"
+              size={16}
+              height={45}
+              width={110}
               textColor="black"
-            //   onPress={() => alert("Take Photo!")}
+              onPress={() => console.log("Take Photo")}
             />
-          </View>
-
-          <View style={{ marginTop: 20 }}>
             <Button
-              title="Upload Profile"
-              color1st="royalblue"
-              color2nd="blue"
-              size={20}
-              height={50}
-              width="100%"
+              title="Upload"
+              size={16}
+              height={45}
+              width={110}
               textColor="white"
-            //   onPress={() => alert("Upload Profile!")}
+              onPress={() => console.log("Upload")}
             />
-          </View>
-
-          <View style={{ marginTop: 20 }}>
             <Button
               title="Cancel"
-              color1st="brown"
-              color2nd="red"
-              size={20}
-              height={50}
-              width="100%"
+              size={16}
+              height={45}
+              width={110}
               textColor="white"
               onPress={handleBottomSheetClose}
             />
           </View>
-        </View>
-      {/* </BottomSheet> */}
+        </Animatable.View>
+      )}
     </ImageBackground>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   header: {
-    flex: 3,
-    justifyContent: "center",
+    flex: 2,
+    justifyContent: "flex-end",
     alignItems: "center",
+    paddingBottom: 20,
+  },
+  textHeader: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 26,
   },
   footer: {
-    flex: 2,
+    flex: 3,
     backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    padding: 30,
+    alignItems: "center",
   },
-  title: {
-    fontSize: 30,
-    color: "#05375a",
-    fontWeight: "bold",
+  profileImage: {
+    height: 160,
+    width: 160,
+    borderRadius: 80,
+    borderWidth: 4,
+    borderColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+  },
+  continueButton: {
+    marginTop: 40,
+  },
+  bottomSheet: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: -2 },
+    elevation: 10,
+  },
+  sheetTitle: {
+    fontSize: 18,
+    fontWeight: "600",
     textAlign: "center",
+    marginBottom: 20,
+    color: "#333",
   },
-  text_header: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 30,
+  sheetButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
 });
 

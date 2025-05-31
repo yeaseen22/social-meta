@@ -96,15 +96,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
     const handleOnNextPress = () => {
         if (data.firstName && data.lastName) {
             if (error.isValidFirstName && error.isValidLastName) {
-                // navigation.navigate('Register2', data);
-
-                // router.push({
-                //     pathname: "/auth/register2",
-                //     params: {
-                //         navigation: navigation as any,
-                //         params: data as any,
-                //     },
-                // });
+                navigation.navigate('Register2', data);
             }
         }
     };
@@ -161,7 +153,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
                         size={18}
                         textColor="white"
                         height={50}
-                        onPress={handleOnNextPress}
+                        onPress={() => navigation.navigate('Register2', data)}
                     />
 
                     <View style={{ marginTop: 20 }}>

@@ -2,19 +2,31 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { createSlice } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../lib/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+import { BaseQueryFn } from '@reduxjs/toolkit/query';
+
 
 /**
  * The Custom Base query for Axios Interceptor
- * @param param0
+ * @param param
  * @returns
  */
-const customBaseQuery = async ({ url, method, data }: any) => {
+const axiosBaseQuery = (): BaseQueryFn<
+  { url: string; method: string; data?: any; params?: any },
+  unknown,
+  unknown
+> => async ({ url, method, data, params }) => {
   try {
-    const result = await axiosInstance({ url, method, data });
+    const result = await axiosInstance({ url, method, data, params });
     return { data: result.data };
-
-  } catch (error) {
-    return { error };
+  } catch (axiosError) {
+    let err = axiosError as any;
+    return {
+      error: {
+        status: err.response?.status,
+        data: err.response?.data || err.message,
+      },
+    };
   }
 };
 
@@ -22,7 +34,7 @@ const customBaseQuery = async ({ url, method, data }: any) => {
 // region Auth API
 export const authAPI = createApi({
   reducerPath: 'api',
-  baseQuery: customBaseQuery,
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     // region Login Mutation
     login: builder.mutation({
@@ -36,29 +48,41 @@ export const authAPI = createApi({
           const { data } = await queryFulfilled;
           const { accessToken, refreshToken, user } = data;
           dispatch(setCredentials({ accessToken, refreshToken, user }));
-
-        } catch (error) {
-          console.error('Login failed: ', error);
+        } catch (err: any) {
+          const errorMessage = err?.error?.data?.message || 'Login failed';
+          Toast.show({
+            type: 'error',
+            text1: 'Login Failed',
+            text2: errorMessage,
+          });
+          console.log('🧨 Error Message:', errorMessage);
         }
       },
     }),
 
-    // region Register Mutation
+
+
     register: builder.mutation({
       query: (body) => ({
         url: '/auth/register',
         method: 'POST',
         data: body,
       }),
-      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log('data', data)
           const { accessToken, refreshToken, user } = data;
           dispatch(setCredentials({ accessToken, refreshToken, user }));
-
-        } catch (error) {
-          console.error('Registration failed: ', error);
+        } catch (err: any) {
+          console.error('Register error:', err?.response?.data || err);
+          Toast.show({
+            type: 'error',
+            text1: 'Registration Failed',
+            text2: err?.response?.data?.message || err?.message || "Something went wrong",
+          });
         }
+
       },
     }),
 
