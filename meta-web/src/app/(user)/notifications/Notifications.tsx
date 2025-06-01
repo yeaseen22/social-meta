@@ -22,6 +22,7 @@ import { socket } from "@/lib/socket";
 export default function NotificationsPage() {
   const dispatch = useDispatch();
   const notifications = useSelector((state: RootState) => state.notifications.notifications);
+  console.log("🔥 Notifications:", notifications);
 
   useEffect(() => {
     const handleNotification = (notification: any) => {

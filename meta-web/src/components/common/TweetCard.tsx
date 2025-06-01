@@ -77,6 +77,7 @@ export default function TweetCard({ post }: TweetCardProps) {
         setIsEditOpen(true);
         handleClose();
     };
+    
 
     const handleTitleClick = () => {
         console.log("Title clicked!");
@@ -94,34 +95,44 @@ export default function TweetCard({ post }: TweetCardProps) {
 
     const handleLike = async () => {
         try {
-            const isAlreadyLiked = likes > post.likes_count;
-            setLikes((prev) => (isAlreadyLiked ? prev - 1 : prev + 1));
-
-            await likePost({ postId: post._id }).unwrap();
-
-            if (!isAlreadyLiked) {
-                socket.emit("sendNotification", {
-                    recipientId: post.owner._id,
-                    senderId: post.owner._id, // Use post.owner._id instead of user._id
-                    postId: post._id,
-                    type: "like",
-                    message: `Someone liked your post.`, // Remove reference to user.firstname
-                });
-            }
+          const isAlreadyLiked = likes > post.likes_count;
+          setLikes((prev) => (isAlreadyLiked ? prev - 1 : prev + 1));
+      
+          await likePost({ postId: post._id }).unwrap();
+      
+          if (!isAlreadyLiked) {
+            console.log("📢 Emitting like notification...", {
+              recipientId: post.owner._id,
+              senderId: "CURRENT_USER_ID",  // Replace with actual logged-in user ID
+              postId: post._id,
+              type: "like",
+              message: `Someone liked your post.`,
+            });
+      
+            socket.emit("notification", {
+              recipientId: post.owner._id,
+              senderId: "CURRENT_USER_ID",
+              postId: post._id,
+              type: "like",
+              message: `Someone liked your post.`,
+            });
+          }
         } catch (err) {
-            console.error("Error liking post:", err);
-            setLikes(post.likes_count);
+          console.error("Error liking post:", err);
+          setLikes(post.likes_count);
         }
-    };
+      };
+      
+    
 
-    const handleDislike = async () => {
-        try {
-            // await dislikePost(post._id).unwrap();
-            setDislikes((prev) => prev + 1);
-        } catch (err) {
-            console.error("Error disliking post:", err);
-        }
-    };
+    // const handleDislike = async () => {
+    //     try {
+    //         // await dislikePost(post._id).unwrap();
+    //         setDislikes((prev) => prev + 1);
+    //     } catch (err) {
+    //         console.error("Error disliking post:", err);
+    //     }
+    // };
 
     const handleAddComment = async () => {
         if (newComment.trim()) {

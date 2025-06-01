@@ -13,7 +13,7 @@ const useRegister = () => {
             Toast.show({
                 type: 'error',
                 text1: 'Error',
-                text2: 'Something went wrong',
+                text2: (registerError as any)?.data?.message || 'Something went wrong',
             });
         }
     }, [registerError, registerLoading]);
@@ -32,21 +32,23 @@ const useRegister = () => {
         lastname: string;
         email: string;
         password: string;
-        gender: string;
-        birthday: string;
+        birthdate: string;
     };
 
     // region Mutation Register
     const registerAction = async (userInfo: RegisterInfoType) => {
         try {
             // sending data to API
-            await registerMutation(userInfo);
+            const result = await registerMutation(userInfo);
 
-            Toast.show({
-                type: 'success',
-                text1: 'Success',
-                text2: 'User registered successfully',
-            });
+            if ('data' in result) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Registered',
+                    text2: 'Welcome',
+                });
+                return result.data;
+            }
 
         } catch (error) {
             console.error('USER REGISTER: issue - ', error);

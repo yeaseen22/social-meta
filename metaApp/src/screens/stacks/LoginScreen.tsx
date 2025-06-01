@@ -11,18 +11,20 @@ import {
     Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import { FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, OutlineButton } from '../../components/widgets/Button';
 import { useLogin } from '../../hooks';
+import axios from 'axios';
+import { setCredentials } from '../../redux/slice/auth.slice';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LoginProps = {
     navigation: any;
 };
 
 const Login: React.FC<LoginProps> = ({ navigation }) => {
-    // const router = useRouter(); // Use the router from expo-router
-    // console.log('MY NAVIGATION HERE - ', navigation);
     const { loginAction, loginLoading } = useLogin();
+    const dispatch = useDispatch()
 
     const [data, setData] = useState({
         email: '',
@@ -89,10 +91,18 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             secureTextEntry: !data.secureTextEntry,
         });
     };
-
+    
+    // region Handle Login API Call
     // region Handle Login API Call
     const handleLogin = async () => {
         await loginAction({ email: data.email, password: data.password });
+
+        // Clear form
+        setData((prev) => ({
+            ...prev,
+            email: '',
+            password: '',
+        }));
     };
 
     // region UI
@@ -111,9 +121,11 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                     {/* <FontAwesome name="user-o" size={20} color="#05375a" /> */}
                     <TextInput
                         placeholder="Your Email"
+                        value={data.email}
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(value) => textInputChange(value, 'EMAIL')}
+
                     />
                     {/* {data.check_textInputChange && <Feather name="check-circle" size={20} color="green" />} */}
                 </View>
@@ -124,6 +136,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                     {/* <Feather name="lock" size={20} color="#05375a" /> */}
                     <TextInput
                         placeholder="Your Password"
+                        value={data.password}
                         secureTextEntry={data.secureTextEntry}
                         style={styles.textInput}
                         autoCapitalize="none"
@@ -158,7 +171,7 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
                             size={18}
                             width="100%"
                             height={50}
-                            onPress={() => navigation.navigate('Register')} // Use router.push to navigate
+                            onPress={() => navigation.navigate('Register')}
                         />
                     </View>
                 </View>
@@ -216,3 +229,5 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
+

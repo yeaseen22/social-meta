@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { authAPISlice, authSliceReducer } from './slice';
+import authSliceReducer from "./slice/auth.slice";  // ✅ Default import
+import { authAPISlice } from "./slice/auth.slice";
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { postsApi } from './slice/post.slice';

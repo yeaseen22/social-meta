@@ -19,6 +19,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 const PostCard = ({ item }: any) => {
+    console.log('item', item);
+    
     const [isShouldRender, setIsShouldRender] = useState<boolean>(false);
 
     // Init..
