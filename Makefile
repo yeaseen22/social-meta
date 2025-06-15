@@ -32,7 +32,7 @@ server-down:
 	docker-compose down app
 
 
-# Database Mangement
+# Database Management
 db:
 	docker-compose up mongodb
 

@@ -1,20 +1,21 @@
-# Node-JS for Application..
-FROM node:16-alpine
+# Base image
+FROM node:20-alpine
 
-# Set the Working Directory..
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# Copy the package.json and package-lock.json files
+# Install dependencies
 COPY package*.json ./
+RUN npm install --legacy-peer-deps
 
-# Install application dependencies
-RUN npm install
+# Copy rest of the app
+COPY . .
 
-# Copy the server directory to the container
-COPY ./server /usr/src/app/server
+# Build TypeScript
+RUN npm run build
 
-# Expose the port on which the Node.js application will run
+# Expose port (default Express port)
 EXPOSE 8080
 
-# Start the application from the server folder
-CMD ["node", "server/server.js"]
+# Run the server (adjust if your entry file is different)
+CMD ["node", "dist/server.js"]

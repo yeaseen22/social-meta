@@ -4,7 +4,7 @@ export { default as ChatScreen } from './stacks/ChatScreen';
 export { default as NotificationScreen } from './tabs/NotificationScreen';
 export { default as ProfileScreen } from './tabs/ProfileScreen';
 export { default as PostScreen } from './tabs/PostScreen';
-export {default as MessageScreen} from './stacks/MessagesScreen'
+export {default as MessageScreen} from './stacks/MessagesScreen';
 
 
 export { default as LoginScreen } from './stacks/LoginScreen';

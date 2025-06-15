@@ -16,7 +16,7 @@ class NotificationService {
      * @param page 
      * @param limit 
      */
-    // region  Get Notifications
+    // region Get Notifications
     public async getUserNotifications(userId: string, page: number = 1, limit: number = 10): Promise<any> {
         try {
             const skip = (page - 1) * limit;

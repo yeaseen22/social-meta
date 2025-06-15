@@ -91,8 +91,8 @@ const Login: React.FC<LoginProps> = ({ navigation }) => {
             secureTextEntry: !data.secureTextEntry,
         });
     };
-    
-    // region Handle Login API Call
+
+
     // region Handle Login API Call
     const handleLogin = async () => {
         await loginAction({ email: data.email, password: data.password });

@@ -1,5 +1,6 @@
 version: "3"
 services:
+# region Web Client
   client:
     build:
       context: ./client
@@ -13,29 +14,32 @@ services:
     networks:
       - social-meta-network
     restart: always
-    
+
+# region Backend Server
   app:
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
     container_name: social-meta-app
     ports:
       - "8080:8080"
     depends_on:
       - mongodb
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/socialMeta
     networks:
       - social-meta-network
-    command: "node server/server.js"
+    command: "node dist/server.js"
     volumes:
-      - "./server:/usr/src/app/server"
-      - /usr/src/app/node_modules
-    working_dir: /usr/src/app
+      - "./server:/app"
+      - /app/node_modules
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/socialMeta
+      - NODE_ENV=development
+    working_dir: /app
     restart: always
     links:
       - mongodb
 
+# region Database Server
   mongodb:
     image: mongo:latest
     container_name: social-meta-mongodb
