@@ -1,0 +1,19 @@
+name: Deploy Backend API to Render
+
+on:
+  push:
+    branches:
+      - [deploy]
+
+jobs:
+  deploy:
+    name: Trigger Render Deploy Hook
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: action/checkout@v3
+
+      - name: Trigger Deploy Hook to Render
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
