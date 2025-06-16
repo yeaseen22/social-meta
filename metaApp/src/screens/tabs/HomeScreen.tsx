@@ -203,7 +203,7 @@ const HomeTabScreen = ({ navigation }: any) => {
         return data.map((post, index) => (
             <PostCard
                 key={`post-${post._id}-${index}`}
-                item={post} 
+                item={post}
                 onOptionsPress={() => handlePostOptions(post._id)}
             />
         ));

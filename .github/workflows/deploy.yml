@@ -2,13 +2,15 @@ name: Deploy Backend API to Render
 
 on:
   push:
-    branches:
-      - [deploy]
+    branches: [deploy]
 
 jobs:
   deploy:
     name: Trigger Render Deploy Hook
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
 
     steps:
       - name: Checkout repo
