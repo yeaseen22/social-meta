@@ -189,7 +189,6 @@ const MessagesScreen: React.FC<{ navigation: any; route: any }> = ({
   );
 };
 
-export default MessagesScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -280,3 +279,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+export default MessagesScreen;
