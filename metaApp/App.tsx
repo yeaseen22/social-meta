@@ -113,6 +113,8 @@ const App = () => {
                   return {
                     headerShown: true,
                     headerTitle: getHeaderTitle(route) || 'Home',
+                    headerTitleAlign: 'center',
+                    headerBackVisible: false, // Hide the Back Button
                     headerRight: () =>
                       focusedRouteName === 'Home' ? (
                         <TouchableOpacity

@@ -12,13 +12,13 @@ import {
     Interaction,
     InteractionText,
     Divider
-} from '../../styles/FeedStyles';
+} from '../../styles/FeedStyles.ts';
 import { Card as PaperCard } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
-import { useLikePostMutation } from '../../redux/slice/post.slice';
+import { useLikePostMutation } from '../../redux/slice/post.slice.ts';
 
 // Define types for better type safety
 interface PostItem {
@@ -41,16 +41,16 @@ interface PostCardProps {
     onSharePress?: () => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ 
-    item, 
-    onOptionsPress, 
+const PostCard: React.FC<PostCardProps> = ({
+    item,
+    onOptionsPress,
     onCommentPress,
-    onSharePress 
+    onSharePress
 }) => {
     // Local state to handle UI updates immediately
     const [liked, setLiked] = useState<boolean>(item.liked);
     const [likeCount, setLikeCount] = useState<number>(item.likes);
-    
+
     // RTK Query hook for liking posts
     const [likePost] = useLikePostMutation();
 
@@ -60,16 +60,16 @@ const PostCard: React.FC<PostCardProps> = ({
             // Optimistic update
             const newLikedState = !liked;
             const newLikeCount = newLikedState ? likeCount + 1 : likeCount - 1;
-            
+
             setLiked(newLikedState);
             setLikeCount(newLikeCount);
-            
+
             // Call API to update like status
-            await likePost({ 
-                postId: item._id, 
-                action: newLikedState ? 'like' : 'unlike' 
+            await likePost({
+                postId: item._id,
+                action: newLikedState ? 'like' : 'unlike'
             }).unwrap();
-            
+
         } catch (error) {
             // Revert on error
             console.error('Error updating like status:', error);
@@ -107,10 +107,10 @@ const PostCard: React.FC<PostCardProps> = ({
                         <UserName>{item.userName}</UserName>
                         <PostTime>{item.postTime}</PostTime>
                     </UserInfoText>
-                    
+
                     {onOptionsPress && (
-                        <TouchableOpacity 
-                            style={styles.optionsButton} 
+                        <TouchableOpacity
+                            style={styles.optionsButton}
                             onPress={onOptionsPress}
                         >
                             <MaterialCommunityIcons name="dots-vertical" size={22} color="#666" />

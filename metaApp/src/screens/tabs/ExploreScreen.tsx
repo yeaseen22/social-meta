@@ -5,7 +5,7 @@ import { TouchableOpacity, View, ActivityIndicator, Text, useColorScheme } from 
 import { Container, InputWrapper, TextInput, InnerContainer, LoadingContainer } from '../../styles/SearchStyles';
 // import { Feather, Ionicons } from '@expo/vector-icons';
 // import BottomSheet from '@/components/widgets/BottomSheet';
-import { Button } from '../../components/widgets/Button';
+import { Button } from '../../components/widgets/Button.tsx';
 
 
 const Explore = (): JSX.Element => {

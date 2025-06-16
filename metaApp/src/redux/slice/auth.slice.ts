@@ -5,12 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 
-
 /**
  * The Custom Base query for Axios Interceptor
  * @param param
  * @returns
  */
+// region Custom Base Query
 const axiosBaseQuery = (): BaseQueryFn<
   { url: string; method: string; data?: any; params?: any },
   unknown,
@@ -19,6 +19,7 @@ const axiosBaseQuery = (): BaseQueryFn<
   try {
     const result = await axiosInstance({ url, method, data, params });
     return { data: result.data };
+
   } catch (axiosError) {
     let err = axiosError as any;
     return {

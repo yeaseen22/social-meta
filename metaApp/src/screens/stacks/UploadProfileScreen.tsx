@@ -10,8 +10,8 @@ import {
   Platform,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import { Button } from "../../components/widgets/Button";
-import ImagePicker from "../../components/widgets/ImagePicker";
+import { Button } from "../../components/widgets/Button.tsx";
+import ImagePicker from "../../components/widgets/ImagePicker.tsx";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/Button.type";
 

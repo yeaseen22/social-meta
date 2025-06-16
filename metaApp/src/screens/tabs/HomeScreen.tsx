@@ -15,7 +15,7 @@ import {
   Animated
 } from 'react-native';
 import { PostCard } from '../../components/widgets';
-import { InstaStoryUI } from '../../components/ui';
+import { InstaStoryUI } from '../../components/widgets';
 import { Container } from '../../styles/FeedStyles';
 import {
   useGetAllPostsQuery,
@@ -24,6 +24,7 @@ import {
   useUpdatePostMutation
 } from '../../redux/slice/post.slice';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Button } from '../../components/widgets/Button';
 
 const LIMIT = 5;
 
@@ -212,6 +213,11 @@ const HomeTabScreen = ({ navigation }: any) => {
     // Find the selected post for action menu
     const selectedPost = posts.find(post => post._id === selectedPostId);
 
+    // Navigate to Create Post
+    const navigateToCreatePost = () => {
+        navigation.navigate('Post');
+    };
+
     return (
         <Container>
             <KeyboardAvoidingView
@@ -219,16 +225,21 @@ const HomeTabScreen = ({ navigation }: any) => {
                 style={{ flex: 1 }}
             >
                 <ScrollView
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                    onMomentumScrollEnd={handleScrollEnd}
-                    onScroll={handleScroll}
-                    scrollEventThrottle={16}
+                    // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    // onMomentumScrollEnd={handleScrollEnd}
+                    // onScroll={handleScroll}
+                    // scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}
                 >
                     <InstaStoryUI />
 
                     {posts.length === 0 && !isLoading && (
-                        <Text style={styles.noPostsText}>No posts found.</Text>
+                        <>
+                            <Text style={styles.noPostsText}>No Posts Found.</Text>
+                            <View style={{ marginVertical: 10 }}>
+                                <Button title="Create Post" onPress={navigateToCreatePost} />
+                            </View>
+                        </>
                     )}
 
                     {renderPostData(posts)}
@@ -240,21 +251,6 @@ const HomeTabScreen = ({ navigation }: any) => {
                         </View>
                     )}
                 </ScrollView>
-
-                {/* Floating Action Button */}
-                <Animated.View
-                    style={[
-                        styles.fabContainer,
-                        { transform: [{ translateY: fabAnimation }] }
-                    ]}
-                >
-                    <TouchableOpacity
-                        style={styles.fab}
-                        onPress={() => setCreateModalVisible(true)}
-                    >
-                        <Icon name="add" size={24} color="#fff" />
-                    </TouchableOpacity>
-                </Animated.View>
 
                 {/* Create Post Modal */}
                 <Modal

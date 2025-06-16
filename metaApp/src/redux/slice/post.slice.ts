@@ -4,6 +4,7 @@ import axiosInstance from '../../lib/shared/axios/axiosInstance';
 import Toast from 'react-native-toast-message';
 
 // Custom base query for Axios
+// region Custom Base Query
 const axiosBaseQuery = (): BaseQueryFn<
     { url: string; method: string; data?: any; params?: any },
     unknown,
@@ -12,6 +13,7 @@ const axiosBaseQuery = (): BaseQueryFn<
     try {
         const result = await axiosInstance({ url, method, data, params });
         return { data: result.data };
+
     } catch (axiosError) {
         let err = axiosError as any;
         return {
@@ -23,12 +25,13 @@ const axiosBaseQuery = (): BaseQueryFn<
     }
 };
 
+// region API CALLS
 export const postAPI = createApi({
     reducerPath: 'postAPI',
     baseQuery: axiosBaseQuery(),
     tagTypes: ['Posts'],
     endpoints: (builder) => ({
-        // region GETS ALL POSTS
+        // region Gets All Posts
         getAllPosts: builder.query({
             query: ({ page = 1, limit = 5 }) => ({
                 url: `/posts`,
@@ -38,13 +41,19 @@ export const postAPI = createApi({
             providesTags: ['Posts'],
         }),
 
-        // CREATE POST
-        createPost: builder.mutation({
-            query: (body) => ({
-                url: `/posts`,
-                method: 'POST',
-                data: body,
-            }),
+        // region Create Post
+        createPost: builder.mutation<any, any>({
+            query: (formData: FormData) => {
+                return {
+                  url: "/posts",
+                  method: "POST",
+                  // headers: {
+                  //   "Content-Type": "multipart/form-data;",
+                  // },
+                  data: formData,
+                  formData: true,
+                };
+            },
             invalidatesTags: ['Posts'],
             async onQueryStarted(_, { queryFulfilled }) {
                 try {
@@ -55,7 +64,11 @@ export const postAPI = createApi({
                         text2: 'Your post was successfully published!',
                     });
                 } catch (err: any) {
-                    const message = err?.error?.data?.message || 'Failed to create post';
+                    const message =
+                        err?.error?.data?.message ||
+                        err?.error?.message ||
+                        'Failed to create post';
+
                     Toast.show({
                         type: 'error',
                         text1: 'Error',
@@ -65,7 +78,7 @@ export const postAPI = createApi({
             },
         }),
 
-        // UPDATE POST
+        // region Update Post
         updatePost: builder.mutation({
             query: ({ id, content }) => ({
                 url: `/posts/${id}`,
@@ -92,7 +105,7 @@ export const postAPI = createApi({
             },
         }),
 
-        // DELETE POST
+        // region Delete Post
         deletePost: builder.mutation({
             query: (postId) => ({
                 url: `/posts/${postId}`,
@@ -117,6 +130,8 @@ export const postAPI = createApi({
                 }
             },
         }),
+
+        // region Like Post
         likePost: builder.mutation({
             query: ({ postId }) => ({
                 url: '/likes/toggle',
@@ -147,6 +162,8 @@ export const {
     useLikePostMutation,
 } = postAPI;
 
+
+// region POST SLICES
 const postSlice = createSlice({
     name: 'post',
     initialState: {

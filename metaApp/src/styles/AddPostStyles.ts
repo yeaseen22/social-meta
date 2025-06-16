@@ -3,7 +3,7 @@ import { Dimensions, Platform } from 'react-native';
 
 
 // Get the screen width
-const screenWidth = Dimensions.get('window').width;
+// const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export const Container = (styled as any).View`
