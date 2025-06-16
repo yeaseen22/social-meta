@@ -95,3 +95,27 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+
+# Reinstall All Node Modules
+```shell
+rm -rf node_modules
+rm -rf android/.gradle
+rm -rf ios/Pods ios/Podfile.lock
+yarn install # or npm install
+cd android && ./gradlew clean 
+cd ios && npx pod install
+```
+# Reset Metro Cache
+   `npx react-native start --reset-cache`
+
+# Try Rebuilding App
+```shell
+   cd android
+   ./gradlew assembleDebug
+   OR directly:
+   cd ios
+   pod install
+```
+
+`npx react-native run-android`

@@ -28,7 +28,7 @@ export const postAPI = createApi({
     baseQuery: axiosBaseQuery(),
     tagTypes: ['Posts'],
     endpoints: (builder) => ({
-        //region GET ALL POSTS
+        // region GETS ALL POSTS
         getAllPosts: builder.query({
             query: ({ page = 1, limit = 5 }) => ({
                 url: `/posts`,

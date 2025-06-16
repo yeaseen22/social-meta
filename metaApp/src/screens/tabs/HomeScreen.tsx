@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { 
-  RefreshControl, 
-  ScrollView, 
-  Text, 
-  View, 
-  StyleSheet, 
-  TouchableOpacity, 
-  Modal, 
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
   TextInput,
   Alert,
   ActivityIndicator,
@@ -17,9 +17,9 @@ import {
 import { PostCard } from '../../components/widgets';
 import { InstaStoryUI } from '../../components/ui';
 import { Container } from '../../styles/FeedStyles';
-import { 
-  useGetAllPostsQuery, 
-  useCreatePostMutation, 
+import {
+  useGetAllPostsQuery,
+  useCreatePostMutation,
   useDeletePostMutation,
   useUpdatePostMutation
 } from '../../redux/slice/post.slice';
@@ -38,7 +38,7 @@ const HomeTabScreen = ({ navigation }: any) => {
     const [actionMenuVisible, setActionMenuVisible] = useState(false);
     const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     // Animation for FAB
     const scrollY = useRef(new Animated.Value(0)).current;
     const fabAnimation = scrollY.interpolate({
@@ -57,7 +57,7 @@ const HomeTabScreen = ({ navigation }: any) => {
     useEffect(() => {
         if (data?.posts?.posts?.length > 0) {
             const transformedPosts = data.posts.posts.map(transformPost);
-            
+
             // Ensure we don't have duplicate posts when adding new page data
             if (page === 1) {
                 setPosts(transformedPosts);
@@ -143,17 +143,19 @@ const HomeTabScreen = ({ navigation }: any) => {
 
         try {
             setIsSubmitting(true);
-            await updatePost({ 
-                id: currentPost._id, 
-                content: postContent 
+            await updatePost({
+                id: currentPost._id,
+                content: postContent
             }).unwrap();
             setPostContent('');
             setEditModalVisible(false);
             setCurrentPost(null);
             setPage(1);
             refetch();
+
         } catch (error) {
             console.error('Failed to update post:', error);
+
         } finally {
             setIsSubmitting(false);
         }
@@ -165,8 +167,8 @@ const HomeTabScreen = ({ navigation }: any) => {
             'Are you sure you want to delete this post? This action cannot be undone.',
             [
                 { text: 'Cancel', style: 'cancel' },
-                { 
-                    text: 'Delete', 
+                {
+                    text: 'Delete',
                     style: 'destructive',
                     onPress: async () => {
                         try {
@@ -199,8 +201,8 @@ const HomeTabScreen = ({ navigation }: any) => {
     // Helper function to render posts list with unique keys
     const renderPostData = (data: any[]) => {
         return data.map((post, index) => (
-            <PostCard 
-                key={`post-${post._id}-${index}`} 
+            <PostCard
+                key={`post-${post._id}-${index}`}
                 item={post} 
                 onOptionsPress={() => handlePostOptions(post._id)}
             />
@@ -240,14 +242,14 @@ const HomeTabScreen = ({ navigation }: any) => {
                 </ScrollView>
 
                 {/* Floating Action Button */}
-                <Animated.View 
+                <Animated.View
                     style={[
                         styles.fabContainer,
                         { transform: [{ translateY: fabAnimation }] }
                     ]}
                 >
-                    <TouchableOpacity 
-                        style={styles.fab} 
+                    <TouchableOpacity
+                        style={styles.fab}
                         onPress={() => setCreateModalVisible(true)}
                     >
                         <Icon name="add" size={24} color="#fff" />
@@ -269,7 +271,7 @@ const HomeTabScreen = ({ navigation }: any) => {
                                     <Icon name="close" size={24} color="#333" />
                                 </TouchableOpacity>
                             </View>
-                            
+
                             <TextInput
                                 style={styles.postInput}
                                 placeholder="What's on your mind?"
@@ -278,9 +280,9 @@ const HomeTabScreen = ({ navigation }: any) => {
                                 onChangeText={setPostContent}
                                 autoFocus
                             />
-                            
+
                             <View style={styles.modalFooter}>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     style={[styles.postButton, !postContent.trim() && styles.disabledButton]}
                                     onPress={handleCreatePost}
                                     disabled={!postContent.trim() || isSubmitting}
@@ -311,7 +313,7 @@ const HomeTabScreen = ({ navigation }: any) => {
                                     <Icon name="close" size={24} color="#333" />
                                 </TouchableOpacity>
                             </View>
-                            
+
                             <TextInput
                                 style={styles.postInput}
                                 placeholder="Edit your post..."
@@ -320,9 +322,9 @@ const HomeTabScreen = ({ navigation }: any) => {
                                 onChangeText={setPostContent}
                                 autoFocus
                             />
-                            
+
                             <View style={styles.modalFooter}>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     style={[styles.postButton, !postContent.trim() && styles.disabledButton]}
                                     onPress={handleUpdatePost}
                                     disabled={!postContent.trim() || isSubmitting}
@@ -345,21 +347,21 @@ const HomeTabScreen = ({ navigation }: any) => {
                     visible={actionMenuVisible}
                     onRequestClose={() => setActionMenuVisible(false)}
                 >
-                    <TouchableOpacity 
-                        style={styles.actionMenuOverlay} 
+                    <TouchableOpacity
+                        style={styles.actionMenuOverlay}
                         activeOpacity={1}
                         onPress={() => setActionMenuVisible(false)}
                     >
                         <View style={styles.actionMenuContent}>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 style={styles.actionMenuItem}
                                 onPress={() => selectedPost && openEditModal(selectedPost)}
                             >
                                 <Icon name="edit" size={20} color="#333" />
                                 <Text style={styles.actionMenuItemText}>Edit Post</Text>
                             </TouchableOpacity>
-                            
-                            <TouchableOpacity 
+
+                            <TouchableOpacity
                                 style={[styles.actionMenuItem, styles.deleteMenuItem]}
                                 onPress={() => selectedPostId && handleDeletePost(selectedPostId)}
                             >
