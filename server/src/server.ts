@@ -1,9 +1,9 @@
 import { connectDB } from './config';
 import { server, io } from './app/app';
 
-const HOST: string = String(process.env.HOST || 'localhost');
+const HOST: string = process.env.NODE_ENV === 'production' ? String(process.env.HOST || '0.0.0.0') : 'localhost';
 const PORT: number = Number(process.env.PORT || 8080);
-const DB_URI: string = String(process.env.MONGO_URI || 'mongodb://localhost:27017/socialMeta');
+const DB_URI: string = process.env.NODE_ENV === 'production' ? String(process.env.MONGO_URI) : 'mongodb://localhost:27017/socialMeta';
 
 // Socket.IO Connection Handler
 io.on('connection', (socket) => {
