@@ -15,10 +15,10 @@ import {
   ActionSheetIOS,
   Platform,
 } from 'react-native';
-import ProfileHeaderUI from '../../components/ui/ProfileHeaderUI';
-import PostCard from '../../components/ui/PostCard';
-import FollowersTab from '../../components/widgets/FollowersTab';
-import FollowingTab from '../../components/widgets/FollowingTab';
+import ProfileHeaderUI from '../../components/widgets/ProfileHeaderUI.tsx';
+import PostCard from '../../components/widgets/PostCard.tsx';
+import FollowersTab from '../../components/widgets/FollowersTab.tsx';
+import FollowingTab from '../../components/widgets/FollowingTab.tsx';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -124,15 +124,15 @@ const ImagePickerModal = ({ visible, onClose, onImageSelected, title }: any) => 
       onRequestClose={onClose}
     >
       <View style={styles.imagePickerOverlay}>
-        <TouchableOpacity 
-          style={styles.imagePickerBackground} 
-          activeOpacity={1} 
+        <TouchableOpacity
+          style={styles.imagePickerBackground}
+          activeOpacity={1}
           onPress={onClose}
         />
-        
-        <Animated.View 
+
+        <Animated.View
           style={[
-            styles.imagePickerContainer, 
+            styles.imagePickerContainer,
             { transform: [{ translateY: slideAnim }] }
           ]}
         >
@@ -142,18 +142,18 @@ const ImagePickerModal = ({ visible, onClose, onImageSelected, title }: any) => 
               <Icon name="close" size={24} color="#666" />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.imagePickerOptions}>
             <TouchableOpacity style={styles.imagePickerOption} onPress={openCamera}>
               <Icon name="camera-alt" size={30} color="#1DA1F2" />
               <Text style={styles.imagePickerOptionText}>Camera</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.imagePickerOption} onPress={openGallery}>
               <Icon name="photo-library" size={30} color="#1DA1F2" />
               <Text style={styles.imagePickerOptionText}>Gallery</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.imagePickerOption} onPress={onClose}>
               <Icon name="cancel" size={30} color="#E53935" />
               <Text style={[styles.imagePickerOptionText, { color: '#E53935' }]}>Cancel</Text>
@@ -166,23 +166,23 @@ const ImagePickerModal = ({ visible, onClose, onImageSelected, title }: any) => 
 };
 
 // Enhanced Profile Header with Image Upload
-const EnhancedProfileHeader = ({ 
-  onMenuOpen, 
-  profileImage, 
-  coverImage, 
-  onProfileImagePress, 
+const EnhancedProfileHeader = ({
+  onMenuOpen,
+  profileImage,
+  coverImage,
+  onProfileImagePress,
   onCoverImagePress,
-  ...props 
+  ...props
 }: any) => (
   <View style={styles.headerWrapper}>
     {/* Cover Image Section */}
     <View style={styles.coverImageContainer}>
-      <Image 
-        source={{ uri: coverImage || userData.coverImage }} 
-        style={styles.coverImage} 
+      <Image
+        source={{ uri: coverImage || userData.coverImage }}
+        style={styles.coverImage}
       />
-      <TouchableOpacity 
-        style={styles.editCoverButton} 
+      <TouchableOpacity
+        style={styles.editCoverButton}
         onPress={onCoverImagePress}
       >
         <Icon name="camera-alt" size={20} color="#fff" />
@@ -191,13 +191,13 @@ const EnhancedProfileHeader = ({
 
     {/* Profile Image Section */}
     <View style={styles.profileImageSection}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.profileImageContainer}
         onPress={onProfileImagePress}
       >
-        <Image 
-          source={{ uri: profileImage || userData.avatar }} 
-          style={styles.profileImage} 
+        <Image
+          source={{ uri: profileImage || userData.avatar }}
+          style={styles.profileImage}
         />
         <View style={styles.editProfileImageButton}>
           <Icon name="camera-alt" size={16} color="#fff" />
@@ -220,7 +220,7 @@ const EnhancedProfileHeader = ({
 // Profile Menu Component
 const ProfileMenu = ({ visible, onClose, onLogout, navigation }: any) => {
   const slideAnim = useRef(new Animated.Value(-300)).current;
-  
+
   React.useEffect(() => {
     if (visible) {
       Animated.timing(slideAnim, {
@@ -255,15 +255,15 @@ const ProfileMenu = ({ visible, onClose, onLogout, navigation }: any) => {
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <TouchableOpacity 
-          style={styles.modalBackground} 
-          activeOpacity={1} 
+        <TouchableOpacity
+          style={styles.modalBackground}
+          activeOpacity={1}
           onPress={onClose}
         />
-        
-        <Animated.View 
+
+        <Animated.View
           style={[
-            styles.menuContainer, 
+            styles.menuContainer,
             { transform: [{ translateX: slideAnim }] }
           ]}
         >
@@ -277,24 +277,24 @@ const ProfileMenu = ({ visible, onClose, onLogout, navigation }: any) => {
               <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.menuDivider} />
-          
+
           <ScrollView style={styles.menuItems}>
             {menuItems.map((item, index) => (
-              <TouchableOpacity 
-                key={index} 
+              <TouchableOpacity
+                key={index}
                 style={styles.menuItem}
                 onPress={() => {
                   onClose();
                   item.onPress();
                 }}
               >
-                <Icon 
-                  name={item.icon} 
-                  size={24} 
-                  color={item.color || '#333'} 
-                  style={styles.menuIcon} 
+                <Icon
+                  name={item.icon}
+                  size={24}
+                  color={item.color || '#333'}
+                  style={styles.menuIcon}
                 />
                 <Text style={[styles.menuItemText, item.color && { color: item.color }]}>
                   {item.label}
@@ -302,7 +302,7 @@ const ProfileMenu = ({ visible, onClose, onLogout, navigation }: any) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          
+
           <View style={styles.menuFooter}>
             <Text style={styles.menuFooterText}>App Version 1.0.0</Text>
           </View>
@@ -325,23 +325,23 @@ const LogoutConfirmationModal = ({ visible, onClose, onConfirm }: any) => (
         <View style={styles.logoutModalHeader}>
           <Text style={styles.logoutModalTitle}>Logout</Text>
         </View>
-        
+
         <View style={styles.logoutModalBody}>
           <Text style={styles.logoutModalText}>
             Are you sure you want to logout?
           </Text>
         </View>
-        
+
         <View style={styles.logoutModalFooter}>
-          <TouchableOpacity 
-            style={[styles.logoutModalButton, styles.logoutModalCancelButton]} 
+          <TouchableOpacity
+            style={[styles.logoutModalButton, styles.logoutModalCancelButton]}
             onPress={onClose}
           >
             <Text style={styles.logoutModalCancelText}>Cancel</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.logoutModalButton, styles.logoutModalConfirmButton]} 
+
+          <TouchableOpacity
+            style={[styles.logoutModalButton, styles.logoutModalConfirmButton]}
             onPress={onConfirm}
           >
             <Text style={styles.logoutModalConfirmText}>Logout</Text>
@@ -451,8 +451,8 @@ const ProfileTabScreen = (props: any) => {
         }
         showsVerticalScrollIndicator={false}
       >
-        <EnhancedProfileHeader 
-          {...props} 
+        <EnhancedProfileHeader
+          {...props}
           onMenuOpen={handleMenuOpen}
           profileImage={profileImage}
           coverImage={coverImage}
@@ -475,15 +475,15 @@ const ProfileTabScreen = (props: any) => {
       </ScrollView>
 
       {/* Profile Menu */}
-      <ProfileMenu 
-        visible={menuVisible} 
-        onClose={handleMenuClose} 
+      <ProfileMenu
+        visible={menuVisible}
+        onClose={handleMenuClose}
         onLogout={handleLogoutPress}
         navigation={props.navigation}
       />
-      
+
       {/* Logout Confirmation Modal */}
-      <LogoutConfirmationModal 
+      <LogoutConfirmationModal
         visible={logoutModalVisible}
         onClose={handleLogoutCancel}
         onConfirm={handleLogoutConfirm}
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
   headerWrapper: {
     position: 'relative',
   },
-  
+
   // Cover Image Styles
   coverImageContainer: {
     height: 200,

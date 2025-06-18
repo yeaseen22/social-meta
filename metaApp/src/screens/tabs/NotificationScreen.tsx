@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, ScrollView, RefreshControl, StyleSheet } from 'react-native';
 import { Container, NotifyDiv, NotifyPersonText, NotifyPersonAvatar, NotifyRightElement, NotifyLovedImg } from '../../styles/NotificationStyles';
-import { FollowButton } from '../../components/widgets/Button';
+import { FollowButton } from '../../components/widgets/Button.tsx';
 import { Card as PaperCard } from 'react-native-paper';
 
 const NotificationTabScreen = () => {

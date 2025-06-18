@@ -16,11 +16,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-
-// Asad MacBook IP - 192.168.0.101
-// Asad Desktop IP - 192.168.0.106
-const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'http://192.168.0.104:8080/api/v1';
-
+const API_URL = process.env.REACT_PUBLIC_API_URL ?? 'https://social-meta.onrender.com/api/v1';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
@@ -49,16 +45,17 @@ axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
       const token = store.getState().auth.accessToken;
-
-      // Fallback to AsyncStorage if Redux token doesn't exist
       const accessToken = token ?? await AsyncStorage.getItem('accessToken');
 
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        if (config.headers) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
       }
     } catch (error) {
       console.error('Error attaching token to request:', error);
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -78,13 +75,14 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       console.log('🔁 Attempting token refresh...');
 
-
       // If already refreshing, wait for it to complete
       if (isRefreshing) {
         const newAccessToken = await waitForRefresh();
+
         if (newAccessToken) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
+
         } else {
           //  Refresh failed while waiting — treat as expired
           Toast.show({
@@ -104,9 +102,9 @@ axiosInstance.interceptors.response.use(
         }
       }
 
-
       // Otherwise start refresh
       isRefreshing = true;
+
       try {
         const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
 
@@ -122,8 +120,6 @@ axiosInstance.interceptors.response.use(
         console.log('access', newAccessToken);
         console.log('refresh', newRefreshToken);
 
-
-
         // Store new tokens
         await AsyncStorage.setItem('accessToken', newAccessToken);
         await AsyncStorage.setItem('refreshToken', newRefreshToken);
@@ -137,11 +133,10 @@ axiosInstance.interceptors.response.use(
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
+
       } catch (refreshError) {
         await AsyncStorage.clear();
         store.dispatch(clearCredentials());
-
-
 
         if ((global as any).navigationRef?.current) {
           Toast.show({
@@ -153,6 +148,7 @@ axiosInstance.interceptors.response.use(
         }
 
         return Promise.reject(refreshError);
+
       } finally {
         isRefreshing = false;
       }

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 // import { FontAwesome } from '@expo/vector-icons';
-import { Button, OutlineButton } from '../../components/widgets/Button';
+import { Button, OutlineButton } from '../../components/widgets/Button.tsx';
 // import { useRouter } from 'expo-router';
 
 type RegisterProps = {

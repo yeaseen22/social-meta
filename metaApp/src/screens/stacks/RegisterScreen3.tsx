@@ -11,7 +11,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import useRegister from '../../hooks/useRegister';
-import { Button as CustomButton, OutlineButton } from '../../components/widgets/Button';
+import { Button as CustomButton, OutlineButton } from '../../components/widgets/Button.tsx';
 import Toast from 'react-native-toast-message';
 
 type Register3Props = {
@@ -75,11 +75,11 @@ const Register3: React.FC<Register3Props> = ({ navigation, route }) => {
     if (!route?.params) return;
 
     const finalPayload = {
-      firstname: route.params.firstName, 
+      firstname: route.params.firstName,
       lastname: route.params.lastName,
       email: route.params.email,
       password: route.params.password,
-      birthdate: data.birthDate, 
+      birthdate: data.birthDate,
       bio: data.bio.trim(),
       title: data.title.trim(),
     };
@@ -87,7 +87,7 @@ const Register3: React.FC<Register3Props> = ({ navigation, route }) => {
     console.log(finalPayload);
 
     try {
-      
+
       const res = await registerAction(finalPayload);
       console.log('Registered:', res);
       navigation?.navigate('UploadProfile', res);

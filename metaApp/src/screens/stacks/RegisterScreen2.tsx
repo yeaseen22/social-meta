@@ -11,7 +11,7 @@ import {
     Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Button, OutlineButton } from '../../components/widgets/Button';
+import { Button, OutlineButton } from '../../components/widgets/Button.tsx';
 
 
 // Define Props for Register2

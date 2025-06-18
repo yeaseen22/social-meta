@@ -1,3 +1,6 @@
+export { default as InstaStoryUI } from './InstaStoryUI';
 export { default as ImagePicker } from './ImagePicker';
-export { default as PostCard } from '../ui/PostCard';
-export { default as ProfileHeader } from '../ui/ProfileHeaderUI';
+export { default as PostCard } from './PostCard';
+export { default as FollowersTab } from './FollowersTab';
+export { default as FollowingTab } from './FollowingTab';
+export { default as ProfileHeaderUI } from './ProfileHeaderUI';

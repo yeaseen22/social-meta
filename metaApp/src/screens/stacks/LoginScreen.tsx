@@ -11,7 +11,7 @@ import {
     Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Button, OutlineButton } from '../../components/widgets/Button';
+import { Button, OutlineButton } from '../../components/widgets/Button.tsx';
 import { useLogin } from '../../hooks';
 import axios from 'axios';
 import { setCredentials } from '../../redux/slice/auth.slice';

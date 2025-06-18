@@ -17,7 +17,13 @@ const MainTabs = () => {
   const Tab = createMaterialBottomTabNavigator();
 
   return (
-    <Tab.Navigator initialRouteName="Home" activeColor="black">
+    <Tab.Navigator
+      initialRouteName="Home"
+      activeColor="black"
+      screenOptions={{
+
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
