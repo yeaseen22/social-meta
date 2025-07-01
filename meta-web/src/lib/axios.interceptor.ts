@@ -60,10 +60,11 @@ axiosInstance.interceptors.response.use(
 
         console.log("Refresh Response: ", refreshResponse.data);
 
-        const { accessToken, refreshToken } = refreshResponse.data.data;
-        // Update tokens in Redux Persistance State..
-        store.dispatch(setCredentials({ accessToken, refreshToken }));
+        const { accessToken } = refreshResponse.data.data;
 
+        const currentRefreshToken = store.getState().auth.refreshToken;
+        store.dispatch(setCredentials({ accessToken, refreshToken: currentRefreshToken }));
+        
         // Retry the original request with the new access token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return axiosInstance(originalRequest);

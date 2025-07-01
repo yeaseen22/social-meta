@@ -14,8 +14,10 @@ import {
 import { useRouter } from 'next/navigation';
 import { useLoginMutation, setCredentials } from '@/redux/slice/auth.slice';
 import { useDispatch } from 'react-redux';
-import { useFormHandler } from '@/hooks/useForm'; // Import merged hook
+import { useFormHandler } from '@/hooks/useForm'; 
 import toast from 'react-hot-toast';
+import { setAuthCookie } from "@/lib/authToken";
+
 
 // Validation Rules
 const validationRules = {
@@ -43,27 +45,38 @@ export default function LoginPage() {
     validationRules
   );
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
+ const handleLogin = async (event: React.FormEvent) => {
+  event.preventDefault();
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    try {
-      const authLoginResponse = await login({
-        email: formData.email,
-        password: formData.password,
-      }).unwrap();
+  try {
+    const { data } = await login({
+      email: formData.email,
+      password: formData.password,
+    }).unwrap();
 
-      dispatch(setCredentials({ user: authLoginResponse.data.user, accessToken: authLoginResponse.data.accessToken, refreshToken: authLoginResponse.data.refreshToken }));
-      console.log('Login successful!', setCredentials({ accessToken: authLoginResponse.data.accessToken }));
+    // 1. Dispatch to Redux
+    dispatch(setCredentials({
+      user: data.user,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    }));
 
-      // toast.success("Login successful!");
-      router.push('/');
-    } catch (error) {
-      console.error('Failed to log in: ', error);
-      toast.error("Login failed.");
-    }
-  };
+    // 2. Store in localStorage for persistence
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+
+    // 3. Redirect or show toast
+    toast.success("Login successful!");
+    setAuthCookie(data.accessToken)
+    router.push("/");
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error("Login failed.");
+  }
+};
+
 
   return (
     <Container maxWidth={false} className='loginContainer'>

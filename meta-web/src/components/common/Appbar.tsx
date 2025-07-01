@@ -27,6 +27,8 @@ import { clearCredentials } from '@/redux/slice/auth.slice';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { clearAuthCookie } from "@/lib/authToken";
+
 
 // region AppBar Component
 export default function PrimarySearchAppBar(props: any) {
@@ -36,9 +38,9 @@ export default function PrimarySearchAppBar(props: any) {
     const authUser = useSelector((state: RootState) => state.auth.user); // Get user from Redux
     console.log(authUser?.id);
     const userId = authUser?.id;
-      
 
-    
+
+
 
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -70,8 +72,11 @@ export default function PrimarySearchAppBar(props: any) {
         try {
             await logout({});
             dispatch(clearCredentials());
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            clearAuthCookie()
             toast.success("Logout successful!");
-            router.push('/login'); // Redirect user to login after logout
+            router.push('/login'); 
         } catch (error) {
             console.error("Logout failed: ", error);
             toast.error("Logout failed. Please try again.");

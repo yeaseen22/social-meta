@@ -1,27 +1,28 @@
+// middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const accessToken = req.headers.get("authorization")?.split(" ")[1]; 
+  const accessToken = req.cookies.get("accessToken")?.value;
+  console.log(accessToken, "middleware");
 
-    const publicPaths = ["/login", "/register"]; 
-    const protectedPaths = ["/dashboard", "/profile", "/settings"];
+  const { pathname } = req.nextUrl;
 
-    const { pathname } = req.nextUrl;
+  const publicPaths = ["/login", "/register"];
+  const isPublic = publicPaths.includes(pathname);
 
-    // ⛔ If user is logged in, prevent access to login/register
-    if (accessToken && publicPaths.includes(pathname)) {
-        return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+  // 🔐 Redirect unauthenticated users trying to access protected routes
+  if (!accessToken && !isPublic) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-    // 🔒 If user is NOT logged in, redirect from protected routes
-    if (!accessToken && protectedPaths.some(path => pathname.startsWith(path))) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+  // 🚫 Redirect authenticated users away from public pages
+  if (accessToken && isPublic) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
-    return NextResponse.next(); 
+  return NextResponse.next();
 }
 
-// 🌍 Apply middleware to specific paths
 export const config = {
-    matcher: ["/login", "/register", "/dashboard", "/profile", "/settings"], 
+  matcher: ["/((?!_next|favicon.ico|api|static|.*\\..*).*)"],
 };

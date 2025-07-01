@@ -138,6 +138,7 @@ export const postsApi = createApi({
         }
       },
     }),
+    
     // Update a post
     updatePost: builder.mutation<Post, { id: string; postData: FormData }>({
       query: ({ id, postData }) => ({
